@@ -1,4 +1,5 @@
-import { Card, DirectoryNode, Folder } from "./index";
+import type { MongoClient } from "mongodb";
+import { Card, DirectoryNode, Folder, Db } from "./index";
 
 export default class Deck extends DirectoryNode {
 
@@ -11,6 +12,12 @@ export default class Deck extends DirectoryNode {
 		parent: Folder | null
 	) {
 		super(UId, name, parent)
+	}
+
+	/** Asynchronously load cards from database into this Deck */
+	async initCards(connectedMongoClient: MongoClient) {
+		let db = new Db(connectedMongoClient)
+		this.cards = await db.getCardsInDeck(this.getUId())
 	}
 	
 }
