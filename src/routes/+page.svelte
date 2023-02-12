@@ -17,6 +17,7 @@
 			filterOutNewFolders()
 
 			newFolderName = "";
+			
 		}
 	}
 

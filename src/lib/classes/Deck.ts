@@ -9,9 +9,10 @@ export default class Deck extends DirectoryNode {
 	constructor(
 		UId: string,
 		name: string,
-		parent: Folder | null
+		parent: Folder | null,
+		connectedMongoClient: MongoClient
 	) {
-		super(UId, name, parent)
+		super(UId, name, parent, connectedMongoClient)
 	}
 
 	/** Asynchronously load cards from database into this Deck */
