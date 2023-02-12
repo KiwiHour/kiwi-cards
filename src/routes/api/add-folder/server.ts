@@ -10,8 +10,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	let UId = generateUId()
 	let type = "folder"
 	let children = []
-
-	let folder = new Folder()
+	
+	// new parent is null if parentUId is null or "", else it must be a folder
+	let parent = parentUId == "" || null ? null : new Folder()
+	let folder = new Folder(UId, name, )
 
 	return json(":)")
 }

@@ -1,51 +1,58 @@
-import type { DatabaseDeck, DatabaseDirectoryNode, DatabaseFolder, DatabaseRootNode } from "$lib/schema";
+import type { DatabaseDirectoryNode, NodeType } from "$lib/schema";
 import type { MongoClient } from "mongodb";
 import { Db } from "./index";
 
-interface Node {
-	UId: string
-	name: string
-	type: "folder" | "deck"
-}
-
 export default class DirectoryTreeTraverser {
 
-	private currentNodeUId: string | null = null;
-	private previousNodeUIds: string[] = [];
+	private currentPath: string[] = []; // array of node UIds
 	private db: Db;
 
 	constructor(private connectedMongoClient: MongoClient) {
-		this.db = new Db(connectedMongoClient);
+		this.db = new Db(this.connectedMongoClient)
+	}
+
+	setCurrentPath(newPath: string[]) {
+		this.currentPath = newPath
+	}
+
+	async getDirectoryTree() {
+		let { directoryTree } = await this.db.getGlobalData()
+		return directoryTree
 	}
 
 	async getCurrentNode() {
-		if (this.previousNodeUIds.length == 0) {
-			return {
-				UId: "root",
-				name: "root",
-				type: "root",
-				parentUId: null
-			} as DatabaseRootNode
+
+		let currentNode: DatabaseDirectoryNode = await this.getDirectoryTree()
+		
+		for (let UId of this.currentPath) {
+			if (currentNode.type == "deck") { break }
+			let possibleNode = (currentNode as DatabaseDirectoryNode<"root" | "folder">).children.find(child => child.UId == UId)
+			if (!possibleNode) { break }
+			currentNode = possibleNode
 		}
 
-		let { directoryTree: currentNode } = await this.db.getGlobalData()
-
-		for (let previousNodeUId of this.previousNodeUIds) {
-			let nextNode = currentNode.children.find(node => node.UId == previousNodeUId)
-			if (!nextNode) { return null }
-			if (nextNode.type == "deck") {
-				return nextNode as DatabaseDeck
-			}
-
-			currentNode = nextNode
+		switch (currentNode.type) {
+			case "root": return currentNode as DatabaseDirectoryNode<"root">;
+			case "folder": return currentNode as DatabaseDirectoryNode<"folder">;
+			case "deck": return currentNode as DatabaseDirectoryNode<"deck">;
 		}
 
 	}
+	
+	async deleteCurrentNode() {}
+	async deleteChildNode(childUId: string) {}
 
-	async canTraverseDown() {
+	async moveCurrentNode(newPath: string[]) {
 		let currentNode = await this.getCurrentNode()
-		if (!currentNode) { return false }
-		return currentNode.children.length
+		if (currentNode?.type == "folder") {
+			currentNode.children
+		}
 	}
+	async moveChildNode(childUId: string, newPath: string[]) {}
+
+	async addChildNode<NType extends NodeType>(node: DatabaseDirectoryNode<NType>) {}
+	
+	async updateCurrentNode<NType extends NodeType>(newNode: DatabaseDirectoryNode<NType>) {}
+	async updateChildNode<NType extends NodeType>(childUId: string, newNode: DatabaseDirectoryNode<NType>) {}
 
 }

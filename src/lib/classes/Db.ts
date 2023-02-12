@@ -1,6 +1,6 @@
-import type { DatabaseCard, DatabaseGlobalData, DatabaseFolder, DatabaseDirectoryTree } from "$lib/schema";
+import type { DatabaseCard, DatabaseGlobalData, DatabaseDirectoryNode, NodeType } from "$lib/schema";
 import { ObjectId, type Collection, type MongoClient } from "mongodb";
-import { Card, DirectoryNode, Folder } from "./index";
+import { Card, Folder } from "./index";
 
 export default class Db {
 
@@ -14,38 +14,38 @@ export default class Db {
 
 	// database setters
 
-	async updateDirectoryTree(directoryTree: DatabaseDirectoryTree) {
+	async updateDirectoryTree(directoryTree: DatabaseDirectoryNode) {
 		await this.globalCollection.updateOne(
 			{}, // first one (only collection)
-			{ $set: { "directoryTree": directoryTree}}
+			{ $set: { "directoryTree.children": directoryTree}}
 		)
 	}
 
-	async addFolder(folder: Folder, parentUIds: string[]) {
-		let { directoryTree: currentParentsChildren } = await this.getGlobalData()
+	// async addFolder(folder: Folder, parentUIds: string[]) {
+	// 	let { directoryTree: currentParentsChildren } = await this.getGlobalData()
 
-		for (let parentUId of parentUIds) {
-			let possibleParent = currentParentsChildren.find(node => node.UId == parentUId && node.type == "folder") as DatabaseFolder | undefined
-			if (!possibleParent ) { throw Error("Invalid parent UIDs")}
+	// 	for (let parentUId of parentUIds) {
+	// 		let possibleParent = currentParentsChildren.find(node => node.UId == parentUId && node.type == "folder") as DatabaseFolder | undefined
+	// 		if (!possibleParent ) { throw Error("Invalid parent UIDs")}
 
-			currentParentsChildren = possibleParent.children
-		}
+	// 		currentParentsChildren = possibleParent.children
+	// 	}
 
-		// we have now found the closest parent via the database
-		// add the new folder to the parent
+	// 	// we have now found the closest parent via the database
+	// 	// add the new folder to the parent
 
-		let databaseFolder: DatabaseFolder = {
-			UId: folder.getUId(),
-			name: folder.getName(),
-			type: "folder",
-			parentUId: parentUIds.slice(-1)[0],
-			children: []
-		}
+	// 	let databaseFolder: DatabaseFolder = {
+	// 		UId: folder.getUId(),
+	// 		name: folder.getName(),
+	// 		type: "folder",
+	// 		parentUId: parentUIds.slice(-1)[0],
+	// 		children: []
+	// 	}
 
-		currentParentsChildren.push(databaseFolder)
+	// 	currentParentsChildren.push(databaseFolder)
 
-		await this.updateDirectoryTree(currentParentsChildren)
-	}
+	// 	await this.updateDirectoryTree(currentParentsChildren)
+	// }
 
 	// database getters
 
@@ -60,7 +60,6 @@ export default class Db {
 					UId: "root",
 					name: "root",
 					type: "root",
-					parentUId: null,
 					children: []
 				} }
 			await this.globalCollection.insertOne(globalData)
@@ -78,18 +77,18 @@ export default class Db {
 	}
 	
 	/** Get all the cards within a deck of a specific UID */
-	async getCardsInDeck(deckUId: string) {
-		let allCardData = await this.cardsCollection.find({}).toArray()
-		let foundCards: Card[] = []
+	// async getCardsInDeck(deckUId: string) {
+	// 	let allCardData = await this.cardsCollection.find({}).toArray()
+	// 	let foundCards: Card[] = []
 
-		for (let cardData of allCardData) {
-			if (cardData.deckUId == deckUId) {
-				let card = new Card(cardData)
-				foundCards.push(card)
-			}
-		}
+	// 	for (let cardData of allCardData) {
+	// 		if (cardData.deckUId == deckUId) {
+	// 			let card = new Card(cardData)
+	// 			foundCards.push(card)
+	// 		}
+	// 	}
 
-		return foundCards
-	}
+	// 	return foundCards
+	// }
 
 }
