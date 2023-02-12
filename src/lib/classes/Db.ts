@@ -17,7 +17,7 @@ export default class Db {
 	async updateDirectoryTree(directoryTree: DatabaseDirectoryTree) {
 		await this.globalCollection.updateOne(
 			{}, // first one (only collection)
-			{ $set: { "directoryTree": directoryTree }}
+			{ $set: { "directoryTree": directoryTree}}
 		)
 	}
 
@@ -53,7 +53,16 @@ export default class Db {
 		let globalData = await this.globalCollection.findOne({})
 		if (!globalData) {
 			// restore db with blank data
-			globalData = { _id: new ObjectId(), inUseUIds: [], directoryTree: [] }
+			globalData = {
+				_id: new ObjectId(),
+				inUseUIds: [],
+				directoryTree: {
+					UId: "root",
+					name: "root",
+					type: "root",
+					parentUId: null,
+					children: []
+				} }
 			await this.globalCollection.insertOne(globalData)
 		}
 

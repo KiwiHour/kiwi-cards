@@ -1,8 +1,14 @@
 export interface DatabaseDirectoryNode {
 	UId: string
 	name: string
-	type: "folder" | "deck"
+	type: "folder" | "deck" | "root"
 	parentUId: string | null
+}
+
+export interface DatabaseRootNode extends DatabaseDirectoryNode {
+	type: "root",
+	parentUId: null,
+	children: DatabaseDirectoryNode[]
 }
 
 export interface DatabaseFolder extends DatabaseDirectoryNode {
@@ -27,5 +33,5 @@ export interface DatabaseCard {
 export type DatabaseDirectoryTree = DatabaseDirectoryNode[]
 export interface DatabaseGlobalData {
 	inUseUIds: string[]
-	directoryTree: DatabaseDirectoryTree
+	directoryTree: DatabaseRootNode
 }
