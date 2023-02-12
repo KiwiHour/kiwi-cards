@@ -15,7 +15,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	console.log("successfully connected to mongodb")
-	event.locals.mongoClient = mongoClient;
+	event.locals.connectedMongoClient = mongoClient;
 
 	return await resolve(event);
 

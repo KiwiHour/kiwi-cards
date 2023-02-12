@@ -25,6 +25,10 @@
 		folders = [({ name: "", new: true }), ...folders]
 	}
 
+	function focus(el: HTMLElement) {
+		el.focus();
+	}
+
 	let newFolderName: string;
 	let folders: X[] =  [{name: ":)", new: false}]
 	
@@ -37,7 +41,7 @@
 	<div id="directory-tree">
 		{#each folders as folder}
 			{#if folder.new}
-				<input type="text" placeholder="Folder name..." bind:value={newFolderName} on:keypress={(event) => handleNewFolderNaming(event)}>
+				<input use:focus type="text" placeholder="Folder name..." bind:value={newFolderName} on:keypress={(event) => handleNewFolderNaming(event)}>
 			{:else}
 				<Folder folderName={folder.name}>
 					heheh
