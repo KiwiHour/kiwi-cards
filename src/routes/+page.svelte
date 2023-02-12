@@ -41,7 +41,10 @@
 	<div id="directory-tree">
 		{#each folders as folder}
 			{#if folder.new}
-				<input use:focus type="text" placeholder="Folder name..." bind:value={newFolderName} on:keypress={(event) => handleNewFolderNaming(event)}>
+				<input use:focus type="text" placeholder="Folder name..."
+					bind:value={newFolderName}
+					on:keypress={(event) => handleNewFolderNaming(event)}
+					on:blur={filterOutNewFolders}> <!-- removes new folders, hence removes this -->
 			{:else}
 				<Folder folderName={folder.name}>
 					heheh
