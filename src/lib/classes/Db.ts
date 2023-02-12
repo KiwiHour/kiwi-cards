@@ -14,7 +14,7 @@ export default class Db {
 
 	// database setters
 
-	async updateDirectoryTree(directoryTree: DatabaseDirectoryNode) {
+	async updateDirectoryTree(directoryTree: DatabaseDirectoryNode<"root">) {
 		await this.globalCollection.updateOne(
 			{}, // first one (only collection)
 			{ $set: { "directoryTree.children": directoryTree}}
@@ -69,12 +69,7 @@ export default class Db {
 	}
 
 	/** Get a card via it's UID */
-	async getCard(UId: string) {
-		let cardData = await this.cardsCollection.findOne({ UId })
-		if (!cardData) { return null }
-
-		return new Card(cardData)
-	}
+	// async getCard(UId: string) { }
 	
 	/** Get all the cards within a deck of a specific UID */
 	// async getCardsInDeck(deckUId: string) {

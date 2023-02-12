@@ -1,10 +1,21 @@
 export type NodeType = "root" | "folder" | "deck"
+export type NonRootNodeType = Exclude<NodeType, "root">
+export type NonDeckNodeType = Exclude<NodeType, "deck">
 
 export interface DatabaseDirectoryNode<NType extends NodeType = NodeType> {
 	UId: string
 	name: string
 	type: NType
-	children: NType extends "deck"  ? NType extends "root" | "folder" ? DatabaseDirectoryNode<"folder" | "deck">[] | DatabaseCard[] : DatabaseCard[] : DatabaseDirectoryNode<"folder" | "deck">[]
+
+	// Children types go as follows (NonRoot[] as a child cannot be the root)
+	// Unknown -> NonRoot[] or Card UIDs
+	// NonDeck -> NonRoot[]
+	// Deck -> Card UIDs
+	children: NType extends "deck" ?  
+		NType extends NonDeckNodeType ? 
+			DatabaseDirectoryNode<NonRootNodeType>[] | string[] 
+		  : string[]
+	  : DatabaseDirectoryNode<NonRootNodeType>[]
 }
 
 export interface DatabaseCard {
@@ -14,7 +25,6 @@ export interface DatabaseCard {
 	back: string
 	
 	UId: string
-	name: string
 	type: "card"
 }
 
