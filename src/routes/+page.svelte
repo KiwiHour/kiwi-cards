@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { DatabaseDirectory } from "$lib/schema";
+    import type { Database } from "$lib/schema";
     import type { PageData } from "./$types";
     import Folder from "./directory-nodes/Folder.svelte";
 
@@ -35,7 +35,6 @@
 	}
 
 	let newFolderName: string;
-	let folders: DatabaseDirectory.Node<"folder">[] =  []
 	
 </script>
 
@@ -44,12 +43,12 @@
 	<input type="button" value="New Folder" on:click={handleNewFolder}>
 	<input type="button" value="New Deck">
 	<div id="directory-tree">
-		{#each data.rootDirectory.children as node}
+		<!-- {#each data.rootDirectory.children as node}
 			{#if node.UId == "new"}
 				<input use:focus type="text" placeholder="Folder name..."
 					bind:value={newFolderName}
 					on:keypress={(event) => handleNewFolderNaming(event)}
-					on:blur={filterOutNewFolders}> <!-- removes new folders, hence removes this -->
+					on:blur={filterOutNewFolders}> < !-- removes new folders, hence removes this -- >
 			{:else}
 				
 				CONTENTS OF SAID NODE GOES HERE
@@ -61,21 +60,17 @@
 				
 			{/if}
 		{/each}
+	-->
 		
 	</div>
 
-	{JSON.stringify(data.rootDirectory)}
+	{JSON.stringify(data.fileTree)}
+
+	{#each data.fileTree as node}
+		<!-- FIGURE OUT HOW THE FUCK TO ITERNATE THROUGH THIS???-->
+	{/each}
 
 	<br><br>
 
-	{#each data.rootDirectory.children as childNode}
-		{childNode.name}<br>
-		{#each childNode.children as childNode2}
-			{#if childNode.type !== "deck"}
-				{JSON.stringify(childNode2)}
-			{/if}
-		{/each}
-		<br><br>
-	{/each}
 
 </main>

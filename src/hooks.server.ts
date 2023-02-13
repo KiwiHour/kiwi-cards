@@ -16,11 +16,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	let db = new Db(mongoClient)
-	let { rootDirectory } = await db.getGlobalData();
+	//let { rootDirectory } = await db.getGlobalData();
 
 	console.log("successfully connected to mongodb")
 	event.locals.connectedMongoClient = mongoClient;
-	event.locals.rootDirectory = rootDirectory
+	//event.locals.rootDirectory = rootDirectory
 
 	return await resolve(event);
 

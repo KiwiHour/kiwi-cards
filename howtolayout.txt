@@ -39,17 +39,10 @@ desired = [root,
 	[node, [children]
 	children = [node, [[node, [[node, [children] ]] ]] ]
 	
+function getTree(node)
+	return [node, children.map(child => getTree(child))]
 
-function getChildren(parent, current)
-	if child.type == "deck":
-		return [current, child]
-	children = []
-	parent.children.forEach(child => {
-		children.push(getChild(child, children))
-	})
-
-	return children
-
+	[node, [node, [node, [node, getTree()]]]]
 
 getChildren(root, []) -> children = [
 	getChildren(year1, []) 
