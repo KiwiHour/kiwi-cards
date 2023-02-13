@@ -66,8 +66,13 @@
 
 	{JSON.stringify(data.fileTree)}
 
+	[
+		[NODE, [NODE, [ID, ID]]]
+		[NODE, [ID, ID]]
+	]
+
 	{#each data.fileTree as node}
-		<!-- FIGURE OUT HOW THE FUCK TO ITERNATE THROUGH THIS???-->
+		
 	{/each}
 
 	<br><br>

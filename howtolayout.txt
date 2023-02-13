@@ -48,3 +48,34 @@ getChildren(root, []) -> children = [
 	getChildren(year1, []) 
 		getChildren(sem1, [])
 			getChildren(com1, []) -> return [
+
+
+
+CODE TO ITERATE THROUGH ARRAYEDNODES
+
+FOLDER = {"type": "folder"}
+DECK = {"type": "deck"}
+
+data = [
+    [FOLDER, [DECK, ["someid", "okid"]]],
+    [DECK, ["id1", "id"]]
+]
+
+def iterate_data(data):
+    if True:
+        print(f"item: {data}")
+        node = data[0]
+        sub_data = data[1]
+        print(f"node: {node}")
+        print(f"children: {sub_data}")
+        if node["type"] != "deck":
+            print("not deck")
+            print("\n")
+            iterate_data(sub_data)
+        else:
+            print(sub_data)
+            print("\n")
+
+# iterates through arrayednodes (data)
+for node in data:
+    iterate_data(node)
