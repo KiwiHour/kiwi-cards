@@ -2,6 +2,7 @@
     import type { Database } from "$lib/schema";
     import type { PageData } from "./$types";
     import Folder from "./directory-nodes/Folder.svelte";
+	import Deck from "./directory-nodes/Deck.svelte";
 
 	export let data: PageData
 
@@ -35,6 +36,8 @@
 	}
 
 	let newFolderName: string;
+
+	let rootNodes = data.fileTree
 	
 </script>
 
@@ -42,7 +45,18 @@
 
 	<input type="button" value="New Folder" on:click={handleNewFolder}>
 	<input type="button" value="New Deck">
-	<div id="directory-tree">
+	
+	{#each data.fileTree as [node, children]}
+
+		{#if node.type == "folder"}
+			<Folder arrayedNode={[node, children]}/>
+		{:else if node.type == "deck"}
+			<Deck arrayedNode={[node, children]}/>
+		{/if}
+
+	{/each}
+
+
 		<!-- {#each data.rootDirectory.children as node}
 			{#if node.UId == "new"}
 				<input use:focus type="text" placeholder="Folder name..."
@@ -60,22 +74,6 @@
 				
 			{/if}
 		{/each}
-	-->
-		
-	</div>
-
-	{JSON.stringify(data.fileTree)}
-
-	[
-		[NODE, [NODE, [ID, ID]]]
-		[NODE, [ID, ID]]
-	]
-
-	{#each data.fileTree as node}
-		
-	{/each}
-
-	<br><br>
-
+	-->	
 
 </main>

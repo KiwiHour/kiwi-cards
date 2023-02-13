@@ -2,6 +2,11 @@ import type { ObjectId } from "mongodb"
 
 export namespace Database {
 	
+	export type ArrayedNode<NType extends "folder" | "deck"> = 
+	NType extends "folder" ? NType extends "deck" ? [Database.DirectoryNode, ArrayedNode<"folder" | "deck">[] | string[]] : // folder or a deck
+		[Database.DirectoryNode, ArrayedNode<"folder" | "deck">[]] : // folder
+		[Database.DirectoryNode, string[]] // deck
+
 	export interface DirectoryNode {
 		_id: ObjectId | string
 		UId: string,
