@@ -1,7 +1,16 @@
-import type { DatabaseDirectory } from "$lib/schema";
+import type { Database } from "$lib/schema";
 import type { MongoClient } from "mongodb";
 import { Db } from "./index";
 
+/**
+ * Node's are specified using nodeUIds
+ * This ensures that the data about said node is the most up to date
+ * Ask the "datastructure" IS the database
+ * Storing a copy of nodes in a variable/object would increase complexity
+ * as you need to update the copy as well as the database
+ * 
+ * A null parentUId implies that the node is at the root level (orphan)
+ */
 export default class DirectoryTreeManager {
 
 	private db: Db;
@@ -10,90 +19,91 @@ export default class DirectoryTreeManager {
 		this.db = new Db(this.connectedMongoClient)
 	}
 
-	async getRootDirectory() {
-		let { rootDirectory } = await this.db.getGlobalData()
-		return rootDirectory
+	private stringifyObjectID(node: Database.DirectoryNode) {
+		node._id = node._id.toString()
+		return node
 	}
 
-	async getNode(nodeUIdPath: string[]): Promise<{ node: DatabaseDirectory.AnyNode, rootDirectory: DatabaseDirectory.Node<"root"> }> {
+	// private as updating a node without changing related nodes will cause issues
+	private async updateNode(nodeUId: string, updatedAttributes: Partial<Database.DirectoryNode>) {
+		await this.db.directoryNodesCollection.findOneAndUpdate(
+			{ "UId": nodeUId },
+			{ $set: updatedAttributes }
+		)
+	}
 
-		let root: DatabaseDirectory.Node = await this.getRootDirectory()
-		let currentNode = root
-		
-		for (let UId of nodeUIdPath) {
-			if (currentNode.type == "deck") { break }
-			let possibleNode = (currentNode as DatabaseDirectory.Node<"root" | "folder">).children.find(child => child.UId == UId)
-			if (!possibleNode) { throw new Error("Invalid node UId path") }
-			currentNode = possibleNode
-		}
-		
-		switch (currentNode.type) {
-			case "root": return {
-				node: currentNode as DatabaseDirectory.Node<"root">,
-				rootDirectory: root as DatabaseDirectory.Node<"root">
-			}
-			case "folder": return {
-				node: currentNode as DatabaseDirectory.Node<"folder">,
-				rootDirectory: root as DatabaseDirectory.Node<"root">
-			}
-			case "deck": return {
-				node: currentNode as DatabaseDirectory.Node<"deck">,
-				rootDirectory: root as DatabaseDirectory.Node<"root">
-			}
+	private async getDescendants(nodeUId: string | null) {
+		let descendants: Database.DirectoryNode[] = await this.getChildren(nodeUId)
+
+		for (let descendant of descendants) {
+			descendants = [...descendants, ...(await this.getDescendants(descendant.UId))]
 		}
 
+		return descendants
+	}
+
+	private async addChildUIdToNode(nodeUId: string, childUId: string) {
+		let node = await this.getNode(nodeUId)
+		// add moved node's UId to the new parent's childrenUIDs
+		node.childrenUIds.push(childUId)
+		await this.updateNode(node.UId, { "childrenUIds": node.childrenUIds })
+	}
+
+	private async removeChildUIdFromNode(nodeUId: string, childUId: string) {
+		let node = await this.getNode(nodeUId)
+		node.childrenUIds = node.childrenUIds.filter(UId => UId != childUId)
+		await this.updateNode(node.UId, { "childrenUIds": node.childrenUIds })
+	}
+
+	async getChildren(parentUId: string | null) {
+		let children = await this.db.directoryNodesCollection.find({ "parentUId": parentUId }).toArray()
+		let idlessChildren = children.map(child => this.stringifyObjectID(child))
+		return idlessChildren  
+	}
+
+	async getNode(nodeUId: string) {
+		let node = await this.db.directoryNodesCollection.findOne({ "UId": nodeUId })
+		if (!node) { throw new Error(`Node with UId of ${nodeUId} could not be found`) }
+		let idlessNode = this.stringifyObjectID(node)
+		return idlessNode
+	}
+
+	async deleteNode(nodeUId: string) {
+		let node = await this.getNode(nodeUId)
+		await this.db.directoryNodesCollection.deleteOne({ "UId": node.UId })
+		
+		// delete node descendants
+		let descendants = await this.getDescendants(nodeUId)
+		let deleteDescendantPromises = descendants.map(descendant => this.db.directoryNodesCollection.deleteOne({ "UId": descendant.UId }))
+		// much faster to do a promise.all, as all nodes can be deleted at the same time (not related), instead of waiting for previous one to delete
+		await Promise.all(deleteDescendantPromises)
+			
+
+		if (node.parentUId == null) { return; }
+		await this.removeChildUIdFromNode(node.parentUId, node.UId)
 	}
 	
-	async deleteNode(nodeUIdPath: string[]) {
-		// need to be at parent node, so we can edit children and update node
-		let parentUIdPath = nodeUIdPath.slice(0, -1)
-		let nodeUId = nodeUIdPath.slice(-1)[0]
-		let { node: parentNode, rootDirectory } = await this.getNode(parentUIdPath)
-
-		if (parentNode.type == "deck") {
-			parentNode.children = parentNode.children.filter(cardUId => cardUId !== nodeUId)
-		} else {
-			parentNode.children = parentNode.children.filter(child => child.UId !== nodeUId)
-		}
-
-		// to double check that main root is updated
-		// remove after you are sure that this method of object references works correctly
-		console.log(JSON.stringify(rootDirectory))
-		await this.db.updateRootDirectory(rootDirectory)
-		
-	}
-	
-	async addChildNode(parentUIdPath: string[], node: DatabaseDirectory.NonRootNode) {
-
-		let { node: parentNode, rootDirectory } = await this.getNode(parentUIdPath)
-		if (parentNode.type == "deck") { throw new Error("Cannot add child node to deck. Use 'addCard' method")}
-		parentNode.children.push(node)
-
-		await this.db.updateRootDirectory(rootDirectory)
-
+	// cannot be unsure nodeOrUId as node hasnt been added to db yet
+	async addNode(node: Database.DirectoryNode) {
+		await this.db.directoryNodesCollection.insertOne(node)
+		if (node.parentUId == null) { return }
+		await this.addChildUIdToNode(node.parentUId, node.UId) // update node's parent's children data
 	}
 
-	async moveNode(nodeUIdPath: string[], newParentUIdPath: string[]) {
+	async moveNode(nodeUId: string, newParentUId: string | null) {
+		let node = await this.getNode(nodeUId)
+		await this.db.directoryNodesCollection.findOneAndUpdate(
+			{ "UId": node.UId },
+			{ $set: { "parentUId": newParentUId }}
+		)
 
-		let { node } = await this.getNode(nodeUIdPath)
+		// no need update parent's childrenUIds if the parent is root
+		if (node.parentUId == null) { return }
+		await this.removeChildUIdFromNode(node.parentUId, node.UId) // remove moved node uid from old parent's children data
 
-		if (node.type == "root") { throw new Error("Cannot move root node") }
-
-		await this.deleteNode(nodeUIdPath)
-		await this.addChildNode(newParentUIdPath, node)
-
-		// no need to update database, since functions above do it automatically
-
-	}
-
-	/** Essentially updates the node by deleting it, and then adding back the new node */
-	async updateNode(nodeUIdPath: string[], newNode: DatabaseDirectory.NonRootNode) {
-
-		await this.deleteNode(nodeUIdPath)
-		await this.addChildNode(nodeUIdPath, newNode)
-
-		// no need to update database, since functions above do it automatically
-
+		// no need to update new parent's childUIDs if the new parent is root
+		if (newParentUId == null) { return }
+		await this.addChildUIdToNode(newParentUId, node.UId) // add moved node uid to new parent's children data
 	}
 
 }

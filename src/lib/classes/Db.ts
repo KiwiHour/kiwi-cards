@@ -1,44 +1,14 @@
-import type { DatabaseCard, DatabaseGlobalData, DatabaseDirectory } from "$lib/schema";
-import { ObjectId, type Collection, type MongoClient } from "mongodb";
+import type { Database } from "$lib/schema";
+import type { Collection, MongoClient } from "mongodb";
 
 export default class Db {
 
-	private cardsCollection: Collection<DatabaseCard>
-	private globalCollection: Collection<DatabaseGlobalData>
+	public cardsCollection: Collection<Database.Card>
+	public directoryNodesCollection: Collection<Database.DirectoryNode>
 
-	constructor(private connectedMongoClient: MongoClient) {
+	constructor(connectedMongoClient: MongoClient) {
 		this.cardsCollection = connectedMongoClient.db("kiwihour").collection("cards")
-		this.globalCollection = connectedMongoClient.db("kiwihour").collection("global")
-	}
-
-	// database setters
-
-	async updateRootDirectory(rootDirectory: DatabaseDirectory.Node<"root">) {
-		await this.globalCollection.updateOne(
-			{}, // first one (only collection)
-			{ $set: { "rootDirectory": rootDirectory}}
-		)
-	}
-
-	// database getters
-
-	async getGlobalData() {
-		let globalData = await this.globalCollection.findOne({})
-		if (!globalData) {
-			// restore db with blank data
-			globalData = {
-				_id: new ObjectId(),
-				inUseUIds: [],
-				rootDirectory: {
-					UId: "root",
-					name: "root",
-					type: "root",
-					children: []
-				} }
-			await this.globalCollection.insertOne(globalData)
-		}
-
-		return globalData
+		this.directoryNodesCollection = connectedMongoClient.db("kiwihour").collection("directory-nodes")
 	}
 
 }

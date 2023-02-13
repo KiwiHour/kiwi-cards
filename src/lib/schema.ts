@@ -1,42 +1,31 @@
-export namespace DatabaseDirectory {
+import type { ObjectId } from "mongodb"
 
-	export type NodeType = "root" | "folder" | "deck"
-	export type NonRootNodeType = Exclude<NodeType, "root">
-	export type NonDeckNodeType = Exclude<NodeType, "deck">
-
-	export interface Node<NType extends NodeType = NodeType> {
-		UId: string
-		name: string
-		type: NType
+export namespace Database {
 	
-		// Children types go as follows (NonRoot[] as a child cannot be the root)
-		// Unknown -> NonRoot[] or Card UIDs
-		// NonDeck -> NonRoot[]
-		// Deck -> Card UIDs
-		children: NType extends "deck" ?  
-			NType extends NonDeckNodeType ? 
-				NonRootNode[] | string[] 
-			  : string[]
-		  : NonRootNode[]
+	export type ArrayedNode<NType extends "folder" | "deck"> = 
+	NType extends "folder" ? NType extends "deck" ? [Database.DirectoryNode, ArrayedNode<"folder" | "deck">[] | string[]] : // folder or a deck
+		[Database.DirectoryNode, ArrayedNode<"folder" | "deck">[]] : // folder
+		[Database.DirectoryNode, string[]] // deck
+
+	export interface DirectoryNode {
+		_id: ObjectId | string
+		UId: string,
+		parentUId: string | null
+		childrenUIds: string[]
+
+		name: string
+		type: "folder" | "deck"
 	}
 
-	export type NonRootNode = Node<"folder"> | Node<"deck">
-	export type NonDeckNode = Node<"root"> | Node<"folder">
-	export type AnyNode = Node<"root"> | Node<"folder"> | Node<"deck">
+	export interface Card {
+		lastCorrect: Date
+		daysTillAsk: number
+		front: string
+		back: string
+		
+		_id: ObjectId | string
+		UId: string
+		type: "card"
+	}
 
-}
-
-export interface DatabaseCard {
-	lastCorrect: Date
-	daysTillAsk: number
-	front: string
-	back: string
-	
-	UId: string
-	type: "card"
-}
-
-export interface DatabaseGlobalData {
-	inUseUIds: string[]
-	rootDirectory: DatabaseDirectory.Node<"root">
 }
