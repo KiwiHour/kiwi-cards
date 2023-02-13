@@ -12,13 +12,13 @@ let mockDirectoryTree: DatabaseDirectory.Node<"root"> = {
 				]},
 				{ UId: "ac3", name: "COM1003", type: "deck", children: [
 
-				]},
+				]}
 			]},
 			{ UId: "as2", name: "Semester 2", type: "folder", children: [
 				{ UId: "abc5", name: "COM1005", type: "deck", children: [
 					"cardUID", "card2UID"
-				]},
-			]},
+				]}
+			]}
 		]},
 		{ UId: "y2", name: "Year 2", type: "folder", children: [
 			{ UId: "bs1", name: "Semester 1", type: "folder", children: [
@@ -30,7 +30,7 @@ let mockDirectoryTree: DatabaseDirectory.Node<"root"> = {
 				]},
 				{ UId: "ac3", name: "COM1003", type: "deck", children: [
 
-				]},
+				]}
 			]}
 		]}
 	]

@@ -1,5 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
 
+import type { DatabaseDirectory } from "$lib/schema";
 import type { MongoClient } from "mongodb";
 
 // for information about these interfaces
@@ -8,6 +9,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			connectedMongoClient: MongoClient
+			rootDirectory: DatabaseDirectory.Node<"root">
 		}
 		// interface PageData {}
 		// interface Platform {}

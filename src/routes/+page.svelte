@@ -1,5 +1,8 @@
 <script lang="ts">
-    import Folder from "./Folder.svelte";
+    import type { PageData } from "./$types";
+    import Folder from "./directory-nodes/Folder.svelte";
+
+	export let data: PageData
 
 	interface X {
 		name: string
@@ -40,19 +43,26 @@
 	<input type="button" value="New Folder" on:click={handleNewFolder}>
 	<input type="button" value="New Deck">
 	<div id="directory-tree">
-		{#each folders as folder}
-			{#if folder.new}
+		{#each data.rootDirectory.children as node}
+			{#if node.UId == "new"}
 				<input use:focus type="text" placeholder="Folder name..."
 					bind:value={newFolderName}
 					on:keypress={(event) => handleNewFolderNaming(event)}
 					on:blur={filterOutNewFolders}> <!-- removes new folders, hence removes this -->
 			{:else}
-				<Folder folderName={folder.name}>
-					heheh
-				</Folder>
+				
+				CONTENTS OF SAID NODE GOES HERE
+				POSSIBLY A FOLDER OR A DECK,
+				FOLDER IS A COMPONENT
+				DECK IS A COMPONENT
+
+				MAYBE ADD A ROOT COMPONENT??? IDK
+				
 			{/if}
 		{/each}
 		
 	</div>
+
+	{JSON.stringify(data.rootDirectory)}
 
 </main>

@@ -10,14 +10,14 @@ export default class DirectoryTreeManager {
 		this.db = new Db(this.connectedMongoClient)
 	}
 
-	async getDirectoryRoot() {
-		let { directoryTree } = await this.db.getGlobalData()
-		return directoryTree
+	async getRootDirectory() {
+		let { rootDirectory } = await this.db.getGlobalData()
+		return rootDirectory
 	}
 
-	async getNode(nodeUIdPath: string[]): Promise<{ node: DatabaseDirectory.AnyNode, directoryRoot: DatabaseDirectory.Node<"root"> }> {
+	async getNode(nodeUIdPath: string[]): Promise<{ node: DatabaseDirectory.AnyNode, rootDirectory: DatabaseDirectory.Node<"root"> }> {
 
-		let root: DatabaseDirectory.Node = await this.getDirectoryRoot()
+		let root: DatabaseDirectory.Node = await this.getRootDirectory()
 		let currentNode = root
 		
 		for (let UId of nodeUIdPath) {
@@ -30,15 +30,15 @@ export default class DirectoryTreeManager {
 		switch (currentNode.type) {
 			case "root": return {
 				node: currentNode as DatabaseDirectory.Node<"root">,
-				directoryRoot: root as DatabaseDirectory.Node<"root">
+				rootDirectory: root as DatabaseDirectory.Node<"root">
 			}
 			case "folder": return {
 				node: currentNode as DatabaseDirectory.Node<"folder">,
-				directoryRoot: root as DatabaseDirectory.Node<"root">
+				rootDirectory: root as DatabaseDirectory.Node<"root">
 			}
 			case "deck": return {
 				node: currentNode as DatabaseDirectory.Node<"deck">,
-				directoryRoot: root as DatabaseDirectory.Node<"root">
+				rootDirectory: root as DatabaseDirectory.Node<"root">
 			}
 		}
 
@@ -48,7 +48,7 @@ export default class DirectoryTreeManager {
 		// need to be at parent node, so we can edit children and update node
 		let parentUIdPath = nodeUIdPath.slice(0, -1)
 		let nodeUId = nodeUIdPath.slice(-1)[0]
-		let { node: parentNode, directoryRoot } = await this.getNode(parentUIdPath)
+		let { node: parentNode, rootDirectory } = await this.getNode(parentUIdPath)
 
 		if (parentNode.type == "deck") {
 			parentNode.children = parentNode.children.filter(cardUId => cardUId !== nodeUId)
@@ -58,18 +58,18 @@ export default class DirectoryTreeManager {
 
 		// to double check that main root is updated
 		// remove after you are sure that this method of object references works correctly
-		console.log(JSON.stringify(directoryRoot))
-		await this.db.updateDirectoryTree(directoryRoot)
+		console.log(JSON.stringify(rootDirectory))
+		await this.db.updateRootDirectory(rootDirectory)
 		
 	}
 	
 	async addChildNode(parentUIdPath: string[], node: DatabaseDirectory.NonRootNode) {
 
-		let { node: parentNode, directoryRoot } = await this.getNode(parentUIdPath)
+		let { node: parentNode, rootDirectory } = await this.getNode(parentUIdPath)
 		if (parentNode.type == "deck") { throw new Error("Cannot add child node to deck. Use 'addCard' method")}
 		parentNode.children.push(node)
 
-		await this.db.updateDirectoryTree(directoryRoot)
+		await this.db.updateRootDirectory(rootDirectory)
 
 	}
 

@@ -38,5 +38,5 @@ export interface DatabaseCard {
 
 export interface DatabaseGlobalData {
 	inUseUIds: string[]
-	directoryTree: DatabaseDirectory.Node<"root">
+	rootDirectory: DatabaseDirectory.Node<"root">
 }

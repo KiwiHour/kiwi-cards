@@ -13,10 +13,10 @@ export default class Db {
 
 	// database setters
 
-	async updateDirectoryTree(directoryTree: DatabaseDirectory.Node<"root">) {
+	async updateRootDirectory(rootDirectory: DatabaseDirectory.Node<"root">) {
 		await this.globalCollection.updateOne(
 			{}, // first one (only collection)
-			{ $set: { "directoryTree.children": directoryTree}}
+			{ $set: { "rootDirectory": rootDirectory}}
 		)
 	}
 
@@ -29,7 +29,7 @@ export default class Db {
 			globalData = {
 				_id: new ObjectId(),
 				inUseUIds: [],
-				directoryTree: {
+				rootDirectory: {
 					UId: "root",
 					name: "root",
 					type: "root",
