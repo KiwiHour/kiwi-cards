@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { DatabaseDirectory } from "$lib/schema";
     import type { PageData } from "./$types";
     import Folder from "./directory-nodes/Folder.svelte";
 
@@ -10,23 +11,23 @@
 	}
 
 	function filterOutNewFolders() {
-		folders = folders.filter(folder => !folder.new)
+	// 	folders = folders.filter(folder => !folder.new)
 	}
 
 	/** If new folder is confirmed (hit enter), then add the folder to list then sort alphabetically */
 	function handleNewFolderNaming(event: KeyboardEvent) {
-		if (event.key == "Enter") {
-			folders = [...folders, ({ name: newFolderName, new: false })].sort((a, b) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0)
-			filterOutNewFolders()
+		// if (event.key == "Enter") {
+		// 	folders = [...folders, ({ name: newFolderName, new: false })].sort((a, b) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0)
+		// 	filterOutNewFolders()
 
-			newFolderName = "";
+		// 	newFolderName = "";
 			
-		}
+		// }
 	}
 
 	function handleNewFolder() {
 		filterOutNewFolders()
-		folders = [({ name: "", new: true }), ...folders]
+		// folders = [({ name: "" }), ...folders]
 	}
 
 	function focus(el: HTMLElement) {
@@ -34,7 +35,7 @@
 	}
 
 	let newFolderName: string;
-	let folders: X[] =  [{name: ":)", new: false}]
+	let folders: DatabaseDirectory.Node<"folder">[] =  []
 	
 </script>
 
@@ -56,7 +57,7 @@
 				FOLDER IS A COMPONENT
 				DECK IS A COMPONENT
 
-				MAYBE ADD A ROOT COMPONENT??? IDK
+				MAYBE ADD A ROOT COMPONENT??? IDKS
 				
 			{/if}
 		{/each}
@@ -64,5 +65,17 @@
 	</div>
 
 	{JSON.stringify(data.rootDirectory)}
+
+	<br><br>
+
+	{#each data.rootDirectory.children as childNode}
+		{childNode.name}<br>
+		{#each childNode.children as childNode2}
+			{#if childNode.type !== "deck"}
+				{JSON.stringify(childNode2)}
+			{/if}
+		{/each}
+		<br><br>
+	{/each}
 
 </main>
