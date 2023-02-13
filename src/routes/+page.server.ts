@@ -1,9 +1,10 @@
 import { DirectoryTreeManager } from '$lib/classes';
+import { generateUId } from '$lib/functions';
 import type { Database } from '$lib/schema';
 import type { PageServerLoad } from './$types';
 
 type FileTree = Database.DirectoryNode[]
-type ArrayedNode = [Database.DirectoryNode, Database.DirectoryNode[]]
+type ArrayedNode = [Database.DirectoryNode, FileTree]
 
 let getTree = async (node: Database.DirectoryNode, treeManager: DirectoryTreeManager): Promise<ArrayedNode> => {
     let children = await treeManager.getChildren(node.UId)

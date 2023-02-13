@@ -36,11 +36,26 @@ export default class DirectoryTreeManager {
 		await this.db.directoryNodesCollection.insertOne(node)
 	}
 
-	async moveNode(nodeUId: string, newParentUId: string) {
+	async moveNode(nodeUId: string, newParentUId: string | null) {
 		await this.db.directoryNodesCollection.findOneAndUpdate(
 			{ "UId": nodeUId },
 			{ $set: { "parentUId": newParentUId }}
 		)
+		let node = await this.getNode(nodeUId)
+
+		// no need update parent's childrenUIds if the parent is root
+		if (node.parentUId == null) { return }
+		let parentNode = await this.getNode(node.parentUId)
+		// remove moved node's UId from parent's childrenUIds
+		parentNode.childrenUIds = parentNode.childrenUIds.filter(childUId => childUId != nodeUId)
+		await this.updateNode(parentNode.UId, { "childrenUIds": parentNode.childrenUIds })
+
+		// no need to update new parent's childUIDs if the new parent is root
+		if (newParentUId == null) { return }
+		let newParentNode = await this.getNode(newParentUId)
+		// add moved node's UId to the new parent's childrenUIDs
+		newParentNode.childrenUIds.push(nodeUId)
+		await this.updateNode(newParentNode.UId, { "childrenUIds": newParentNode.childrenUIds })
 	}
 
 	async updateNode(nodeUId: string, updatedAttributes: Partial<Database.DirectoryNode>) {
