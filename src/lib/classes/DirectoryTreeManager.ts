@@ -2,8 +2,15 @@ import type { Database } from "$lib/schema";
 import type { MongoClient } from "mongodb";
 import { Db } from "./index";
 
-type NodeOrUId = Database.DirectoryNode | string
-
+/**
+ * Node's are specified using nodeUIds
+ * This ensures that the data about said node is the most up to date
+ * Ask the "datastructure" IS the database
+ * Storing a copy of nodes in a variable/object would increase complexity
+ * as you need to update the copy as well as the database
+ * 
+ * A null parentUId implies that the node is at the root level (orphan)
+ */
 export default class DirectoryTreeManager {
 
 	private db: Db;
@@ -17,27 +24,33 @@ export default class DirectoryTreeManager {
 		return node
 	}
 
-	/** Ensures that a given UID or node object becomes a node object
-	 * 	If it is already a node object, no api call. So no performance problem
-	 *  @returns directory node */
-	private async ensureNodeObject(nodeOrUId: NodeOrUId) {
-		if (typeof nodeOrUId == "string") {
-			return await this.getNode(nodeOrUId)
-		} else {
-			return nodeOrUId as Database.DirectoryNode
-		}
+	// private as updating a node without changing related nodes will cause issues
+	private async updateNode(nodeUId: string, updatedAttributes: Partial<Database.DirectoryNode>) {
+		await this.db.directoryNodesCollection.findOneAndUpdate(
+			{ "UId": nodeUId },
+			{ $set: updatedAttributes }
+		)
 	}
 
-	// null -> root
-	private async addChildUIdToNode(nodeOrUId: NodeOrUId, childUId: string) {
-		let node = await this.ensureNodeObject(nodeOrUId)
+	private async getDescendants(nodeUId: string | null) {
+		let descendants: Database.DirectoryNode[] = await this.getChildren(nodeUId)
+
+		for (let descendant of descendants) {
+			descendants = [...descendants, ...(await this.getDescendants(descendant.UId))]
+		}
+
+		return descendants
+	}
+
+	private async addChildUIdToNode(nodeUId: string, childUId: string) {
+		let node = await this.getNode(nodeUId)
 		// add moved node's UId to the new parent's childrenUIDs
 		node.childrenUIds.push(childUId)
 		await this.updateNode(node.UId, { "childrenUIds": node.childrenUIds })
 	}
 
-	private async removeChildUIdFromNode(nodeOrUId: NodeOrUId, childUId: string) {
-		let node = await this.ensureNodeObject(nodeOrUId)
+	private async removeChildUIdFromNode(nodeUId: string, childUId: string) {
+		let node = await this.getNode(nodeUId)
 		node.childrenUIds = node.childrenUIds.filter(UId => UId != childUId)
 		await this.updateNode(node.UId, { "childrenUIds": node.childrenUIds })
 	}
@@ -55,13 +68,17 @@ export default class DirectoryTreeManager {
 		return idlessNode
 	}
 
-	async deleteNode(nodeOrUId: NodeOrUId) {
-		let node = await this.ensureNodeObject(nodeOrUId)
+	async deleteNode(nodeUId: string) {
+		let node = await this.getNode(nodeUId)
 		await this.db.directoryNodesCollection.deleteOne({ "UId": node.UId })
-		// needs to recursively follow through every child of the deleted node, and remove them as well
-		// since deleteing a folder also deletes the contents of said folder
+		
+		// delete node descendants
+		let descendants = await this.getDescendants(nodeUId)
+		let deleteDescendantPromises = descendants.map(descendant => this.db.directoryNodesCollection.deleteOne({ "UId": descendant.UId }))
+		// much faster to do a promise.all, as all nodes can be deleted at the same time (not related), instead of waiting for previous one to delete
+		await Promise.all(deleteDescendantPromises)
+			
 
-		// If the node that was deleted's parent was the root, no need to remove child UID from parent
 		if (node.parentUId == null) { return; }
 		await this.removeChildUIdFromNode(node.parentUId, node.UId)
 	}
@@ -73,8 +90,8 @@ export default class DirectoryTreeManager {
 		await this.addChildUIdToNode(node.parentUId, node.UId) // update node's parent's children data
 	}
 
-	async moveNode(nodeOrUId: NodeOrUId, newParentUId: string | null) {
-		let node = await this.ensureNodeObject(nodeOrUId)
+	async moveNode(nodeUId: string, newParentUId: string | null) {
+		let node = await this.getNode(nodeUId)
 		await this.db.directoryNodesCollection.findOneAndUpdate(
 			{ "UId": node.UId },
 			{ $set: { "parentUId": newParentUId }}
@@ -87,14 +104,6 @@ export default class DirectoryTreeManager {
 		// no need to update new parent's childUIDs if the new parent is root
 		if (newParentUId == null) { return }
 		await this.addChildUIdToNode(newParentUId, node.UId) // add moved node uid to new parent's children data
-	}
-
-	// private as updating a node without changing related nodes will cause issues
-	private async updateNode(nodeUId: string, updatedAttributes: Partial<Database.DirectoryNode>) {
-		await this.db.directoryNodesCollection.findOneAndUpdate(
-			{ "UId": nodeUId },
-			{ $set: updatedAttributes }
-		)
 	}
 
 }
