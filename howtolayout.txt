@@ -1,0 +1,57 @@
+
+desired = [root,
+		[
+		[year1,
+			[	
+				[sem1,
+					[com1, com2, com3]],
+				[sem2, 
+					[com5, com6]]
+			]
+		],\Y1
+		[year2,
+			[
+				[sem1,
+					[com20, com50]]
+			]] \Y2 CHILD
+		]] \root CHILD
+	]
+
+<Root>
+	<Year1>
+		<Sem1>
+			COM1, COM2, COM3
+		</Sem1>
+		<Sem2>
+			COM5,COM7
+		</Sem2>
+	</Year1>
+	<Year2>
+		<Sem1>
+			COM20, COM50
+		</Sem1>
+	</Year2>	
+</Root>
+
+<X>{children}</X> -> [X, [children]]
+		
+
+	[node, [children]
+	children = [node, [[node, [[node, [children] ]] ]] ]
+	
+
+function getChildren(parent, current)
+	if child.type == "deck":
+		return [current, child]
+	children = []
+	parent.children.forEach(child => {
+		children.push(getChild(child, children))
+	})
+
+	return children
+
+
+getChildren(root, []) -> children = [
+	getChildren(year1, []) 
+		getChildren(sem1, [])
+			getChildren(com1, []) -> return [
