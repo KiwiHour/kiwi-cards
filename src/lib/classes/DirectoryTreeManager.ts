@@ -15,6 +15,20 @@ export default class DirectoryTreeManager {
 		return node
 	}
 
+	// null -> root
+	private async addChildUIdToNode(nodeUId: string, childUId: string) {
+		let node = await this.getNode(nodeUId)
+		// add moved node's UId to the new parent's childrenUIDs
+		node.childrenUIds.push(childUId)
+		await this.updateNode(nodeUId, { "childrenUIds": node.childrenUIds })
+	}
+
+	private async removeChildUIdFromNode(nodeUId: string, childUId: string) {
+		let node = await this.getNode(nodeUId)
+		node.childrenUIds = node.childrenUIds.filter(UId => UId != childUId)
+		await this.updateNode(nodeUId, { "childrenUIds": node.childrenUIds })
+	}
+
 	async getChildren(parentUId: string | null) {
 		let children = await this.db.directoryNodesCollection.find({ "parentUId": parentUId }).toArray()
 		let idlessChildren = children.map(child => this.stringifyObjectID(child))
@@ -45,20 +59,15 @@ export default class DirectoryTreeManager {
 
 		// no need update parent's childrenUIds if the parent is root
 		if (node.parentUId == null) { return }
-		let parentNode = await this.getNode(node.parentUId)
-		// remove moved node's UId from parent's childrenUIds
-		parentNode.childrenUIds = parentNode.childrenUIds.filter(childUId => childUId != nodeUId)
-		await this.updateNode(parentNode.UId, { "childrenUIds": parentNode.childrenUIds })
+		await this.removeChildUIdFromNode(node.parentUId, nodeUId)
 
 		// no need to update new parent's childUIDs if the new parent is root
 		if (newParentUId == null) { return }
-		let newParentNode = await this.getNode(newParentUId)
-		// add moved node's UId to the new parent's childrenUIDs
-		newParentNode.childrenUIds.push(nodeUId)
-		await this.updateNode(newParentNode.UId, { "childrenUIds": newParentNode.childrenUIds })
+		await this.addChildUIdToNode(newParentUId, nodeUId)
 	}
 
-	async updateNode(nodeUId: string, updatedAttributes: Partial<Database.DirectoryNode>) {
+	// private as updating a node without changing related nodes will cause issues
+	private async updateNode(nodeUId: string, updatedAttributes: Partial<Database.DirectoryNode>) {
 		await this.db.directoryNodesCollection.findOneAndUpdate(
 			{ "UId": nodeUId },
 			{ $set: updatedAttributes }
