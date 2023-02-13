@@ -1,4 +1,4 @@
-import type { DatabaseDirectoryNode, NodeType } from "$lib/schema";
+import type { DatabaseDirectory } from "$lib/schema";
 import type { MongoClient } from "mongodb";
 import { Db } from "./index";
 
@@ -15,39 +15,39 @@ export default class DirectoryTreeManager {
 		return directoryTree
 	}
 
-	async getNode(UIdPath: string[]) {
+	async getNode(nodeUIdPath: string[]): Promise<{ node: DatabaseDirectory.AnyNode, directoryRoot: DatabaseDirectory.Node<"root"> }> {
 
-		let root: DatabaseDirectoryNode = await this.getDirectoryRoot()
+		let root: DatabaseDirectory.Node = await this.getDirectoryRoot()
 		let currentNode = root
 		
-		for (let UId of UIdPath) {
+		for (let UId of nodeUIdPath) {
 			if (currentNode.type == "deck") { break }
-			let possibleNode = (currentNode as DatabaseDirectoryNode<"root" | "folder">).children.find(child => child.UId == UId)
-			if (!possibleNode) { break }
+			let possibleNode = (currentNode as DatabaseDirectory.Node<"root" | "folder">).children.find(child => child.UId == UId)
+			if (!possibleNode) { throw new Error("Invalid node UId path") }
 			currentNode = possibleNode
 		}
 		
 		switch (currentNode.type) {
 			case "root": return {
-				node: currentNode as DatabaseDirectoryNode<"root">,
-				directoryRoot: root as DatabaseDirectoryNode<"root">
+				node: currentNode as DatabaseDirectory.Node<"root">,
+				directoryRoot: root as DatabaseDirectory.Node<"root">
 			}
 			case "folder": return {
-				node: currentNode as DatabaseDirectoryNode<"folder">,
-				directoryRoot: root as DatabaseDirectoryNode<"root">
+				node: currentNode as DatabaseDirectory.Node<"folder">,
+				directoryRoot: root as DatabaseDirectory.Node<"root">
 			}
 			case "deck": return {
-				node: currentNode as DatabaseDirectoryNode<"deck">,
-				directoryRoot: root as DatabaseDirectoryNode<"root">
+				node: currentNode as DatabaseDirectory.Node<"deck">,
+				directoryRoot: root as DatabaseDirectory.Node<"root">
 			}
 		}
 
 	}
 	
-	async deleteNode(UIdPath: string[]) {
+	async deleteNode(nodeUIdPath: string[]) {
 		// need to be at parent node, so we can edit children and update node
-		let parentUIdPath = UIdPath.slice(0, -1)
-		let nodeUId = UIdPath.slice(-1)[0]
+		let parentUIdPath = nodeUIdPath.slice(0, -1)
+		let nodeUId = nodeUIdPath.slice(-1)[0]
 		let { node: parentNode, directoryRoot } = await this.getNode(parentUIdPath)
 
 		if (parentNode.type == "deck") {
@@ -62,8 +62,38 @@ export default class DirectoryTreeManager {
 		await this.db.updateDirectoryTree(directoryRoot)
 		
 	}
-	async moveNode(UIdPath: string[], newUIdPath: string[]) {}
-	async addChildNode<NType extends NodeType>(UIdPath: string[], node: DatabaseDirectoryNode<NType>) {}
-	async updateNode<NType extends NodeType>(UIdPath: string[], newNode: DatabaseDirectoryNode<NType>) {}
+	
+	async addChildNode(parentUIdPath: string[], node: DatabaseDirectory.NonRootNode) {
+
+		let { node: parentNode, directoryRoot } = await this.getNode(parentUIdPath)
+		if (parentNode.type == "deck") { throw new Error("Cannot add child node to deck. Use 'addCard' method")}
+		parentNode.children.push(node)
+
+		await this.db.updateDirectoryTree(directoryRoot)
+
+	}
+
+	async moveNode(nodeUIdPath: string[], newParentUIdPath: string[]) {
+
+		let { node } = await this.getNode(nodeUIdPath)
+
+		if (node.type == "root") { throw new Error("Cannot move root node") }
+
+		await this.deleteNode(nodeUIdPath)
+		await this.addChildNode(newParentUIdPath, node)
+
+		// no need to update database, since functions above do it automatically
+
+	}
+
+	/** Essentially updates the node by deleting it, and then adding back the new node */
+	async updateNode(nodeUIdPath: string[], newNode: DatabaseDirectory.NonRootNode) {
+
+		await this.deleteNode(nodeUIdPath)
+		await this.addChildNode(nodeUIdPath, newNode)
+
+		// no need to update database, since functions above do it automatically
+
+	}
 
 }

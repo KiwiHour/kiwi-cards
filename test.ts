@@ -1,6 +1,6 @@
-import type { DatabaseDirectoryNode, NodeType } from "./src/lib/schema"
+import type { DatabaseDirectory } from "./src/lib/schema"
 
-let mockDirectoryTree: DatabaseDirectoryNode<"root"> = {
+let mockDirectoryTree: DatabaseDirectory.Node<"root"> = {
 	UId: "root",
 	name: "root",
 	type: "root",
@@ -16,7 +16,7 @@ let mockDirectoryTree: DatabaseDirectoryNode<"root"> = {
 			]},
 			{ UId: "as2", name: "Semester 2", type: "folder", children: [
 				{ UId: "abc5", name: "COM1005", type: "deck", children: [
-					{ UId: "c5c1", name: "What is COM1005?", type: "card", lastCorrect: new Date(), daysTillAsk: 1, front: "What is COM1005?", back: "Pure pain" },
+					"cardUID", "card2UID"
 				]},
 			]},
 		]},
@@ -38,9 +38,9 @@ let mockDirectoryTree: DatabaseDirectoryNode<"root"> = {
 
 // finds topmost deck (first node in each level)
 
-let currentNode: DatabaseDirectoryNode = mockDirectoryTree
+let currentNode: DatabaseDirectory.Node = mockDirectoryTree
 while (currentNode.type !== "deck" && currentNode.children.length > 0) {
-	currentNode = (currentNode as DatabaseDirectoryNode<Exclude<NodeType, "deck">>).children[0]
+	currentNode = (currentNode as DatabaseDirectory.Node<Exclude<DatabaseDirectory.NodeType, "deck">>).children[0]
 }
 
 console.log(currentNode)
