@@ -105,12 +105,14 @@ export default class DirectoryTreeManager {
 		)
 
 		// no need update parent's childrenUIds if the parent is root
-		if (node.parentUId == null) { return }
-		await this.removeChildUIdFromNode(node.parentUId, node.UId) // remove moved node uid from old parent's children data
+		if (node.parentUId !== null) {
+			await this.removeChildUIdFromNode(node.parentUId, node.UId) // remove moved node uid from old parent's children data
+		}
 
 		// no need to update new parent's childUIDs if the new parent is root
-		if (newParentUId == null) { return }
-		await this.addChildUIdToNode(newParentUId, node.UId) // add moved node uid to new parent's children data
+		if (newParentUId !== null) {
+			await this.addChildUIdToNode(newParentUId, node.UId) // add moved node uid to new parent's children data
+		}
 	}
 
 	async changeNodeName(nodeUId: string, newName: string) {
