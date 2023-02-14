@@ -17,7 +17,7 @@ export default class RequestTypeHandler {
 
 	isUndefined() { return typeof this.variable === "undefined" || this.variable === undefined }
 	isString() { return typeof this.variable === "string" }
-	isNumber() { return !isNaN(parseFloat(this.variable || "")) }
+	isNumber() { return !isNaN(parseFloat(this.variable || "")) && parseFloat(this.variable || "") == this.variable as any} // loose type check
 	isBoolean() { return this.variable === "true" || this.variable === "false" || typeof this.variable === "boolean" }
 	isNull() { return this.variable === "null" || this.variable === null }
 	isRestrictedValue() { return this.restrictedValues.includes(this.variable || "") }
