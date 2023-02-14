@@ -32,7 +32,7 @@ export default class RequestTypeHandler {
 
 	formattedError(invalidType: string, validTypes: ("string"|"number"|"boolean"|"null")[] | (string|number|boolean|null)[]) {
 		return error(422, { message: 
-			`${this.path}: The variable '${this.variableName}' is ${this.restrictedValues.length == 0 ? "typeof ": ""}${invalidType}. Expected ${this.restrictedValues.length == 0 ? "typeof ": ""}${JSON.stringify(validTypes)?.replace(/"/g, "'")}. Variable contents: ${JSON.stringify(this.variable)?.replace(/"/g, "'")}` })
+			`${this.path}: The variable '${this.variableName}' is ${this.restrictedValues.length == 0 ? "typeof ": ""}${invalidType}. Expected ${this.restrictedValues.length == 0 ? "typeof ": ""}${validTypes.join(" or ")}. Variable contents: ${JSON.stringify(this.variable)?.replace(/"/g, "'")}` })
 	}
 	validate(cb: (error: HttpError | undefined) => void) {
 
