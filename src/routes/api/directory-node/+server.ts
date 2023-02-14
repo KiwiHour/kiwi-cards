@@ -2,22 +2,30 @@ import { RequestTypeHandler, DirectoryTreeManager } from "$lib/classes";
 import { generateUId } from "$lib/functions";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 
-export const POST: RequestHandler = async ({ locals, request }) => {
+export const DELETE: RequestHandler = async ({ locals, request, url }) => {
+	let { nodeUId } = await request.json()
+
+	let nodeUIdTypeHandler = new RequestTypeHandler("DELETE", url.pathname, "nodeUId", nodeUId, ["string"], [])
+
+	return json({ status: 200 })
+}
+
+export const POST: RequestHandler = async ({ locals, request, url }) => {
 	let { parentUId, name, type } = await request.json()
 
 	// Type security
 	
-	let parentUIdTypeHandler = new RequestTypeHandler("/add-folder", "parentUId", parentUId, ["string", "null"], [])
+	let parentUIdTypeHandler = new RequestTypeHandler("POST", url.pathname, "parentUId", parentUId, ["string", "null"], [])
 	parentUIdTypeHandler.validate(error => {
 		if (error) { throw error }
 	})
 
-	let nameTypeHandler = new RequestTypeHandler("/add-folder", "name", name, ["string"], [])
+	let nameTypeHandler = new RequestTypeHandler("POST", url.pathname, "name", name, ["string"], [])
 	nameTypeHandler.validate(error => {
 		if (error) { throw error }
 	})
 
-	let typeTypeHandler = new RequestTypeHandler("/add-folder", "type", type, ["string"], ["folder", "deck"])
+	let typeTypeHandler = new RequestTypeHandler("POST", url.pathname, "type", type, ["string"], ["folder", "deck"])
 	typeTypeHandler.validate(error => {
 		if (error) { throw error }
 	})

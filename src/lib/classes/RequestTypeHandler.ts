@@ -5,6 +5,7 @@ import { error, type HttpError } from "@sveltejs/kit";
 export default class RequestTypeHandler {
 
 	constructor (
+		private method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
 		private path: string,
 		private variableName: string,
 		private variable: string | undefined,
