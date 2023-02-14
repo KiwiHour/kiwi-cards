@@ -25,14 +25,14 @@ export const PATCH: RequestHandler = async ({ locals, request, url }) => {
         newName: newNameTypeHandler.getTrueTypedVariable() as string
     }
 
-    console.log(`Attempting to rename node with UId "${trueTypes.nodeUId}" to "${trueTypes.newName}" `)
+    console.log(`Attempting to rename node with UId '${trueTypes.nodeUId}' to '${trueTypes.newName}' `)
 
 	try {
 
         await treeManager.validateNodeUId(nodeUId)
 		await treeManager.changeNodeName(trueTypes.nodeUId, trueTypes.newName)
 
-        console.log(`Node with UId`)
+        console.log(`PATCH successful`)
 		return json({ status: 200 })
 
 	} catch (err) {

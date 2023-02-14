@@ -70,7 +70,7 @@ export default class DirectoryTreeManager {
 
 	async getNode(nodeUId: string) {
 		let node = await this.db.directoryNodesCollection.findOne({ "UId": nodeUId })
-		if (!node) { throw new Error(`Node with UId of "${nodeUId}" could not be found`) }
+		if (!node) { throw new Error(`Node with UId of '${nodeUId}' could not be found`) }
 		let idlessNode = this.stringifyObjectID(node)
 		return idlessNode
 	}
