@@ -7,7 +7,7 @@ export const PATCH: RequestHandler = async ({ locals, request, url }) => {
 
     // Type security
 
-    let nodeUIdTypeHandler = new RequestTypeHandler("DELETE", url.pathname, "nodeUId", nodeUId, ["string"], [])
+    let nodeUIdTypeHandler = new RequestTypeHandler("PATCH", url.pathname, "nodeUId", nodeUId, ["string"], [])
 	nodeUIdTypeHandler.validate(error => {
 		if (error) { throw error }
 	})
@@ -25,12 +25,14 @@ export const PATCH: RequestHandler = async ({ locals, request, url }) => {
         newName: newNameTypeHandler.getTrueTypedVariable() as string
     }
 
-    console.log(`Attempting to rename node with UId ${trueTypes.nodeUId} to ${trueTypes.newName} `)
+    console.log(`Attempting to rename node with UId "${trueTypes.nodeUId}" to "${trueTypes.newName}" `)
 
 	try {
 
         await treeManager.validateNodeUId(nodeUId)
 		await treeManager.changeNodeName(trueTypes.nodeUId, trueTypes.newName)
+
+        console.log(`Node with UId`)
 		return json({ status: 200 })
 
 	} catch (err) {

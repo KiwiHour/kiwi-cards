@@ -19,7 +19,7 @@ export const DELETE: RequestHandler = async ({ locals, request, url }) => {
 		nodeUId: nodeUIdTypeHandler.getTrueTypedVariable() as string
 	}
 	
-	console.log(`Attempting to delete node with UId ${trueTypes.nodeUId}`)
+	console.log(`Attempting to delete node with UId "${trueTypes.nodeUId}"`)
 
 	try {
 		
@@ -69,7 +69,7 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
 		type: typeTypeHandler.getTrueTypedVariable() as "folder" | "deck"
 	}
 
-	console.log(`Attempting to add ${trueTypes.type} "${trueTypes.name}" with parentUId of ${trueTypes.parentUId}`)
+	console.log(`Attempting to add ${trueTypes.type} "${trueTypes.name}" with parentUId of "${trueTypes.parentUId}"`)
 
 	try {
 
