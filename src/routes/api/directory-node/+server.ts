@@ -14,10 +14,10 @@ export const DELETE: RequestHandler = async ({ locals, request, url }) => {
 
 	// Delete the node
 
-	console.log(`Deleting node with UId ${nodeUId}`)
-
+	console.log(`Attempting to delete node with UId ${nodeUId}`)
+	
 	let treeManager = new DirectoryTreeManager(locals.connectedMongoClient)
-
+	
 	try {
 		await treeManager.deleteNode(nodeUId)
 	} catch (err) {
@@ -26,6 +26,7 @@ export const DELETE: RequestHandler = async ({ locals, request, url }) => {
 		}
 	}
 
+	console.log("DELETE successful")
 	return json({ status: 200 })
 }
 
@@ -51,7 +52,7 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
 
 	// Add the node
 
-	console.log(`Adding ${type} with UId ${parentUId}`)
+	console.log(`Attempted to add ${type} "${name}" with parentUId of ${parentUId}`)
 
 	let treeManager = new DirectoryTreeManager(locals.connectedMongoClient)
 
@@ -69,6 +70,7 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
 		}
 	}
 
+	console.log("POST successful")
 	return json({ status: 200 })
 
 }
