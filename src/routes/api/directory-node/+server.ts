@@ -13,6 +13,8 @@ function getValidTypes(patching: string): ("string"|"number"|"boolean"|"null")[]
 export const PATCH: RequestHandler = async ({ locals, request, url }) => {
 	let { patching, nodeUId, newValue } = await request.json()
 
+
+	//	 PARENT UID UPDATED WHEN THE UID IS INVALID!!!!!!
 	// Type security
 
 	let patchingTypeHandler = new RequestTypeHandler("PATCH", url.pathname, "patching", patching, ["string"], ["name", "parentUId"])
