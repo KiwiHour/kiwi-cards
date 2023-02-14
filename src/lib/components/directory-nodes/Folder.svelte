@@ -27,10 +27,12 @@
 
 </script>
 
-<div class="folder">
+<div class="folder" id={folder.UId}>
 
-	<input class="toggle-folder-btn" id="toggle-folder-{folder.UId}" type="button" value={expanded ? "-" : "+"} on:click={toggleFolder}>
-	<label for="toggle-folder-{folder.UId}">{folder.name}</label>
+	<div class="name-and-button">
+		<input class="toggle-folder-btn" id="toggle-folder-{folder.UId}" type="button" value={expanded ? "-" : "+"} on:click={toggleFolder}>
+		<p>{folder.name}</p>
+	</div>
 	<div class="folder-contents">
 		{#if expanded}
 			{#each children as [child, grandChildren]}
@@ -45,8 +47,21 @@
 </div>
 
 <style>
+
+	p {
+		padding: 0;
+		margin: 0;
+	}
+
+	.name-and-button {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 5px;
+	}
+
 	.folder-contents {
-		transform: translateX(2%);
+		margin-left: 1%;
 	}
 	
 	.toggle-folder-btn {
