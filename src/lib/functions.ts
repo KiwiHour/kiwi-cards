@@ -1,3 +1,4 @@
+import { error } from "@sveltejs/kit";
 import crypto from "crypto"
 import type { MongoClient } from "mongodb"
 import { Db } from "./classes"
@@ -21,4 +22,10 @@ export async function generateUId(connectedMongoClient: MongoClient) {
 
 export function getExpandedFolderUIDs(sessionStorage: Storage) {
 	return JSON.parse(sessionStorage.getItem("expanded-folder-uids")?.replace(/'/g, `"`) || "[]") as string[]
+}
+
+export function unknownInternalError(method: "POST" | "GET" | "PUT" | "PATCH" | "DELETE", url: URL) {
+	return error(500, { message:
+		`${method} ${url.pathname}: Unknown internal server error`
+	})
 }

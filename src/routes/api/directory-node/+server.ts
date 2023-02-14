@@ -1,12 +1,6 @@
 import { RequestTypeHandler, DirectoryTreeManager } from "$lib/classes";
-import { generateUId } from "$lib/functions";
+import { generateUId, unknownInternalError } from "$lib/functions";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
-
-function unknownInternalError(method: "POST" | "GET" | "PUT" | "PATCH" | "DELETE", url: URL) {
-	return error(500, { message:
-		`${method} ${url.pathname}: Unknown internal server error`
-	})
-}
 
 export const DELETE: RequestHandler = async ({ locals, request, url }) => {
 	let { nodeUId } = await request.json()
@@ -30,7 +24,7 @@ export const DELETE: RequestHandler = async ({ locals, request, url }) => {
 
 		console.log("DELETE successful")
 		return json({ status: 200 })
-		
+
 	} catch (err) {
 		if (err instanceof Error) {
 			throw error(500, { message: err.message })
