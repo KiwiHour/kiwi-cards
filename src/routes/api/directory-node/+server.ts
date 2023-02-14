@@ -5,7 +5,26 @@ import { error, json, type RequestHandler } from "@sveltejs/kit";
 export const DELETE: RequestHandler = async ({ locals, request, url }) => {
 	let { nodeUId } = await request.json()
 
+	// Type security
+
 	let nodeUIdTypeHandler = new RequestTypeHandler("DELETE", url.pathname, "nodeUId", nodeUId, ["string"], [])
+	nodeUIdTypeHandler.validate(error => {
+		if (error) { throw error }
+	})
+
+	// Delete the node
+
+	console.log(`Deleting node with UId ${nodeUId}`)
+
+	let treeManager = new DirectoryTreeManager(locals.connectedMongoClient)
+
+	try {
+
+	} catch (err) {
+		if (err instanceof Error) {
+			throw error(500, { message: err.message })
+		}
+	}
 
 	return json({ status: 200 })
 }
@@ -30,9 +49,9 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
 		if (error) { throw error }
 	})
 
-	// Add the folder
+	// Add the node
 
-	console.log(parentUId)
+	console.log(`Adding ${type} with UId ${parentUId}`)
 
 	let treeManager = new DirectoryTreeManager(locals.connectedMongoClient)
 
@@ -45,8 +64,8 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
 			type: typeTypeHandler.getTrueTypedVariable() as "folder" | "deck"
 		})
 	} catch (err) {
-		if (err) {
-			throw error(500, { message: (err as Error)?.message })
+		if (err instanceof Error) {
+			throw error(500, { message: err.message })
 		}
 	}
 
