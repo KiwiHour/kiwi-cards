@@ -25,10 +25,12 @@ export const DELETE: RequestHandler = async ({ locals, request, url }) => {
 	let treeManager = new DirectoryTreeManager(locals.connectedMongoClient)
 	
 	try {
+		
 		await treeManager.deleteNode(nodeUId)
 
 		console.log("DELETE successful")
 		return json({ status: 200 })
+		
 	} catch (err) {
 		if (err instanceof Error) {
 			throw error(500, { message: err.message })
