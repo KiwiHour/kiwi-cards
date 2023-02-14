@@ -73,6 +73,13 @@ export default class DirectoryTreeManager {
 		}
 	}
 
+	/** Throws an error from getNode method, returns true if no error (false should never happen) */
+	async validateNodeUId(nodeUId: string) {
+		let node = await this.getNode(nodeUId)
+		if (node) { return true }
+		else { return false }
+	}
+
 	async getChildren(parentUId: string | null) {
 		let children = await this.db.directoryNodesCollection.find({ "parentUId": parentUId }).toArray()
 		let idlessChildren = children.map(child => this.stringifyObjectID(child))
@@ -145,10 +152,11 @@ export default class DirectoryTreeManager {
 	async changeNodeName(nodeUId: string, newName: string) {
 		try {
 			
+			console.log(nodeUId, newName)
 			await this.updateNode(nodeUId, { name: newName })
 		
 		} catch (err) {
-			if (err instanceof Error) { throw err }
+			if (err) { throw new Error("test") }
 		}
 	}
 

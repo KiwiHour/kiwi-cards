@@ -29,6 +29,7 @@ export const PATCH: RequestHandler = async ({ locals, request, url }) => {
 
 	try {
 
+        await treeManager.validateNodeUId(nodeUId)
 		await treeManager.changeNodeName(trueTypes.nodeUId, trueTypes.newName)
 		return json({ status: 200 })
 
