@@ -2,6 +2,12 @@ import { RequestTypeHandler, DirectoryTreeManager } from "$lib/classes";
 import { generateUId } from "$lib/functions";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 
+function unknownInternalError(method: "POST" | "GET" | "PUT" | "PATCH" | "DELETE", url: URL) {
+	return error(500, { message:
+		`${method} ${url.pathname}: Unknown internal server error`
+	})
+}
+
 export const DELETE: RequestHandler = async ({ locals, request, url }) => {
 	let { nodeUId } = await request.json()
 
@@ -20,14 +26,18 @@ export const DELETE: RequestHandler = async ({ locals, request, url }) => {
 	
 	try {
 		await treeManager.deleteNode(nodeUId)
+
+		console.log("DELETE successful")
+		return json({ status: 200 })
 	} catch (err) {
 		if (err instanceof Error) {
 			throw error(500, { message: err.message })
 		}
 	}
 
-	console.log("DELETE successful")
-	return json({ status: 200 })
+	// should not get here
+	throw unknownInternalError("DELETE", url)
+
 }
 
 export const POST: RequestHandler = async ({ locals, request, url }) => {
@@ -57,20 +67,27 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
 	let treeManager = new DirectoryTreeManager(locals.connectedMongoClient)
 
 	try {
+
+		let nodeUId = await generateUId(locals.connectedMongoClient)
 		await treeManager.addNode({
-			UId: await generateUId(locals.connectedMongoClient),
+			UId: nodeUId,
 			parentUId: parentUIdTypeHandler.getTrueTypedVariable() as string | null,
 			childrenUIds: [],
 			name: nameTypeHandler.getTrueTypedVariable() as string,
 			type: typeTypeHandler.getTrueTypedVariable() as "folder" | "deck"
 		})
+
+		
+		console.log("POST successful")
+		return json({ status: 200, addedNodeUId: nodeUId })
+
 	} catch (err) {
 		if (err instanceof Error) {
 			throw error(500, { message: err.message })
 		}
 	}
 
-	console.log("POST successful")
-	return json({ status: 200 })
+	// should not reach here
+	throw unknownInternalError("POST", url)
 
 }
