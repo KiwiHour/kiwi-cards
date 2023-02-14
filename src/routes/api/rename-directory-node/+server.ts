@@ -20,6 +20,25 @@ export const PATCH: RequestHandler = async ({ locals, request, url }) => {
     // Rename node
 
     let treeManager = new DirectoryTreeManager(locals.connectedMongoClient)
+    let trueTypes = {
+        nodeUId: nodeUIdTypeHandler.getTrueTypedVariable() as string,
+        newName: newNameTypeHandler.getTrueTypedVariable() as string
+    }
+
+    console.log(`Attempting to rename node with UId ${trueTypes.nodeUId} to ${trueTypes.newName} `)
+
+	try {
+
+		await treeManager.changeNodeName(trueTypes.nodeUId, trueTypes.newName)
+		return json({ status: 200 })
+
+	} catch (err) {
+		if (err instanceof Error) {
+			throw error(500, { message: err.message })
+		}
+	}
+
+	throw unknownInternalError("PATCH", url)
 
 
-})
+}
