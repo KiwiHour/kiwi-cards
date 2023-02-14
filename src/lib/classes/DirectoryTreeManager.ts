@@ -106,4 +106,8 @@ export default class DirectoryTreeManager {
 		await this.addChildUIdToNode(newParentUId, node.UId) // add moved node uid to new parent's children data
 	}
 
+	async changeNodeName(nodeUId: string, newName: string) {
+		await this.updateNode(nodeUId, { name: newName })
+	}
+
 }
