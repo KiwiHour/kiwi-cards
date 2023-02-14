@@ -4,6 +4,7 @@
 	import Deck from "../lib/components/directory-nodes/Deck.svelte";
     import { onMount } from "svelte";
     import { getExpandedFolderUIDs } from "$lib/functions";
+    import iconPaths from "$lib/icon-paths";
 
 	export let data: PageData
 
@@ -33,6 +34,8 @@
 		// folders = [({ name: "" }), ...folders]
 	}
 
+	function handleNewDeck() {}
+
 	function focus(el: HTMLElement) {
 		el.focus();
 	}
@@ -50,18 +53,32 @@
 
 <main>
 
-	<input type="button" value="New Folder" on:click={handleNewFolder}>
-	<input type="button" value="New Deck">
-	
-	{#each data.fileTree as [node, children]}
+	<div class="file-tree">
+		
+			<div id="buttons">
+				<button type="button" id="new-folder" on:click={handleNewFolder}>
+					<img alt="new-folder" src={iconPaths["folder-add"]} style="scale: 1.2">
+				</button>
+				<button type="button" id="new-deck" on:click={handleNewDeck}>
+					<img alt="new-folder" src={iconPaths["deck-add"]}>
+				</button>
+			</div>
+			
+			<div class="outline">
+				<div class="folders">
+					{#each data.fileTree as [node, children]}
+				
+						{#if node.type == "folder"}
+							<Folder arrayedNode={[node, children]} expanded={expandedFolderUIds.includes(node.UId)}/>
+						{:else if node.type == "deck"}
+							<Deck arrayedNode={[node, children]}/>
+						{/if}
+				
+					{/each}
+				</div>
+			</div>
+	</div>
 
-		{#if node.type == "folder"}
-			<Folder arrayedNode={[node, children]} expanded={expandedFolderUIds.includes(node.UId)}/>
-		{:else if node.type == "deck"}
-			<Deck arrayedNode={[node, children]}/>
-		{/if}
-
-	{/each}
 
 
 		<!-- {#each data.rootDirectory.children as node}
@@ -84,3 +101,57 @@
 	-->	
 
 </main>
+
+<style>
+	
+	.file-tree  {
+		width: 20% ;
+		height: 100%;
+		padding: 10px;
+		padding-right: 40px;
+		background-color: rgba(233, 233, 233, 0.418);
+
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.outline {
+		width: 100%;
+		height: 100%;
+		border: 2px solid black;
+		border-radius: 10px;
+		padding: 10px;
+	}
+
+	.folders {
+		/* overflow: scroll; */
+		padding-bottom: 10px;
+	}
+
+	#buttons {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		gap: 10px;
+	}
+
+	#buttons button {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		padding: 5px 10px;
+		border: 2px black solid;
+		border-radius: 5px;
+		background-color: transparent;
+		height: 50px;
+		width: 50px;
+	}
+
+	#buttons button img {
+		width: 30px;
+		height: 30px;
+	}
+
+</style>

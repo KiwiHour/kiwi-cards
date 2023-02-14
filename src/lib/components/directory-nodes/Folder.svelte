@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { getExpandedFolderUIDs } from "$lib/functions";
     import type { Database } from "$lib/schema";
+    import { getExpandedFolderUIDs } from "$lib/functions";
     import { onMount } from "svelte";
     import Deck from "./Deck.svelte";
+	import iconPaths from "$lib/icon-paths";
 
 	export let arrayedNode: any // i give up
 	export let expanded: boolean
-	let [ folder, children ] = arrayedNode as Database.ArrayedNode<"folder">
 
 	function toggleFolder() {
 		expanded = !expanded
@@ -20,6 +20,7 @@
 	}
 
 	let expandedFolderUIds: string[] = []
+	let [ folder, children ] = arrayedNode as Database.ArrayedNode<"folder">
 
 	onMount(() => {
 		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
@@ -29,11 +30,12 @@
 
 <div class="folder" id={folder.UId}>
 
-	<div class="name-and-button">
-		<input class="toggle-folder-btn" id="toggle-folder-{folder.UId}" type="button" value={expanded ? "-" : "+"} on:click={toggleFolder}>
+	<button type="button" class="name-and-button" on:click={toggleFolder}>
+		<img class="toggle-indicator" id="folder-icon" src={expanded ? iconPaths["folder-open"] : iconPaths["folder-closed"] } alt="folder icon">
 		<p>{folder.name}</p>
-	</div>
+	</button>
 	<div class="folder-contents">
+
 		{#if expanded}
 			{#each children as [child, grandChildren]}
 				{#if child.type == "folder"}
@@ -43,30 +45,56 @@
 				{/if}
 			{/each}
 		{/if}
+
 	</div>
 </div>
 
 <style>
 
 	p {
-		padding: 0;
 		margin: 0;
 	}
 
+	.folder {
+		display: flex;
+		flex-direction: column;
+		align-items: start;
+	}
+
 	.name-and-button {
+		border: none;
+		display: flex;
+		flex-direction: row;
+		justify-content: start;
+		padding: 5px 15px;;
+		font-size: 1.2em;
+		background-color: transparent;
+	}
+
+	.name-and-button:hover {
+		background-color: lightgray;
+	}
+
+	.toggle-indicator {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: 5px;
+		justify-content: start;
+		padding-right: 10px;
+	}
+
+	.name-and-button img {
+		width: 30px;
+		height: 30px;
 	}
 
 	.folder-contents {
-		margin-left: 1%;
-	}
-	
-	.toggle-folder-btn {
-		width: 2em;
-		height: 2em;
+		display: flex;
+		flex-direction: column;
+		align-items: start;
+		justify-content: center;
+		width: 100%;
+		margin-left: 1vw;
 	}
 
 </style>
