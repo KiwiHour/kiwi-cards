@@ -11,7 +11,7 @@ let getTree = async (node: Database.DirectoryNode, treeManager: DirectoryTreeMan
                 return [child, child.childrenUIds]
             }
             return getTree(child, treeManager) 
-        }))
+        })) as any // i hate this
     ]
 }
 
@@ -21,6 +21,8 @@ export const load: PageServerLoad = async ({ locals }) => {
     let rootNodes: Database.DirectoryNode[] = await directoryTreeManager.getChildren(null) // top level nodes
     
     let fileTree = await Promise.all(rootNodes.map(rootNode => getTree(rootNode, directoryTreeManager)))
+
+	console.log(fileTree[0][1])
 
     return { fileTree } as { fileTree: Database.ArrayedNode<"folder" | "deck">[] }
 

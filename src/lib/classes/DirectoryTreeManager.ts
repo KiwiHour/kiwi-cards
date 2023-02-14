@@ -19,7 +19,7 @@ export default class DirectoryTreeManager {
 		this.db = new Db(this.connectedMongoClient)
 	}
 
-	private stringifyObjectID(node: Database.DirectoryNode) {
+	private stringifyObjectID(node: Required<Database.DirectoryNode>) {
 		node._id = node._id.toString()
 		return node
 	}
@@ -86,7 +86,7 @@ export default class DirectoryTreeManager {
 	// cannot be unsure nodeOrUId as node hasnt been added to db yet
 	async addNode(node: Database.DirectoryNode) {
 		await this.db.directoryNodesCollection.insertOne(node)
-		if (node.parentUId == null) { return }
+		if (node.parentUId === null) { return }
 		await this.addChildUIdToNode(node.parentUId, node.UId) // update node's parent's children data
 	}
 

@@ -8,7 +8,7 @@ export namespace Database {
 		[Database.DirectoryNode, string[]] // deck
 
 	export interface DirectoryNode {
-		_id: ObjectId | string
+		_id?: ObjectId | string
 		UId: string,
 		parentUId: string | null
 		childrenUIds: string[]

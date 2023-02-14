@@ -1,8 +1,9 @@
 <script lang="ts">
-    import type { Database } from "$lib/schema";
     import type { PageData } from "./$types";
-    import Folder from "./directory-nodes/Folder.svelte";
-	import Deck from "./directory-nodes/Deck.svelte";
+    import Folder from "../lib/components/directory-nodes/Folder.svelte";
+	import Deck from "../lib/components/directory-nodes/Deck.svelte";
+    import { onMount } from "svelte";
+    import { getExpandedFolderUIDs } from "$lib/functions";
 
 	export let data: PageData
 
@@ -10,6 +11,7 @@
 		name: string
 		new: boolean
 	}
+	
 
 	function filterOutNewFolders() {
 	// 	folders = folders.filter(folder => !folder.new)
@@ -36,8 +38,13 @@
 	}
 
 	let newFolderName: string;
-
 	let rootNodes = data.fileTree
+	let expandedFolderUIds: string[] = []
+
+	
+	onMount(() => {
+		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
+	})
 	
 </script>
 
@@ -49,7 +56,7 @@
 	{#each data.fileTree as [node, children]}
 
 		{#if node.type == "folder"}
-			<Folder arrayedNode={[node, children]}/>
+			<Folder arrayedNode={[node, children]} expanded={expandedFolderUIds.includes(node.UId)}/>
 		{:else if node.type == "deck"}
 			<Deck arrayedNode={[node, children]}/>
 		{/if}
