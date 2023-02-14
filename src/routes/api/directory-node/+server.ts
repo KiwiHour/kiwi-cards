@@ -23,7 +23,7 @@ export const DELETE: RequestHandler = async ({ locals, request, url }) => {
 
 	try {
 		
-		await treeManager.validateNodeUId(nodeUId)
+		await treeManager.validateNodeUId(trueTypes.nodeUId)
 		await treeManager.deleteNode(trueTypes.nodeUId)
 
 		console.log("DELETE successful")
