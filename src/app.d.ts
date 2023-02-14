@@ -9,7 +9,6 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			connectedMongoClient: MongoClient
-			rootDirectory: DatabaseDirectory.Node<"root">
 		}
 		// interface PageData {}
 		// interface Platform {}

@@ -22,12 +22,12 @@ export const PATCH: RequestHandler = async ({ locals, request, url }) => {
 		if (error) { throw error }
 	})
 
-	let nodeUIdTypeHandler = new RequestTypeHandler("DELETE", url.pathname, "nodeUId", nodeUId, ["string"], [])
+	let nodeUIdTypeHandler = new RequestTypeHandler("PATCH", url.pathname, "nodeUId", nodeUId, ["string"], [])
 	nodeUIdTypeHandler.validate(error => {
 		if (error) { throw error }
 	})
 
-	let newValueTypeHandler = new RequestTypeHandler("DELETE", url.pathname, "newValue", newValue, getValidTypes(patching as string), [])
+	let newValueTypeHandler = new RequestTypeHandler("PATCH", url.pathname, "newValue", newValue, getValidTypes(patching as string), [])
 	nodeUIdTypeHandler.validate(error => {
 		if (error) { throw error }
 	})
