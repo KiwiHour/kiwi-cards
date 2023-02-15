@@ -10,7 +10,8 @@
 
 	function handleFileTreeResize(event: MouseEvent) {
 		if (canResize) {
-			fileTreeWidth = Math.max(150, event.clientX - 22) // (10px padding left + right) (-2 so that its in the middle of the resize bar)
+			console.log(event.clientX)
+			fileTreeWidth = event.clientX - 22 // (10px padding left + right) (-2 so that its in the middle of the resize bar)
 			localStorage.setItem("file-tree-width", fileTreeWidth.toString())
 		}
 	}
