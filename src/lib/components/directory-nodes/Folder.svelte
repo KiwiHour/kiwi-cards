@@ -31,7 +31,7 @@
 <div class="folder" id={folder.UId}>
 
 	<button type="button" class="name-and-button" on:click={toggleFolder}>
-		<img class="toggle-indicator" id="folder-icon" src={expanded ? iconPaths["folder-open"] : iconPaths["folder-closed"] } alt="folder icon">
+		<img class="toggle-indicator" id="folder-icon" src={expanded ? iconPaths.dark["folder-open"] : iconPaths.dark["folder-closed"] } alt="folder icon">
 		<p>{folder.name}</p>
 	</button>
 	<div class="folder-contents">
@@ -53,6 +53,7 @@
 
 	p {
 		margin: 0;
+		white-space: nowrap;
 	}
 
 	.folder {
@@ -72,7 +73,7 @@
 	}
 
 	.name-and-button:hover {
-		background-color: lightgray;
+		background-color: rgb(139, 139, 139);
 	}
 
 	.toggle-indicator {

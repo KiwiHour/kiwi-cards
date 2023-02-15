@@ -40,79 +40,122 @@
 		el.focus();
 	}
 
+	function handleFileTreeResize(event: MouseEvent) {
+		if (canResize) {
+			fileTreeWidth = Math.max(150, event.clientX - 22) // (10px padding left + right) (-2 so that its in the middle of the resize bar)
+			localStorage.setItem("file-tree-width", fileTreeWidth.toString())
+		}
+	}
+
 	let newFolderName: string;
 	let rootNodes = data.fileTree
 	let expandedFolderUIds: string[] = []
+	let canResize = false;
+	let fileTreeWidth: number
+	let mounted = false;
 
-	
 	onMount(() => {
 		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
+		fileTreeWidth = parseInt(localStorage.getItem("file-tree-width") || "")
+		mounted = true
 	})
 	
 </script>
 
-<main>
+{#if mounted}
 
-	<div class="file-tree">
-		
-			<div id="buttons">
-				<button type="button" id="new-folder" on:click={handleNewFolder}>
-					<img alt="new-folder" src={iconPaths["folder-add"]} style="scale: 1.2">
-				</button>
-				<button type="button" id="new-deck" on:click={handleNewDeck}>
-					<img alt="new-folder" src={iconPaths["deck-add"]}>
-				</button>
-			</div>
+	<main on:mouseup={() => { canResize = false }} on:mousemove={handleFileTreeResize}>
+
+		<div class="file-tree" style="{fileTreeWidth ? `width: ${fileTreeWidth}px !important;` : ""}">
+
+				<div id="resize-bar" on:mousedown={() => { canResize = true }}></div>
 			
-			<div class="outline">
-				<div class="folders">
-					{#each data.fileTree as [node, children]}
-				
-						{#if node.type == "folder"}
-							<Folder arrayedNode={[node, children]} expanded={expandedFolderUIds.includes(node.UId)}/>
-						{:else if node.type == "deck"}
-							<Deck arrayedNode={[node, children]}/>
-						{/if}
-				
-					{/each}
+				<div id="buttons">
+					<button type="button" id="new-folder" on:click={handleNewFolder}>
+						<img alt="new-folder" src={iconPaths.dark["folder-add"]} style="scale: 1.2">
+					</button>
+					<button type="button" id="new-deck" on:click={handleNewDeck}>
+						<img alt="new-folder" src={iconPaths.dark["deck-add"]}>
+					</button>
 				</div>
-			</div>
+				
+				<div class="outline">
+					<div class="folders">
+						{#each data.fileTree as [node, children]}
+					
+							{#if node.type == "folder"}
+								<Folder arrayedNode={[node, children]} expanded={expandedFolderUIds.includes(node.UId)}/>
+							{:else if node.type == "deck"}
+								<Deck arrayedNode={[node, children]}/>
+							{/if}
+					
+						{/each}
+					</div>
+				</div>
+		</div>
+
+
+
+			<!-- {#each data.rootDirectory.children as node}
+				{#if node.UId == "new"}
+					<input use:focus type="text" placeholder="Folder name..."
+						bind:value={newFolderName}
+						on:keypress={(event) => handleNewFolderNaming(event)}
+						on:blur={filterOutNewFolders}> < !-- removes new folders, hence removes this -- >
+				{:else}
+					
+					CONTENTS OF SAID NODE GOES HERE
+					POSSIBLY A FOLDER OR A DECK,
+					FOLDER IS A COMPONENT
+					DECK IS A COMPONENT
+
+					MAYBE ADD A ROOT COMPONENT??? IDKS
+					
+				{/if}
+			{/each}
+		-->	
+
+	</main>
+{:else}
+
+	<div id="loading-message">
+		<h1>Loading OptiCards...</h1>
 	</div>
 
-
-
-		<!-- {#each data.rootDirectory.children as node}
-			{#if node.UId == "new"}
-				<input use:focus type="text" placeholder="Folder name..."
-					bind:value={newFolderName}
-					on:keypress={(event) => handleNewFolderNaming(event)}
-					on:blur={filterOutNewFolders}> < !-- removes new folders, hence removes this -- >
-			{:else}
-				
-				CONTENTS OF SAID NODE GOES HERE
-				POSSIBLY A FOLDER OR A DECK,
-				FOLDER IS A COMPONENT
-				DECK IS A COMPONENT
-
-				MAYBE ADD A ROOT COMPONENT??? IDKS
-				
-			{/if}
-		{/each}
-	-->	
-
-</main>
+{/if}
 
 <style>
+
+	#loading-message {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		padding-top: 15%;
+	}
+
+	#resize-bar {
+		position: absolute;
+		right: -5px;
+		top: 0;
+		width: 5px;
+		height: 100%;
+		background-color: lightcyan;
+		cursor: col-resize;
+		z-index: 100;
+	}
 	
 	.file-tree  {
+		position: relative;
 		width: 20% ;
 		height: 100%;
 		padding: 10px;
-		padding-right: 40px;
-		background-color: rgba(233, 233, 233, 0.418);
+		background-color: darkgrey;
 
 		display: flex;
 		flex-direction: column;
+		align-items: center;
 		gap: 10px;
 	}
 
@@ -121,12 +164,14 @@
 		height: 100%;
 		border: 2px solid black;
 		border-radius: 10px;
-		padding: 10px;
+		padding: 0px;
+		margin-bottom: 20px;
+		overflow: hidden;
 	}
 
 	.folders {
-		/* overflow: scroll; */
-		padding-bottom: 10px;
+		margin: 10px;
+		margin-left: 0;
 	}
 
 	#buttons {

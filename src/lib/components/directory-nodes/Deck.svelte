@@ -18,7 +18,7 @@
 <div class="deck">
 
 	<button type="button" class="name-and-button" on:click={openDeck}>
-		<img class="toggle-indicator" id="deck-icon" src={open ? iconPaths["deck-open"] : iconPaths["deck-closed"] } alt="deck icon">
+		<img class="toggle-indicator" id="deck-icon" src={open ? iconPaths.dark["deck-open"] : iconPaths.dark["deck-closed"] } alt="deck icon">
 		<p>{deck.name}</p>
 	</button>
 </div>
@@ -27,6 +27,7 @@
 
 	p {
 		margin: 0;
+		white-space: nowrap;
 	}
 
 	.deck {
@@ -47,7 +48,7 @@
 	}
 
 	.name-and-button:hover {
-		background-color: lightgray;
+		background-color: rgb(139, 139, 139);
 	}
 
 	.toggle-indicator {
