@@ -1,5 +1,7 @@
 <script lang="ts">
     import type { Database } from "$lib/schema";
+
+    import { createEventDispatcher } from "svelte";
     import { getExpandedFolderUIDs } from "$lib/functions";
     import { onMount } from "svelte";
     import Deck from "./Deck.svelte";
@@ -7,6 +9,8 @@
 
 	export let arrayedNode: any // i give up
 	export let expanded: boolean
+	export let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck" } | null
+	export let openDeckUId: string | null
 
 	function toggleFolder() {
 		expanded = !expanded
@@ -19,8 +23,15 @@
 		sessionStorage.setItem("expanded-folder-uids", JSON.stringify(expandedFolderUIds))
 	}
 
-	let expandedFolderUIds: string[] = []
+	function handleFocus() {
+		dispatch("node-click", { nodeUId: folder.UId, type: "folder" })
+	}
+
 	let [ folder, children ] = arrayedNode as Database.ArrayedNode<"folder">
+	let expandedFolderUIds: string[] = []
+	let dispatch = createEventDispatcher()
+
+	$: focused = nodeSelectEvent?.nodeUId == folder.UId
 
 	onMount(() => {
 		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
@@ -30,7 +41,7 @@
 
 <div class="folder" id={folder.UId}>
 
-	<button type="button" class="name-and-button" on:click={toggleFolder}>
+	<button type="button" class="name-and-button{focused ? ' focused' : ''}" on:click={(toggleFolder)} on:focus={handleFocus}>
 		<img class="toggle-indicator" id="folder-icon" src={expanded ? iconPaths.dark["folder-open"] : iconPaths.dark["folder-closed"] } alt="folder icon">
 		<p>{folder.name}</p>
 	</button>
@@ -39,9 +50,9 @@
 		{#if expanded}
 			{#each children as [child, grandChildren]}
 				{#if child.type == "folder"}
-					<svelte:self arrayedNode={[child, grandChildren]} expanded={expandedFolderUIds.includes(child.UId)} />
+					<svelte:self on:node-click arrayedNode={[child, grandChildren]} expanded={expandedFolderUIds.includes(child.UId)} {nodeSelectEvent} {openDeckUId}/>
 				{:else if child.type == "deck"}
-					<Deck arrayedNode={[child, grandChildren]} />
+					<Deck on:node-click arrayedNode={[child, grandChildren]} {nodeSelectEvent} {openDeckUId}/>
 				{/if}
 			{/each}
 		{/if}
@@ -67,9 +78,14 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: start;
+		align-items: center;
 		padding: 5px 15px;;
 		font-size: 1.2em;
 		background-color: transparent;
+	}
+
+	.focused {
+		background-color: rgb(192, 192, 192) !important;
 	}
 
 	.name-and-button:hover {

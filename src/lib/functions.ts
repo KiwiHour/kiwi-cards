@@ -1,7 +1,7 @@
-import { error } from "@sveltejs/kit";
-import crypto from "crypto"
 import type { MongoClient } from "mongodb"
+import { error } from "@sveltejs/kit";
 import { Db } from "./classes"
+import crypto from "crypto"
 
 /** @returns UID length of 16 (8 hex bytes) */
 export async function generateUId(connectedMongoClient: MongoClient) {

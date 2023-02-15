@@ -1,0 +1,67 @@
+#resize-bar {
+	position: absolute;
+	right: -5px;
+	top: 0;
+	width: 5px;
+	height: 100%;
+	background-color: lightcyan;
+	cursor: col-resize;
+	z-index: 100;
+}
+
+.file-tree  {
+	position: relative;
+	width: 20% ;
+	height: 100%;
+	padding: 10px;
+	background-color: darkgrey;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+.outline {
+	width: 100%;
+	height: 100%;
+	border: 2px solid black;
+	border-radius: 10px;
+	padding: 0px;
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+
+.folders {
+	margin: 10px;
+	margin-left: 0;
+}
+
+#file-tree-buttons {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	gap: 10px;
+}
+
+#file-tree-buttons button {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	padding: 5px 10px;
+	border: 2px black solid;
+	border-radius: 5px;
+	background-color: transparent;
+	height: 50px;
+	width: 50px;
+}
+
+#file-tree-buttons button:hover {
+	background-color: rgb(139, 139, 139);
+}
+
+#file-tree-buttons button img {
+	width: 30px;
+	height: 30px;
+}
