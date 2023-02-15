@@ -72,6 +72,9 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
 	console.log(`Attempting to add ${trueTypes.type} '${trueTypes.name}' with parentUId of '${trueTypes.parentUId}'`)
 
 	try {
+		
+		// no need to ensure root exists, it does...
+		if (trueTypes.parentUId !== null) await treeManager.validateNodeUId(trueTypes.parentUId)
 
 		let nodeUId = await generateUId(locals.connectedMongoClient)
 		await treeManager.addNode({
