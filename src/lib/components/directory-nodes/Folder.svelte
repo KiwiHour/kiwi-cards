@@ -39,7 +39,7 @@
 
 </script>
 
-<div class="folder" id={folder.UId}>
+<div class="folder node" id={folder.UId}>
 
 	<button type="button" class="name-and-button{focused ? ' focused' : ''}" on:click={(toggleFolder)} on:focus={handleFocus}>
 		<img class="toggle-indicator" id="folder-icon" src={expanded ? iconPaths.dark["folder-open"] : iconPaths.dark["folder-closed"] } alt="folder icon">
@@ -62,43 +62,7 @@
 
 <style>
 
-	p {
-		margin: 0;
-		white-space: nowrap;
-	}
-
-	.folder {
-		display: flex;
-		flex-direction: column;
-		align-items: start;
-	}
-
-	.name-and-button {
-		border: none;
-		display: flex;
-		flex-direction: row;
-		justify-content: start;
-		align-items: center;
-		padding: 5px 15px;;
-		font-size: 1.2em;
-		background-color: transparent;
-	}
-
-	.focused {
-		background-color: rgb(192, 192, 192) !important;
-	}
-
-	.name-and-button:hover {
-		background-color: rgb(139, 139, 139);
-	}
-
-	.toggle-indicator {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: start;
-		padding-right: 10px;
-	}
+	@import "$lib/css/directory-node.css";
 
 	.name-and-button img {
 		width: 30px;
