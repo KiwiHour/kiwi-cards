@@ -1,9 +1,8 @@
 #navbar {
 	position: relative;
-	left: 5px; /* resize bar is pos absolute and width of 5px, so must account for it */
-
 	height: 100px;
-	width: calc(100% - 5px);
+	min-height: 100px;
+	width: 100%;
 	background-color: lightskyblue;
 }
 

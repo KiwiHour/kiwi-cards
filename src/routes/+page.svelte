@@ -3,6 +3,7 @@
     import { onMount } from "svelte";
     import FileTree from "$lib/components/directory-nodes/FileTree.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
+    import Homepage from "$lib/components/Homepage.svelte";
 
 	export let data: PageData
 
@@ -19,8 +20,10 @@
 
 
 	<FileTree fileTree={data.fileTree}/>
-	<div id="page-content">
+	<div id="page">
 		<Navbar />
+		<!-- Will have an if statement to decide to show homepage or a selected deck -->
+		<Homepage />
 	</div>
 
 {:else}
@@ -40,6 +43,13 @@
 		display: grid;
 		grid-template-columns: 1fr 99fr; /* goofiest method yet fr fr */
 		grid-gap: 0px;
+	}
+
+	#page {
+		width: calc(100% - 5px);
+		transform: translateX(+5px);
+		display: flex;
+		flex-direction: column;
 	}
 
 	#loading-message {
