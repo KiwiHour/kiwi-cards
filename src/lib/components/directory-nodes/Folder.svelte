@@ -11,6 +11,7 @@
 	export let expanded: boolean
 	export let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck" } | null
 	export let openDeckUId: string | null
+	export let depth: number;
 
 	function toggleFolder() {
 		expanded = !expanded
@@ -42,17 +43,19 @@
 <div class="folder node" id={folder.UId}>
 
 	<button type="button" class="name-and-button{focused ? ' focused' : ''}" on:click={(toggleFolder)} on:focus={handleFocus}>
-		<img class="toggle-indicator" id="folder-icon" src={expanded ? iconPaths.dark["folder-open"] : iconPaths.dark["folder-closed"] } alt="folder icon">
-		<p>{folder.name}</p>
+		<div class="button-contents" style="transform: translateX({(depth) * 1}vw) !important;">
+			<img class="toggle-indicator" id="folder-icon" src={expanded ? iconPaths.dark["folder-open"] : iconPaths.dark["folder-closed"] } alt="folder icon">
+			<p  class="prevent-select">{folder.name}</p>
+		</div>
 	</button>
 	<div class="folder-contents">
 
 		{#if expanded}
 			{#each children as [child, grandChildren]}
 				{#if child.type == "folder"}
-					<svelte:self on:node-click arrayedNode={[child, grandChildren]} expanded={expandedFolderUIds.includes(child.UId)} {nodeSelectEvent} {openDeckUId}/>
+					<svelte:self on:node-click arrayedNode={[child, grandChildren]} expanded={expandedFolderUIds.includes(child.UId)} {nodeSelectEvent} {openDeckUId} depth={depth + 1}/>
 				{:else if child.type == "deck"}
-					<Deck on:node-click arrayedNode={[child, grandChildren]} {nodeSelectEvent} {openDeckUId}/>
+					<Deck on:node-click arrayedNode={[child, grandChildren]} {nodeSelectEvent} {openDeckUId} depth={depth + 1}/>
 				{/if}
 			{/each}
 		{/if}
@@ -75,7 +78,6 @@
 		align-items: start;
 		justify-content: center;
 		width: 100%;
-		margin-left: 1vw;
 	}
 
 </style>

@@ -1,3 +1,13 @@
+.prevent-select {
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+  }
+
 p {
 	margin: 0;
 	white-space: nowrap;
@@ -7,10 +17,12 @@ p {
 	display: flex;
 	flex-direction: column;
 	align-items: start;
+	width: 100%;
 }
 
 
 .name-and-button {
+	width: 100%;
 	border: none;
 	display: flex;
 	flex-direction: row;
@@ -19,6 +31,12 @@ p {
 	padding: 5px 15px;;
 	font-size: 1.2em;
 	background-color: transparent;
+}
+
+.name-and-button .button-contents {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 
 .focused {

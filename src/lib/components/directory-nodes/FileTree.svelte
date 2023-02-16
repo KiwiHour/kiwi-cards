@@ -51,9 +51,9 @@
 			{#each fileTree as [node, children]}
 		
 				{#if node.type == "folder"}
-					<Folder on:node-click={handleNodeClick} arrayedNode={[node, children]} expanded={expandedFolderUIds.includes(node.UId)} {nodeSelectEvent} {openDeckUId}/>
+					<Folder on:node-click={handleNodeClick} arrayedNode={[node, children]} expanded={expandedFolderUIds.includes(node.UId)} {nodeSelectEvent} {openDeckUId} depth={0}/>
 				{:else if node.type == "deck"}
-					<Deck on:node-click={handleNodeClick} arrayedNode={[node, children]} {nodeSelectEvent} {openDeckUId}/>
+					<Deck on:node-click={handleNodeClick} arrayedNode={[node, children]} {nodeSelectEvent} {openDeckUId} depth={0}/>
 				{/if}
 		
 			{/each}

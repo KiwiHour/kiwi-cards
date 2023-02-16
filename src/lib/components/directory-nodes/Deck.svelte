@@ -7,6 +7,7 @@
 	export let arrayedNode: any // i give up
 	export let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck" } | null
 	export let openDeckUId: string | null;
+	export let depth: number;
 
 	function openDeck() {
 		
@@ -32,18 +33,16 @@
 <div class="deck node">
 
 	<button type="button" id={deck.UId} class="name-and-button{focused ? ' focused' : ''}" on:click={openDeck} on:focus={handleFocus}>
-		<img class="toggle-indicator" id="deck-icon" src={open ? iconPaths.dark["deck-open"] : iconPaths.dark["deck-closed"] } alt="deck icon">
-		<p>{deck.name}</p>
+		<div class="button-contents" style="transform: translateX({(depth) * 1}vw) !important;">
+			<img class="toggle-indicator" id="deck-icon" src={open ? iconPaths.dark["deck-open"] : iconPaths.dark["deck-closed"] } alt="deck icon">
+			<p class="prevent-select">{deck.name}</p>
+		</div>
 	</button>
 </div>
 
 <style>
 
 	@import "$lib/css/directory-node.css";
-
-	.deck {
-		margin-left: 0.3vw;
-	}
 
 	.name-and-button img {
 		width: 25px;
