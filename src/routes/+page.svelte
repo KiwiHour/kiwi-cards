@@ -24,8 +24,9 @@
 	<FileTree fileTree={data.fileTree}/>
 	<div id="page">
 		<Navbar />
-		<!-- Will have an if statement to decide to show homepage or a selected deck -->
-		<Homepage />
+		<!-- Will have an if statement to decide to show homepage or a selected deck 
+			REMEMBER TO ADD overflow: auto TO ANY OTHER COMPONENTS THAT TAKE UP THE PAGE CONTENTS-->
+		<Homepage /> 
 	</div>
 
 {:else}
@@ -55,12 +56,16 @@
 	}
 
 	#loading-message {
-		width: 100%;
-		height: 100%;
+		width: 100vw;
+		height: 100vh;
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
 		padding-top: 15%;
+	}
+
+	#loading-message h1 {
+		text-align: center;
 	}
 
 </style>
