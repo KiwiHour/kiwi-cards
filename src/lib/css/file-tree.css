@@ -31,7 +31,8 @@
 	border-radius: 10px;
 	padding: 0px;
 	margin-bottom: 20px;
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 .folders {

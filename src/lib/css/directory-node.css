@@ -22,8 +22,8 @@ p {
 
 
 .name-and-button {
-	width: 100%;
 	border: none;
+	width: 100%;
 	display: flex;
 	flex-direction: row;
 	justify-content: start;
