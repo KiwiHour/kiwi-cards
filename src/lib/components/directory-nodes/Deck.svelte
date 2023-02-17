@@ -44,10 +44,4 @@
 
 	@import "$lib/css/directory-node.css";
 
-	.name-and-button img {
-		width: 25px;
-		height: 25px;
-	}
-
-
 </style>

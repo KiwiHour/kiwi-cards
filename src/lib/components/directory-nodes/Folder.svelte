@@ -67,17 +67,4 @@
 
 	@import "$lib/css/directory-node.css";
 
-	.name-and-button img {
-		width: 30px;
-		height: 30px;
-	}
-
-	.folder-contents {
-		display: flex;
-		flex-direction: column;
-		align-items: start;
-		justify-content: center;
-		width: 100%;
-	}
-
 </style>

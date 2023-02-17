@@ -40,32 +40,6 @@
 
 <style>
 
-	main {
-		width: 100%;
-		height: 100%;
-		display: grid;
-		grid-template-columns: 1fr 99fr; /* goofiest method yet fr fr */
-		grid-gap: 0px;
-	}
-
-	#page {
-		width: calc(100% - 5px);
-		transform: translateX(+5px);
-		display: flex;
-		flex-direction: column;
-	}
-
-	#loading-message {
-		width: 100vw;
-		height: 100vh;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		padding-top: 15%;
-	}
-
-	#loading-message h1 {
-		text-align: center;
-	}
+	
 
 </style>
