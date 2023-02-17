@@ -1,0 +1,55 @@
+@import "$lib/css/colours.css";
+
+.file-tree {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	padding: 20px;
+
+	background-color: var(--file-tree-background-colour);
+}
+
+.file-tree #buttons {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	overflow: hidden;
+	padding: 10px 0;
+	
+	background-color: var(--file-tree-buttons-background-colour);
+}
+
+.file-tree #buttons button {
+	width: 50px;
+	height: 50px;
+	min-width: 50px;
+	min-height: 50px;
+	padding: 8px;
+}
+
+.file-tree #buttons button img {
+	width: 100%;
+	height: auto;
+}
+
+.outline {
+	border: 2px var(--outline-colour) solid;
+}
+
+.folders {
+	width: calc(100% - 4px); /* border width * 2 */
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-start;
+
+	overflow: auto;
+
+	background-color: var(--file-tree-folders-background-colour);
+}

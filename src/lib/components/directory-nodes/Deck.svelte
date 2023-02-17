@@ -17,10 +17,6 @@
 		dispatch("node-click", { nodeUId: deck.UId, type: "deck" })
 	}
 	
-	function handleNodeClick(event: any) {
-		console.log(event)
-	}
-
 	let [ deck, cardUIds ] = arrayedNode as Database.ArrayedNode<"deck">
 	let dispatch = createEventDispatcher()
 	let open: boolean
@@ -33,8 +29,8 @@
 <div class="deck node">
 
 	<button type="button" id={deck.UId} class="name-and-button{focused ? ' focused' : ''}" on:click={openDeck} on:focus={handleFocus}>
-		<div class="button-contents" style="transform: translateX({(depth) * 1}vw) !important;">
-			<img class="toggle-indicator" id="deck-icon" src={open ? iconPaths.dark["deck-open"] : iconPaths.dark["deck-closed"] } alt="deck icon">
+		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
+			<img class="toggle-indicator" id="deck-icon" src={open ? iconPaths.dark["deck-open"] : iconPaths.dark["deck-closed"] } alt="deck icon" style="scale: 0.8">
 			<p class="prevent-select">{deck.name}</p>
 		</div>
 	</button>

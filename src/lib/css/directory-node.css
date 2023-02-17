@@ -1,0 +1,46 @@
+@import "$lib/css/colours.css";
+
+.node {
+	width: 100%;
+
+	background-color: var(--file-tree-node-background-colour);
+}
+
+.node .name-and-button {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-start;
+
+	background-color: var(--file-tree-node-background-colour);
+}
+
+.node .name-and-button:hover {
+	background-color: var(--file-tree-node-focused-background-colour);
+}
+
+.node .name-and-button.focused {
+	background-color: var(--file-tree-node-focused-background-colour);
+}
+
+.button-contents {
+	height: 50px;
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	align-items: center;
+
+	margin: 0 10px;
+	gap: 10px;
+}
+
+.button-contents img {
+	height: 100%;
+	width: auto;
+}
+
+.button-contents p {
+	font-size: 1.3em;
+	white-space: nowrap;
+}

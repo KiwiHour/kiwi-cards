@@ -1,0 +1,12 @@
+:root {
+	--resize-bar-colour: lightblue;
+	--outline-colour: black;
+	
+	/* file tree */
+	--file-tree-background-colour: blue;
+	--file-tree-buttons-background-colour: cyan;
+	--file-tree-folders-background-colour: lime;
+	--file-tree-node-background-colour: transparent;
+	--file-tree-node-focused-background-colour: tomato;
+
+}

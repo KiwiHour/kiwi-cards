@@ -43,7 +43,7 @@
 <div class="folder node" id={folder.UId}>
 
 	<button type="button" class="name-and-button{focused ? ' focused' : ''}" on:click={(toggleFolder)} on:focus={handleFocus}>
-		<div class="button-contents" style="transform: translateX({(depth) * 1}vw) !important;">
+		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
 			<img class="toggle-indicator" id="folder-icon" src={expanded ? iconPaths.dark["folder-open"] : iconPaths.dark["folder-closed"] } alt="folder icon">
 			<p  class="prevent-select">{folder.name}</p>
 		</div>
