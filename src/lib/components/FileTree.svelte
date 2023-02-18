@@ -2,8 +2,8 @@
     import type { Database } from "$lib/schema";
 
     import { getExpandedFolderUIDs, sortTopLevelNodes } from "$lib/functions";
-    import Deck from "./Deck.svelte";
-    import Folder from "./Folder.svelte";
+    import Deck from "./file-tree/Deck.svelte";
+    import Folder from "./file-tree/Folder.svelte";
 
 	export let fileTree: Database.ArrayedNode<"folder" | "deck">[]
 	export let width: number | null;

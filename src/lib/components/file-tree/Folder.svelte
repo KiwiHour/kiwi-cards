@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Database } from "$lib/schema";
 
-    import { createEventDispatcher } from "svelte";
     import { getExpandedFolderUIDs, sortTopLevelNodes } from "$lib/functions";
+    import { createEventDispatcher } from "svelte";
     import { onMount } from "svelte";
     import Deck from "./Deck.svelte";
 	import iconPaths from "$lib/icon-paths";
