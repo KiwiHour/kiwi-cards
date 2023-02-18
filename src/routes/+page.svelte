@@ -26,6 +26,7 @@
 </script>
 
 <main on:mouseup={() => { canResize = false }} on:mousemove={handleFileTreeResize}>
+	
 {#if mounted}
 
 	<!-- THIS RELOADS THE DATA ON THE PAGE (hook.server.ts + server.page.ts)-->
