@@ -5,6 +5,7 @@
     import Navbar from "$lib/components/Navbar.svelte";
     import Homepage from "$lib/components/Homepage.svelte";
     import ThemeToggle from "$lib/components/ThemeToggle.svelte";
+    import { invalidateAll } from "$app/navigation";
 
 	export let data: PageData
 
@@ -20,20 +21,19 @@
 		}
 	}
 
-	function updateTheme(event: CustomEvent) {
-		theme = event.detail as "light" | "dark"
-		localStorage.setItem("theme", theme)
-	}
-
 	onMount(() => {
 		mounted = true
-		fileTreeWidth = parseInt(localStorage.getItem("file-tree-width") || "300")
+		fileTreeWidth = parseInt(localStorage.getItem("file-tree-width") || "300") // 300 default
+		theme = localStorage.getItem("theme") ? (localStorage.getItem("theme") as "dark" | "light") : "dark"
+
+		// redefine incase of defaults
 		localStorage.setItem("file-tree-width", fileTreeWidth.toString())
+		localStorage.setItem("theme", theme)
 	})
 	
 </script>
 
-<main on:mouseup={() => { canResize = false }} on:mousemove={handleFileTreeResize}>
+<main on:mouseup={() => { canResize = false }} on:mousemove={handleFileTreeResize} class="{theme}-theme">
 
 {#if mounted}
 
@@ -49,7 +49,7 @@
 			REMEMBER TO ADD overflow: auto TO ANY OTHER COMPONENTS THAT TAKE UP THE PAGE CONTENTS-->
 		<Homepage /> 
 		<div id="theme-toggle">
-			<ThemeToggle on:update-theme={updateTheme}/>
+			<ThemeToggle />
 		</div>
 	</div>
 

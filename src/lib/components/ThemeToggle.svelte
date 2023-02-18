@@ -1,16 +1,16 @@
 <script lang="ts">
 
-	import { createEventDispatcher } from "svelte";
     import { onMount } from "svelte";
 
 	function handleToggle() {
-		let dispatch = createEventDispatcher();
+		document.getElementsByTagName("main")[0].classList.remove(`${currentTheme}-theme`)
 		let newTheme: "light" | "dark" = currentTheme == "light" ? "dark" : "light" // toggle
 		currentTheme = newTheme
 
-		dispatch("update-theme", newTheme)
+		document.getElementsByTagName("main")[0].classList.add(`${newTheme}-theme`)
+		localStorage.setItem("theme", newTheme)
 	}
-
+	
 	let currentTheme: "light" | "dark"
 
 	onMount(() => {
@@ -25,4 +25,4 @@
 
 </script>
 
-<input type="checkbox" on:click={handleToggle}>
+<input type="checkbox" on:click={handleToggle} checked={currentTheme == "dark"}>

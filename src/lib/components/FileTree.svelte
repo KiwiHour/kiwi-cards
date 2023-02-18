@@ -36,14 +36,7 @@
 	</div>
 </div>
 
-{#if "darkmode" || "replace with a boolean"}
-	<!-- Load darkmode colours -->
-{:else}
-	<!-- Load lightmode colours-->
-{/if}
 <style>
-
-	/* remove colours.css import within this file, only import externally so it can be controlled via svelte */
 
 	@import "$lib/css/file-tree.css";
 
