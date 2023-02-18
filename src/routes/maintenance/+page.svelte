@@ -1,7 +1,7 @@
 <main>
 	<div id="wrapper">
 		<h1>Under Maintenance</h1>
-		<p>KiwiKards is currently under maintenance due to unexpected issues or preparations for a new update</p>
+		<p>KiwiCards is currently under maintenance due to unexpected issues or preparations for a new update</p>
 	</div>
 </main>
 
@@ -19,6 +19,10 @@
 		align-items: center;
 		justify-content: center;
 		transform: translateY(-15%);
+	}
+
+	#wrapper > * {
+		padding: 15px 10px;
 	}
 
 	h1, p {

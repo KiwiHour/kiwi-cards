@@ -51,7 +51,7 @@
 {:else}
 	
 	<div id="loading-message">
-		<h1>Loading KiwiKards...</h1>
+		<h1>Loading KiwiCards...</h1>
 	</div>
 	
 {/if}

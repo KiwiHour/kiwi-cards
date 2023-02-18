@@ -18,7 +18,7 @@
 
 	border-radius: 5px;
 	border: 2px solid var(--navbar-menu-button-outline-colour);
-	background-color: var(--navbar-menu-button-background-colour);
+	background-color: var(--navbar-menu-button-background-colour); 
 }
 
 #navbar button:hover {
@@ -36,4 +36,9 @@
 
 #navbar button p {
 	margin: 0;
+	padding: 0;
+}
+
+#navbar #title {
+	margin-right: 10px;
 }
