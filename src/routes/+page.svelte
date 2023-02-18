@@ -13,7 +13,7 @@
 	
 	function handleFileTreeResize(event: MouseEvent) {
 		if (canResize) {
-			fileTreeWidth = event.clientX - 42 // 2x20 + 2 (2 x padding, l + r. and border width)
+			fileTreeWidth = Math.min(Math.max(150, event.clientX - 42), 1500) // 2x20 + 2 (2 x padding, l + r. and border width)
 			localStorage.setItem("file-tree-width", fileTreeWidth.toString())
 		}
 	}
