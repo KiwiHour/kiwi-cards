@@ -33,8 +33,7 @@
 	let open: boolean
 	let blurred: boolean;
 
-	// was it a left click? if so, was it on me. If so, then im now open. if it was a right click i keep my current state (open / closed)
-	$: open = nodeSelectEvent?.clickType == "left" ? nodeSelectEvent.nodeUId == deck.UId : open
+	$: open = openDeckUId == deck.UId
 	$: focused = nodeSelectEvent?.nodeUId == deck.UId
 	$: blurred = nodeSelectEvent?.nodeUId == deck.UId && blurred
 

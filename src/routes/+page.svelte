@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { PageData } from "./$types";
     import { onMount } from "svelte";
-    import FileTree from "$lib/components/directory-nodes/FileTree.svelte";
+    import FileTree from "$lib/components/file-tree/FileTree.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
     import Homepage from "$lib/components/Homepage.svelte";
 

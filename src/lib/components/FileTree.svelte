@@ -2,7 +2,6 @@
     import type { Database } from "$lib/schema";
 
     import { getExpandedFolderUIDs, sortTopLevelNodes } from "$lib/functions";
-    import iconPaths from "$lib/icon-paths";
     import Deck from "./Deck.svelte";
     import Folder from "./Folder.svelte";
 
@@ -11,7 +10,7 @@
 
 	function handleNodeClick(event: CustomEvent) {
 		nodeSelectEvent = event.detail
-		if (event.detail.type == "deck") {
+		if (event.detail.type == "deck" && event.detail.clickType == "left") {
 			openDeckUId = event.detail.nodeUId
 		}
 	}
@@ -23,15 +22,6 @@
 </script>
 
 <div class="file-tree" style="{width ? `width: ${width}px; min-width: ${width}px;` : ""}">
-
-	<!-- <div id="buttons">
-		<button type="button" id="new-folder" on:click={handleNewFolder}>
-			<img alt="new-folder" src={iconPaths.dark["folder-add"]} style="scale: 1.2">
-		</button>
-		<button type="button" id="new-deck" on:click={() => {}}>
-			<img alt="new-folder" src={iconPaths.dark["deck-add"]}>
-		</button>
-	</div> -->
 	
 	<div class="folders outline">
 		{#each sortTopLevelNodes(fileTree) as [node, children]}
