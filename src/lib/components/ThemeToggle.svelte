@@ -3,11 +3,11 @@
     import { onMount } from "svelte";
 
 	function handleToggle() {
-		document.getElementsByTagName("main")[0].classList.remove(`${currentTheme}-theme`)
+		document.body.classList.remove(`${currentTheme}-theme`)
 		let newTheme: "light" | "dark" = currentTheme == "light" ? "dark" : "light" // toggle
 		currentTheme = newTheme
 
-		document.getElementsByTagName("main")[0].classList.add(`${newTheme}-theme`)
+		document.body.classList.add(`${newTheme}-theme`)
 		localStorage.setItem("theme", newTheme)
 	}
 	

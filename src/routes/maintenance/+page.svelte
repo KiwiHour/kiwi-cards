@@ -1,7 +1,16 @@
+<script lang="ts">
+
+    import ThemeToggle from "$lib/components/ThemeToggle.svelte";
+
+</script>
+
 <main>
 	<div id="wrapper">
-		<h1>Under Maintenance</h1>
-		<p>KiwiCards is currently under maintenance due to unexpected issues or preparations for a new update</p>
+		<div id="maintenance-info">
+			<h1>Under Maintenance</h1>
+			<p>KiwiCards is currently under maintenance due to unexpected issues or preparations for a new update</p>
+		</div>
+		<ThemeToggle />
 	</div>
 </main>
 
@@ -10,6 +19,8 @@
 	main {
 		display: flex;
 		flex-direction: row;
+		justify-content: start;
+		background-color: var(--page-background-colour);
 	}
 
 	#wrapper {
@@ -17,8 +28,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
-		transform: translateY(-15%);
+		justify-content: space-evenly;
+
 	}
 
 	#wrapper > * {

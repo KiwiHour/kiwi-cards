@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { PageData } from "./$types";
-    import { onMount } from "svelte";
+    import { onMount, getContext } from "svelte";
     import FileTree from "$lib/components/FileTree.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
     import Homepage from "$lib/components/Homepage.svelte";
@@ -9,10 +9,8 @@
 
 	export let data: PageData
 
-	let mounted = false;
 	let canResize = false;
 	let fileTreeWidth: number | null = 300;
-	let theme: "light" | "dark"
 	
 	function handleFileTreeResize(event: MouseEvent) {
 		if (canResize) {
@@ -22,20 +20,15 @@
 	}
 
 	onMount(() => {
-		mounted = true
 		fileTreeWidth = parseInt(localStorage.getItem("file-tree-width") || "300") // 300 default
-		theme = localStorage.getItem("theme") ? (localStorage.getItem("theme") as "dark" | "light") : "dark"
-
-		// redefine incase of defaults
+		// redefine incase of default
 		localStorage.setItem("file-tree-width", fileTreeWidth.toString())
-		localStorage.setItem("theme", theme)
 	})
 	
 </script>
 
-<main on:mouseup={() => { canResize = false }} on:mousemove={handleFileTreeResize} class="{theme}-theme">
+<main on:mouseup={() => { canResize = false }} on:mousemove={handleFileTreeResize}>
 
-{#if mounted}
 
 	<!-- THIS RELOADS THE DATA ON THE PAGE (hook.server.ts + server.page.ts)-->
 	<!-- <button type="button" on:click={async () => { await invalidateAll() }}>Invalidate All</button> -->
@@ -53,13 +46,6 @@
 		</div>
 	</div>
 
-{:else}
-	
-	<div id="loading-message">
-		<h1>Loading KiwiCards...</h1>
-	</div>
-	
-{/if}
 </main>
 
 <style>
@@ -84,19 +70,6 @@
 		overflow-x: hidden;
 
 		background-color: var(--page-background-colour);
-	}
-
-	#loading-message {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		transform: translateY(-15%);
-	}
-	
-	#loading-message h1 {
-		margin: 0;
 	}
 
 </style>

@@ -1,4 +1,4 @@
-:root main.dark-theme {
+:root body.dark-theme {
 	--font-colour: rgb(218, 218, 218);
 	--resize-bar-colour: rgb(167, 111, 39);
 	--outline-colour: rgb(179, 107, 0);
@@ -31,7 +31,7 @@
 
 }
 
-:root main.light-theme {
+:root body.light-theme {
 	--font-colour: rgb(46, 46, 46);
 	--resize-bar-colour: rgb(120, 224, 186);
 	--outline-colour: rgb(142, 195, 176);
