@@ -20,7 +20,13 @@
 
 	onMount(() => {
 		mounted = true
-		fileTreeWidth = parseInt(localStorage.getItem("file-tree-width") || "")
+		let fileTreeWidthString = localStorage.getItem("file-tree-width")
+		if (fileTreeWidthString) {
+			fileTreeWidth == parseInt(fileTreeWidthString)
+		} else {
+			fileTreeWidth = 300 // for first time on site, 300px
+			localStorage.setItem("file-tree-width", fileTreeWidth.toString())
+		}
 	})
 	
 </script>
