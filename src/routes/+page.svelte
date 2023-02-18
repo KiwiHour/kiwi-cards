@@ -41,7 +41,7 @@
 	<FileTree fileTree={data.fileTree} width={fileTreeWidth}/>
 	<!-- preventDefault stops text highligting while resizing -->
 	<div id="resize-bar" on:mousedown|preventDefault={() => { canResize = true }}></div>
-	<div id="page" style="width: calc(100vh - {fileTreeWidth})">
+	<div id="page">
 		<Navbar />
 		<!-- Will have an if statement to decide to show homepage or a selected deck 
 			REMEMBER TO ADD overflow: auto TO ANY OTHER COMPONENTS THAT TAKE UP THE PAGE CONTENTS-->
