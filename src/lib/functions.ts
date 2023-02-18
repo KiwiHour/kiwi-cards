@@ -4,6 +4,7 @@ import type { Database } from "$lib/schema"
 import { error } from "@sveltejs/kit";
 import { Db } from "./classes"
 import crypto from "crypto"
+import iconPaths from "./icon-paths";
 
 /** @returns UID length of 16 (8 hex bytes) */
 export async function generateUId(connectedMongoClient: MongoClient) {

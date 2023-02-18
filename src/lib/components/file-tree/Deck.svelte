@@ -2,7 +2,6 @@
     import type { Database } from "$lib/schema";
 
 	import { createEventDispatcher } from "svelte";
-    import iconPaths from "$lib/icon-paths";
 
 	export let arrayedNode: any // i give up
 	export let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null
@@ -39,12 +38,12 @@
 
 </script>
 
-<div class="deck node" on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
+<div class="deck node" id={deck.UId} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 
-	<button type="button" id={deck.UId} class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''}" on:click={openDeck} on:focus={handleFocus} on:blur={handleBlur}>
+	<button type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {open ? 'open' : ''}" on:click={openDeck} on:focus={handleFocus} on:blur={handleBlur}>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
-			<img class="toggle-indicator" id="deck-icon" src={open ? iconPaths.dark["deck-open"] : iconPaths.dark["deck-closed"] } alt="deck icon" style="scale: 0.8">
-			<p class="prevent-select {open ? "bold underline" : ""}">{deck.name}</p>
+			<img class="toggle-indicator" id="deck-icon" alt="deck icon" style="scale: 0.8">
+			<p class="prevent-select">{deck.name}</p>
 		</div>
 	</button>
 </div>

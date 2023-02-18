@@ -1,11 +1,7 @@
 @import "$lib/css/global.css";
 
-.bold {
-	font-weight: bold;
-}
-
-.underline {
-	text-decoration: underline;
+svg {
+	fill: green
 }
 
 .node {
@@ -38,6 +34,14 @@
 	background-color: var(--file-tree-node-blurred-background-colour) !important;
 }
 
+.node .name-and-button.open .button-contents p {
+	font-weight: bold;
+}
+
+.deck .name-and-button.open .button-contents p {
+	text-decoration: underline;
+}
+
 .button-contents {
 	height: 33px;
 	display: flex;
@@ -57,6 +61,22 @@
 .button-contents img {
 	height: 100%;
 	width: auto;
+}
+
+/* closed icons */
+.folder .name-and-button img {
+	content: var(--folder-closed-icon);
+}
+.deck .name-and-button img {
+	content: var(--deck-closed-icon);
+}
+
+/* open icons */
+.folder .name-and-button.open img {
+	content: var(--folder-open-icon);
+}
+.deck .name-and-button.open img {
+	content: var(--deck-open-icon);
 }
 
 .button-contents p {

@@ -64,8 +64,6 @@
 
 <style>
 
-	@import "$lib/css/colours.css";
-
 	main {
 		display: flex;
 		flex-direction: row;
@@ -84,6 +82,8 @@
 		flex-direction: column;
 		justify-content: flex-start;
 		overflow-x: hidden;
+
+		background-color: var(--page-background-colour);
 	}
 
 	#loading-message {

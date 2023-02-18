@@ -1,0 +1,64 @@
+:root main.dark-theme {
+	--font-colour: rgb(218, 218, 218);
+	--resize-bar-colour: rgb(167, 111, 39);
+	--outline-colour: rgb(179, 107, 0);
+	--page-background-colour: rgb(27, 27, 27);
+	
+	/* file tree */
+	--file-tree-background-colour: rgb(64, 69, 72);
+	--file-tree-folders-background-colour: rgb(48, 48, 48);
+	--file-tree-node-background-colour: transparent;
+	--file-tree-node-focused-background-colour: rgba(179, 107, 0, 0.75);
+	--file-tree-node-blurred-background-colour: rgba(179, 107, 0, 0.6);
+	--file-tree-node-hover-background-colour: rgba(179, 107, 0, 0.3);
+
+	/* navbar */
+	--navbar-background-colour: rgb(64, 69, 72);
+	--navbar-menu-button-outline-colour: rgb(179, 107, 0);
+	--navbar-menu-button-background-colour: rgba(179, 107, 0, 0.6);
+	--navbar-menu-button-hover-background-colour: rgba(179, 107, 0, 0.75);
+
+	/* icons */
+	--deck-closed-icon: url("svg/deck/dark/808605-iconfinder-deck-closed.svg");
+	--deck-open-icon: url("svg/deck/dark/808605-iconfinder-deck-open.svg");
+	--deck-add-icon: url("svg/deck/dark/808605-iconfinder-deck-add.svg");
+	--deck-delete-icon: url("svg/deck/dark/808605-iconfinder-deck-delete.svg");
+
+	--folder-closed-icon: url("svg/folder/dark/folder-closed-svgrepo-com.svg");
+	--folder-open-icon: url("svg/folder/dark/folder-open-svgrepo-com.svg");
+	--folder-add-icon: url("svg/folder/dark/folder-add-svgrepo-com.svg");
+	--folder-delete-icon: url("svg/folder/dark/folder-delete-svgrepo-com.svg");
+
+}
+
+:root main.light-theme {
+	--font-colour: rgb(46, 46, 46);
+	--resize-bar-colour: rgb(120, 224, 186);
+	--outline-colour: rgb(142, 195, 176);
+	--page-background-colour: rgb(245, 255, 254);
+	
+	/* file tree */
+	--file-tree-background-colour: rgb(212, 253, 235);
+	--file-tree-folders-background-colour: rgb(204, 255, 233);
+	--file-tree-node-background-colour: transparent;
+	--file-tree-node-focused-background-colour: rgb(157, 231, 199);
+	--file-tree-node-blurred-background-colour: rgba(157, 231, 199, 0.6);
+	--file-tree-node-hover-background-colour: rgba(157, 231, 199, 0.4);
+
+	/* navbar */
+	--navbar-background-colour: rgb(212, 253, 235);
+	--navbar-menu-button-outline-colour: rgb(157, 231, 199);
+	--navbar-menu-button-background-colour: rgba(157, 231, 199, 0.35);
+	--navbar-menu-button-hover-background-colour: rgba(157, 231, 199, 0.6);
+
+	/* icons */
+	--deck-closed-icon: url("svg/deck/light/808605-iconfinder-deck-closed.svg");
+	--deck-open-icon: url("svg/deck/light/808605-iconfinder-deck-open.svg");
+	--deck-add-icon: url("svg/deck/light/808605-iconfinder-deck-add.svg");
+	--deck-delete-icon: url("svg/deck/light/808605-iconfinder-deck-delete.svg");
+
+	--folder-closed-icon: url("svg/folder/light/folder-closed-svgrepo-com.svg");
+	--folder-open-icon: url("svg/folder/light/folder-open-svgrepo-com.svg");
+	--folder-add-icon: url("svg/folder/light/folder-add-svgrepo-com.svg");
+	--folder-delete-icon: url("svg/folder/light/folder-delete-svgrepo-com.svg");
+}

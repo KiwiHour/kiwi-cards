@@ -5,7 +5,6 @@
     import { createEventDispatcher } from "svelte";
     import { onMount } from "svelte";
     import Deck from "./Deck.svelte";
-	import iconPaths from "$lib/icon-paths";
 
 	export let arrayedNode: any // i give up
 	export let expanded: boolean
@@ -54,10 +53,10 @@
 
 <div class="folder node" id={folder.UId} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 
-	<button type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''}" on:click={(toggleFolder)} on:focus={handleFocus}  on:blur={handleBlur}>
+	<button type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {expanded ? 'open' : ''}" on:click={(toggleFolder)} on:focus={handleFocus}  on:blur={handleBlur}>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
-			<img class="toggle-indicator" id="folder-icon" src={expanded ? iconPaths.dark["folder-open"] : iconPaths.dark["folder-closed"] } alt="folder icon">
-			<p class="prevent-select {expanded ? "bold" : ""}">{folder.name}</p>
+			<img class="toggle-indicator" id="folder-icon" alt="folder icon">
+			<p class="prevent-select">{folder.name}</p>
 		</div>
 	</button>
 	<div class="folder-contents">
