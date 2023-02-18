@@ -1,4 +1,13 @@
 @import "$lib/css/colours.css";
+@import "$lib/css/global.css";
+
+.bold {
+	font-weight: bold;
+}
+
+.underline {
+	text-decoration: underline;
+}
 
 .node {
 	width: 100%;
@@ -12,27 +21,38 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: flex-start;
+	border: none;
 
 	background-color: var(--file-tree-node-background-colour);
 }
 
 .node .name-and-button:hover {
-	background-color: var(--file-tree-node-focused-background-colour);
+	background-color: var(--file-tree-node-hover-background-colour);
 }
 
 .node .name-and-button.focused {
 	background-color: var(--file-tree-node-focused-background-colour);
 }
 
+/* must go after focused so it overrided */
+.node .name-and-button.blurred {
+	background-color: var(--file-tree-node-blurred-background-colour) !important;
+}
+
 .button-contents {
-	height: 50px;
+	height: 33px;
 	display: flex;
 	flex-direction: row;
 	justify-content: start;
 	align-items: center;
 
 	margin: 0 10px;
+	padding: 1px 0;
 	gap: 10px;
+}
+
+.deck .button-contents {
+	height: 25px;
 }
 
 .button-contents img {

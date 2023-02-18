@@ -1,12 +1,22 @@
 :root {
 	--resize-bar-colour: lightblue;
-	--outline-colour: black;
+	--outline-colour: rgb(255, 153, 0);
 	
 	/* file tree */
-	--file-tree-background-colour: blue;
-	--file-tree-buttons-background-colour: cyan;
-	--file-tree-folders-background-colour: lime;
+	--file-tree-background-colour: rgb(104, 104, 104);
+	--file-tree-buttons-background-colour: transparent;
+	--file-tree-button-background-colour: rgb(82, 82, 82);
+	--file-tree-button-outline-colour: rgb(255, 153, 0);
+	--file-tree-folders-background-colour: rgb(82, 82, 82);
 	--file-tree-node-background-colour: transparent;
-	--file-tree-node-focused-background-colour: tomato;
+	--file-tree-node-focused-background-colour: rgba(255, 166, 0, 0.75);
+	--file-tree-node-blurred-background-colour: rgba(255, 180, 41, 0.6);
+	--file-tree-node-hover-background-colour: rgba(228, 182, 55, 0.3);
+
+	/* navbar */
+	--navbar-background-colour: rgb(63, 63, 63);
+	--navbar-menu-button-outline-colour: rgb(255, 153, 0);
+	--navbar-menu-button-background-colour: rgba(255, 180, 41, 0.6);
+	--navbar-menu-button-hover-background-colour: rgba(255, 166, 0, 0.7);
 
 }

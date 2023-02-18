@@ -13,7 +13,7 @@
 	
 	function handleFileTreeResize(event: MouseEvent) {
 		if (canResize) {
-			fileTreeWidth = event.clientX
+			fileTreeWidth = event.clientX - 42 // 2x20 + 2 (2 x padding, l + r. and border width)
 			localStorage.setItem("file-tree-width", fileTreeWidth.toString())
 		}
 	}
@@ -32,8 +32,9 @@
 	<!-- <button type="button" on:click={async () => { await invalidateAll() }}>Invalidate All</button> -->
 
 	<FileTree fileTree={data.fileTree} width={fileTreeWidth}/>
-	<div id="resize-bar" on:mousedown={() => { canResize = true }}></div>
-	<div id="page">
+	<!-- preventDefault stops text highligting while resizing -->
+	<div id="resize-bar" on:mousedown|preventDefault={() => { canResize = true }}></div>
+	<div id="page" style="width: calc(100vh - {fileTreeWidth})">
 		<Navbar />
 		<!-- Will have an if statement to decide to show homepage or a selected deck 
 			REMEMBER TO ADD overflow: auto TO ANY OTHER COMPONENTS THAT TAKE UP THE PAGE CONTENTS-->
@@ -43,7 +44,7 @@
 {:else}
 	
 	<div id="loading-message">
-		<h1>Loading OptiCards...</h1>
+		<h1>Loading KiwiKards...</h1>
 	</div>
 	
 {/if}
@@ -60,9 +61,30 @@
 
 	#resize-bar {
 		height: 100%;
-		width: 5px;
+		min-width: 5px;
 		cursor: col-resize;
 		background-color: var(--resize-bar-colour);
+	}
+
+	#page {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		overflow-x: hidden;
+	}
+
+	#loading-message {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		transform: translateY(-15%);
+	}
+	
+	#loading-message h1 {
+		margin: 0;
 	}
 
 </style>

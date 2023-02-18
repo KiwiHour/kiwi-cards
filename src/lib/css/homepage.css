@@ -1,0 +1,14 @@
+@import "$lib/css/global.css";
+
+#homepage {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+p {
+	width: 100%;
+	text-align: center;
+}

@@ -1,6 +1,6 @@
 <div id="navbar">
 	<div id="contents">
-		<h1 id="title">Title</h1>
+		<h1 id="title">KiwiKards</h1>
 		<div id="menu">
 			<button type="button"> <!-- will load the homepage into the container -->
 				<p>Homepage</p>

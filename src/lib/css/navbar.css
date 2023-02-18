@@ -1,0 +1,39 @@
+@import "$lib/css/colours.css";
+@import "$lib/css/global.css";
+
+#navbar {
+	width: 100%;
+	background-color: var(--navbar-background-colour);
+}
+
+#navbar #contents {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 20px;
+}
+
+#navbar button {
+
+	border-radius: 5px;
+	border: 2px solid var(--navbar-menu-button-outline-colour);
+	background-color: var(--navbar-menu-button-background-colour);
+}
+
+#navbar button:hover {
+	background-color: var(--navbar-menu-button-hover-background-colour);
+}
+
+#navbar button:active {
+	transform: translate(1px, 1px);
+}
+
+#navbar button {
+	font-size: 1.4em;
+	padding: 12px
+}
+
+#navbar button p {
+	margin: 0;
+}
