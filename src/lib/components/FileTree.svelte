@@ -4,6 +4,7 @@
     import { getExpandedFolderUIDs, sortTopLevelNodes } from "$lib/functions";
     import Deck from "./file-tree/Deck.svelte";
     import Folder from "./file-tree/Folder.svelte";
+    import ThemeToggle from "./ThemeToggle.svelte";
 
 	export let fileTree: Database.ArrayedNode<"folder" | "deck">[]
 	export let width: number | null;
@@ -34,6 +35,7 @@
 	
 		{/each}
 	</div>
+	<ThemeToggle />
 </div>
 
 <style>

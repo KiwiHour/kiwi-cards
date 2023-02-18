@@ -26,6 +26,7 @@
 
 <style>
 	@import "$lib/css/theme.css";
+	@import "$lib/css/global.css";
 
 	#loading-wrapper {
 		width: 100vw;

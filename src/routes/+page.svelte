@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { PageData } from "./$types";
-    import { onMount, getContext } from "svelte";
+    import { onMount } from "svelte";
     import FileTree from "$lib/components/FileTree.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
     import Homepage from "$lib/components/Homepage.svelte";
@@ -41,9 +41,6 @@
 		<!-- Will have an if statement to decide to show homepage or a selected deck 
 			REMEMBER TO ADD overflow: auto TO ANY OTHER COMPONENTS THAT TAKE UP THE PAGE CONTENTS-->
 		<Homepage /> 
-		<div id="theme-toggle">
-			<ThemeToggle />
-		</div>
 	</div>
 
 </main>

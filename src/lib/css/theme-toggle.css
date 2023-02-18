@@ -1,0 +1,70 @@
+/* css from https://codepen.io/alvarotrigo/pen/YzEdrKj with some modifications by me */
+/* i have no clue why this css works, but... yeah */
+
+.toggle {
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	cursor: pointer;
+}
+
+.toggle-switch {
+	display: inline-block;
+	background: var(--theme-toggle-light-mode-background-colour);
+	border-radius: 16px;
+	width: 58px;
+	height: 32px;
+	position: relative;
+	vertical-align: middle;
+	box-shadow: 0 0 0 2px var(--theme-toggle-light-mode-switch-outline-colour);
+	transition: background 0.25s;
+}
+
+.toggle-switch:before, .toggle-switch:after {
+	content: "";
+}
+.toggle-switch:before {
+	display: block;
+	border-radius: 50%;
+	box-shadow: 0 0 0 2px var(--theme-toggle-light-mode-switch-outline-colour);
+	width: 24px;
+	height: 24px;
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	transition: left 0.25s;
+}
+
+.toggle-checkbox:checked ~ .toggle-switch:before {
+	display: block;
+	border-radius: 50%;
+	box-shadow: 0 0 0 2px var(--theme-toggle-dark-mode-switch-outline-colour);
+	width: 24px;
+	height: 24px;
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	transition: left 0.25s;
+}
+
+.toggle-checkbox:checked + .toggle-switch {
+  	background: var(--theme-toggle-dark-mode-background-colour);
+	box-shadow: 0 0 0 2px var(--theme-toggle-dark-mode-switch-outline-colour);
+}
+
+.toggle-checkbox:checked + .toggle-switch:before {
+	left: 30px;
+}
+
+.toggle-checkbox {
+	position: absolute;
+	visibility: hidden;
+}
+
+.toggle-label {
+	margin-left: 5px;
+	position: relative;
+}

@@ -1,3 +1,11 @@
+:root {
+	/* theme toggle */
+	--theme-toggle-dark-mode-background-colour: rgb(48, 48, 48);
+	--theme-toggle-light-mode-background-colour: rgb(190, 238, 227);
+	--theme-toggle-dark-mode-switch-outline-colour: rgb(179, 107, 0);
+	--theme-toggle-light-mode-switch-outline-colour: rgb(142, 195, 176);
+}
+
 :root body.dark-theme {
 	--font-colour: rgb(218, 218, 218);
 	--resize-bar-colour: rgb(167, 111, 39);
@@ -35,11 +43,11 @@
 	--font-colour: rgb(46, 46, 46);
 	--resize-bar-colour: rgb(120, 224, 186);
 	--outline-colour: rgb(142, 195, 176);
-	--page-background-colour: rgb(245, 255, 254);
+	--page-background-colour: rgb(241, 255, 253);
 	
 	/* file tree */
 	--file-tree-background-colour: rgb(212, 253, 235);
-	--file-tree-folders-background-colour: rgb(204, 255, 233);
+	--file-tree-folders-background-colour: rgb(189, 252, 224);
 	--file-tree-node-background-colour: transparent;
 	--file-tree-node-focused-background-colour: rgb(157, 231, 199);
 	--file-tree-node-blurred-background-colour: rgba(157, 231, 199, 0.6);

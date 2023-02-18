@@ -25,4 +25,14 @@
 
 </script>
 
-<input type="checkbox" on:click={handleToggle} checked={currentTheme == "dark"}>
+<label class="toggle">
+	<input class="toggle-checkbox" type="checkbox" on:click={handleToggle} checked={currentTheme == "dark"}>
+	<div class="toggle-switch"></div>
+	<span class="toggle-label prevent-select">Dark mode</span>
+</label>
+
+<style>
+	@import "$lib/css/theme-toggle.css";
+
+	
+</style>
