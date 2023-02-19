@@ -45,7 +45,7 @@
 </script>
 
 {#if showContextMenu}
-	<ContextMenu on:clicked-off-context-menu={() => showContextMenu = false} pos={rightClickPos} node={deck}/>
+	<ContextMenu on:close-context-menu={() => showContextMenu = false} pos={rightClickPos} node={deck}/>
 {/if}
 
 <div class="deck node" id={deck.UId}>

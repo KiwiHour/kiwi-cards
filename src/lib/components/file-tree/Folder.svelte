@@ -58,7 +58,7 @@
 </script>
 
 {#if showContextMenu}
-	<ContextMenu on:clicked-off-context-menu={() => showContextMenu = false} pos={rightClickPos} node={folder}/>
+	<ContextMenu on:close-context-menu={() => showContextMenu = false} pos={rightClickPos} node={folder}/>
 {/if}
 
 <div class="folder node" id={folder.UId}>

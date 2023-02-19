@@ -20,6 +20,11 @@
 	--file-tree-node-blurred-background-colour: rgba(179, 107, 0, 0.6);
 	--file-tree-node-hover-background-colour: rgba(179, 107, 0, 0.3);
 
+	/* context menu */
+	--context-menu-background-colour:rgb(64, 69, 72);
+	--context-menu-outline-colour: rgb(179, 107, 0);
+	--context-menu-hover-colour: rgba(179, 107, 0, 0.6);
+
 	/* navbar */
 	--navbar-background-colour: rgb(64, 69, 72);
 	--navbar-menu-button-outline-colour: rgb(179, 107, 0);
@@ -52,6 +57,11 @@
 	--file-tree-node-focused-background-colour: rgb(157, 231, 199);
 	--file-tree-node-blurred-background-colour: rgba(157, 231, 199, 0.6);
 	--file-tree-node-hover-background-colour: rgba(157, 231, 199, 0.4);
+
+	/* context menu */
+	--context-menu-background-colour:rgb(212, 253, 235);
+	--context-menu-outline-colour: rgb(157, 231, 199);
+	--context-menu-hover-colour: rgba(157, 231, 199, 0.6);
 
 	/* navbar */
 	--navbar-background-colour: rgb(212, 253, 235);
