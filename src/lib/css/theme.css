@@ -8,8 +8,8 @@
 
 :root body.dark-theme {
 	--font-colour: rgb(218, 218, 218);
-	--resize-bar-colour: rgb(167, 111, 39);
-	--outline-colour: rgb(179, 107, 0);
+	--resize-bar-colour: rgb(136, 78, 0);
+	--outline-colour: rgb(136, 78, 0);
 	--page-background-colour: rgb(27, 27, 27);
 	
 	/* file tree */

@@ -56,6 +56,7 @@
 		min-width: 5px;
 		cursor: col-resize;
 		background-color: var(--resize-bar-colour);
+		outline: var(--outline-colour);
 	}
 
 	#page {

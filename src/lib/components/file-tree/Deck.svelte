@@ -47,9 +47,9 @@
 	<ContextMenu on:clicked-off-context-menu={() => showContextMenu = false} pos={rightClickPos} node={deck}/>
 {/if}
 
-<div class="deck node" id={deck.UId} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
+<div class="deck node" id={deck.UId}>
 
-	<button type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {open ? 'open' : ''}" on:click={openDeck} on:focus={handleFocus} on:blur={handleBlur}>
+	<button type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {open ? 'open' : ''}" on:click={openDeck} on:focus={handleFocus} on:blur={handleBlur} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
 			<img class="toggle-indicator" id="deck-icon" alt="deck icon" style="scale: 0.8">
 			<p class="prevent-select">{deck.name}</p>

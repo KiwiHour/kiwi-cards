@@ -60,9 +60,9 @@
 	<ContextMenu on:clicked-off-context-menu={() => showContextMenu = false} pos={rightClickPos} node={folder}/>
 {/if}
 
-<div class="folder node" id={folder.UId} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
+<div class="folder node" id={folder.UId}>
 
-	<button type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {expanded ? 'open' : ''}" on:click={(toggleFolder)} on:focus={handleFocus} on:blur={handleBlur}>
+	<button type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {expanded ? 'open' : ''}" on:click={(toggleFolder)} on:focus={handleFocus} on:blur={handleBlur} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
 			<img class="toggle-indicator" id="folder-icon" alt="folder icon">
 			<p class="prevent-select">{folder.name}</p>
