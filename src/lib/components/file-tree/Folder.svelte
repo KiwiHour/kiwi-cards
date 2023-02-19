@@ -3,6 +3,7 @@
 
     import { getExpandedFolderUIDs, sortTopLevelNodes } from "$lib/functions";
     import { createEventDispatcher } from "svelte";
+    import { slide } from "svelte/transition";
     import { onMount } from "svelte";
     import Deck from "./Deck.svelte";
     import ContextMenu from "./ContextMenu.svelte";
@@ -62,7 +63,7 @@
 
 <div class="folder node" id={folder.UId}>
 
-	<button type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {expanded ? 'open' : ''}" on:click={(toggleFolder)} on:focus={handleFocus} on:blur={handleBlur} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
+	<button transition:slide={{duration: 200}} type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {expanded ? 'open' : ''}" on:click={(toggleFolder)} on:focus={handleFocus} on:blur={handleBlur} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
 			<img class="toggle-indicator" id="folder-icon" alt="folder icon">
 			<p class="prevent-select">{folder.name}</p>

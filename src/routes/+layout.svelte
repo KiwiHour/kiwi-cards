@@ -6,7 +6,7 @@
 	let mounted = false;
 	onMount(() => {
 		mounted = true;
-		theme = localStorage.getItem("theme") ? (localStorage.getItem("theme") as "dark" | "light") : "dark"
+		theme = localStorage.getItem("theme") as "dark" | "light" ?? "dark"
 		// redefine incase of defaults
 		localStorage.setItem("theme", theme)
 		document.body.classList.add(`${theme}-theme`)
