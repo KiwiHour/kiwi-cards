@@ -27,15 +27,15 @@
 	--navbar-menu-button-hover-background-colour: rgba(179, 107, 0, 0.75);
 
 	/* icons */
-	--deck-closed-icon: url("svg/deck/dark/808605-iconfinder-deck-closed.svg");
-	--deck-open-icon: url("svg/deck/dark/808605-iconfinder-deck-open.svg");
-	--deck-add-icon: url("svg/deck/dark/808605-iconfinder-deck-add.svg");
-	--deck-delete-icon: url("svg/deck/dark/808605-iconfinder-deck-delete.svg");
+	--deck-closed-icon: url("./svg/deck/dark/808605-iconfinder-deck-closed.svg");
+	--deck-open-icon: url("./svg/deck/dark/808605-iconfinder-deck-open.svg");
+	--deck-add-icon: url("./svg/deck/dark/808605-iconfinder-deck-add.svg");
+	--deck-delete-icon: url("./svg/deck/dark/808605-iconfinder-deck-delete.svg");
 
-	--folder-closed-icon: url("svg/folder/dark/folder-closed-svgrepo-com.svg");
-	--folder-open-icon: url("svg/folder/dark/folder-open-svgrepo-com.svg");
-	--folder-add-icon: url("svg/folder/dark/folder-add-svgrepo-com.svg");
-	--folder-delete-icon: url("svg/folder/dark/folder-delete-svgrepo-com.svg");
+	--folder-closed-icon: url("./svg/folder/dark/folder-closed-svgrepo-com.svg");
+	--folder-open-icon: url("./svg/folder/dark/folder-open-svgrepo-com.svg");
+	--folder-add-icon: url("./svg/folder/dark/folder-add-svgrepo-com.svg");
+	--folder-delete-icon: url("./svg/folder/dark/folder-delete-svgrepo-com.svg");
 
 }
 
@@ -60,13 +60,13 @@
 	--navbar-menu-button-hover-background-colour: rgba(157, 231, 199, 0.6);
 
 	/* icons */
-	--deck-closed-icon: url("svg/deck/light/808605-iconfinder-deck-closed.svg");
-	--deck-open-icon: url("svg/deck/light/808605-iconfinder-deck-open.svg");
-	--deck-add-icon: url("svg/deck/light/808605-iconfinder-deck-add.svg");
-	--deck-delete-icon: url("svg/deck/light/808605-iconfinder-deck-delete.svg");
+	--deck-closed-icon: url("./svg/deck/light/808605-iconfinder-deck-closed.svg");
+	--deck-open-icon: url("./svg/deck/light/808605-iconfinder-deck-open.svg");
+	--deck-add-icon: url("./svg/deck/light/808605-iconfinder-deck-add.svg");
+	--deck-delete-icon: url("./svg/deck/light/808605-iconfinder-deck-delete.svg");
 
-	--folder-closed-icon: url("svg/folder/light/folder-closed-svgrepo-com.svg");
-	--folder-open-icon: url("svg/folder/light/folder-open-svgrepo-com.svg");
-	--folder-add-icon: url("svg/folder/light/folder-add-svgrepo-com.svg");
-	--folder-delete-icon: url("svg/folder/light/folder-delete-svgrepo-com.svg");
+	--folder-closed-icon: url("./svg/folder/light/folder-closed-svgrepo-com.svg");
+	--folder-open-icon: url("./svg/folder/light/folder-open-svgrepo-com.svg");
+	--folder-add-icon: url("./svg/folder/light/folder-add-svgrepo-com.svg");
+	--folder-delete-icon: url("./svg/folder/light/folder-delete-svgrepo-com.svg");
 }
