@@ -6,12 +6,12 @@ let getTree = async (node: Database.DirectoryNode, treeManager: DirectoryTreeMan
     let children = await treeManager.getChildren(node.UId)
 	return [
         node,
-        await Promise.all(children.map(child => {
+        await Promise.all(children.map(async child => {
             if (child.type == "deck") {
                 return [child, child.childrenUIds]
             }
-            return getTree(child, treeManager) 
-        })) as any // i hate this
+            return await getTree(child, treeManager) 
+        }))
     ]
 }
 

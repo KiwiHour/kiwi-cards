@@ -4,7 +4,6 @@
     import FileTree from "$lib/components/FileTree.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
     import Homepage from "$lib/components/Homepage.svelte";
-    import ThemeToggle from "$lib/components/ThemeToggle.svelte";
     import { invalidateAll } from "$app/navigation";
 
 	export let data: PageData

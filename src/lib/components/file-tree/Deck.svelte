@@ -2,6 +2,7 @@
     import type { Database } from "$lib/schema";
 
 	import { createEventDispatcher } from "svelte";
+    import ContextMenu from "./ContextMenu.svelte";
 
 	export let arrayedNode: any // i give up
 	export let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null
@@ -15,6 +16,8 @@
 
 	function handleRightClick(event: MouseEvent) {
 		console.log(`I am deck ${deck.UId}, i will eventually open up a menu to delete, rename or add a folder/deck`)
+		rightClickPos = { x: event.clientX, y: event.clientY }
+		showContextMenu = true;
 	}
 
 
@@ -31,12 +34,18 @@
 	let dispatch = createEventDispatcher()
 	let open: boolean
 	let blurred: boolean;
+	let showContextMenu = false;
+	let rightClickPos: { x: number, y: number }
 
 	$: open = openDeckUId == deck.UId
 	$: focused = nodeSelectEvent?.nodeUId == deck.UId
 	$: blurred = nodeSelectEvent?.nodeUId == deck.UId && blurred
 
 </script>
+
+{#if showContextMenu}
+	<ContextMenu on:clicked-off-context-menu={() => showContextMenu = false} pos={rightClickPos} node={deck}/>
+{/if}
 
 <div class="deck node" id={deck.UId} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 

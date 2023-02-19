@@ -5,6 +5,7 @@
     import { createEventDispatcher } from "svelte";
     import { onMount } from "svelte";
     import Deck from "./Deck.svelte";
+    import ContextMenu from "./ContextMenu.svelte";
 
 	export let arrayedNode: any // i give up
 	export let expanded: boolean
@@ -26,6 +27,8 @@
 
 	function handleRightClick(event: MouseEvent) {
 		console.log(`I am folder ${folder.UId}, i will eventually open up a menu to delete, rename or add a folder/deck`)
+		rightClickPos = { x: event.clientX, y: event.clientY }
+		showContextMenu = true;
 	}
 
 	function handleFocus(event: FocusEvent) {
@@ -41,6 +44,8 @@
 	let expandedFolderUIds: string[] = []
 	let dispatch = createEventDispatcher()
 	let blurred: boolean;
+	let showContextMenu = false;
+	let rightClickPos: { x: number, y: number }
 
 	$: blurred = nodeSelectEvent?.nodeUId == folder.UId && blurred;
 	$: focused = nodeSelectEvent?.nodeUId == folder.UId
@@ -51,9 +56,13 @@
 
 </script>
 
+{#if showContextMenu}
+	<ContextMenu on:clicked-off-context-menu={() => showContextMenu = false} pos={rightClickPos} node={folder}/>
+{/if}
+
 <div class="folder node" id={folder.UId} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 
-	<button type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {expanded ? 'open' : ''}" on:click={(toggleFolder)} on:focus={handleFocus}  on:blur={handleBlur}>
+	<button type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {expanded ? 'open' : ''}" on:click={(toggleFolder)} on:focus={handleFocus} on:blur={handleBlur}>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
 			<img class="toggle-indicator" id="folder-icon" alt="folder icon">
 			<p class="prevent-select">{folder.name}</p>
