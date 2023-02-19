@@ -58,6 +58,10 @@ svg {
 	height: 25px;
 }
 
+.deck .button-contents img {
+	padding: 0 4px; /* height 33px normally, 25px for deck, so add 8px padding total so they line up */
+}
+
 .button-contents img {
 	height: 100%;
 	width: auto;

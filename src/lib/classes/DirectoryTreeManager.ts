@@ -55,6 +55,15 @@ export default class DirectoryTreeManager {
 		await this.updateNode(node.UId, { "childrenUIds": node.childrenUIds })
 	}
 
+	private async ensureNameNotTaken(node: Database.DirectoryNode, name: string) {
+		let siblings = await this.getChildren(node.parentUId)
+		let takenNames = siblings.filter(sibling => sibling.type == node.type).map(sibling => sibling.name)
+		if (takenNames.includes(name)) {
+			throw new Error(`One of the to-be node's sibling already has the name '${name}'`)
+		}
+		return true
+	}
+
 	/** Throws an error from getNode method, returns true if no error (false should never happen) */
 	async validateNodeUId(nodeUId: string) {
 		let node = await this.getNode(nodeUId)
@@ -92,6 +101,13 @@ export default class DirectoryTreeManager {
 	
 	// cannot be unsure nodeOrUId as node hasnt been added to db yet
 	async addNode(node: Database.DirectoryNode) {
+		await this.ensureNameNotTaken(node, node.name)
+		if (node.parentUId !== null) {
+			let parentNode = await this.getNode(node.parentUId)
+			if (parentNode.type !== "folder") {
+				throw new Error(`Tried to add node with UId '${node.UId}' to a non-folder. Not allowed`)
+			}
+		}
 		await this.db.directoryNodesCollection.insertOne(node)
 		if (node.parentUId === null) { return }
 		await this.addChildUIdToNode(node.parentUId, node.UId) // update node's parent's children data
@@ -99,6 +115,11 @@ export default class DirectoryTreeManager {
 
 	async moveNode(nodeUId: string, newParentUId: string | null) {
 		let node = await this.getNode(nodeUId)
+		let possibleSiblings = await this.getChildren(newParentUId)
+		let takenNames = possibleSiblings.filter(sibling => sibling.type == node.type).map(sibling => sibling.name)
+		if (takenNames.includes(node.name)) {
+			throw new Error(`One of the to-be node's sibling already has the name '${node.name}'`)
+		}
 		await this.db.directoryNodesCollection.findOneAndUpdate(
 			{ "UId": node.UId },
 			{ $set: { "parentUId": newParentUId }}
@@ -116,6 +137,8 @@ export default class DirectoryTreeManager {
 	}
 
 	async changeNodeName(nodeUId: string, newName: string) {
+		let node = await this.getNode(nodeUId)
+		await this.ensureNameNotTaken(node, newName)
 		await this.updateNode(nodeUId, { name: newName })
 	}
 

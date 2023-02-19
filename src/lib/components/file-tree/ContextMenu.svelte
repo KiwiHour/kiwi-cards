@@ -1,34 +1,31 @@
 <script lang="ts">
 
-    import type { Database } from "$lib/schema";
     import { createEventDispatcher } from "svelte";
 
 	export let pos: { x: number, y: number };
-	export let node: Database.DirectoryNode
+	export let config: {
+		title: string
+		options: { name: string, function: () => any }[]
+	}
 
 	async function handleBlur(event: FocusEvent) {
 		dispatch("close-context-menu")
 	}
 	
-	function onload(el: HTMLButtonElement) {
+	function autofocus(el: HTMLButtonElement) {
 		el.focus()
-	}
-
-	async function handleClick() {
-		console.log("clicc")
-		dispatch("close-context-menu")
 	}
 
 	let dispatch = createEventDispatcher()
 
 </script>
 
-<button use:onload id="context-menu" style="left: {pos.x}px; top: {pos.y}px;" on:blur|preventDefault={handleBlur}>
+<button use:autofocus id="context-menu" style="left: {pos.x}px; top: {pos.y}px;" on:blur|preventDefault={handleBlur}>
+	<p id="title">{config.title}</p>
 	<ul>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<li on:click={handleClick}>myId</li>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<li on:click={handleClick}>myId</li>
+		{#each config.options as option}
+			<li on:click={() => {dispatch("close-context-menu"); option.function()}} on:keypress>{option.name}</li>
+		{/each}
 	</ul>
 </button>
 

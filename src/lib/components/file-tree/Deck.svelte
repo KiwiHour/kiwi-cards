@@ -1,7 +1,9 @@
 <script lang="ts">
-    import type { Database } from "$lib/schema";
-
-	import { createEventDispatcher, tick } from "svelte";
+	import type { Database } from "$lib/schema";
+	
+	import { createEventDispatcher } from "svelte";
+    import { invalidateAll } from "$app/navigation";
+	import { deleteNode, renameNode } from "$lib/functions";
     import { slide } from "svelte/transition";
     import ContextMenu from "./ContextMenu.svelte";
 
@@ -11,7 +13,6 @@
 	export let depth: number;
 
 	function openDeck() {
-		console.log("open deck")
 		dispatch("node-click", { nodeUId: deck.UId, type: "deck", clickType: "left" })
 	}
 
@@ -21,7 +22,6 @@
 		showContextMenu = true;
 	}
 
-
 	function handleFocus() {
 		blurred = false
 		dispatch("node-click", { nodeUId: deck.UId, type: "deck" })
@@ -30,6 +30,11 @@
 	function handleBlur() {
 		blurred = true
 	}
+
+	
+	function autofocus(el: HTMLElement) {
+		el.focus()
+	}
 	
 	let [ deck, cardUIds ] = arrayedNode as Database.ArrayedNode<"deck">
 	let dispatch = createEventDispatcher()
@@ -37,26 +42,67 @@
 	let blurred: boolean;
 	let showContextMenu = false;
 	let rightClickPos: { x: number, y: number }
+	let renaming = false;
+	let newName: string = deck.name;
 
 	$: open = openDeckUId == deck.UId
 	$: focused = nodeSelectEvent?.nodeUId == deck.UId
 	$: blurred = nodeSelectEvent?.nodeUId == deck.UId && blurred
 
+	let contextMenuConfig = {
+		title: "deck",
+		options: [
+			{ name: "Rename deck", function: () => renaming = true },
+			{ name: "Delete deck", function: async () => {
+				let [_, err] = await deleteNode(deck.UId)
+				invalidateAll()
+				if (err) { alert(err) }
+			}}
+		]
+	}
+
+	async function handleNewNameSubmit(event: KeyboardEvent) {
+		if (event.key == "Enter") {
+			if (!newName || newName.trim() == "" || newName == deck.name) {
+				newName = deck.name
+				renaming = false;
+				return;
+			}
+			let [_, err] = await renameNode(deck.UId, newName)
+			invalidateAll()
+			if (err) { alert(err) }
+		}
+	}
+
 </script>
 
 {#if showContextMenu}
-	<ContextMenu on:close-context-menu={async () => {showContextMenu = false; await tick()}} pos={rightClickPos} node={deck}/>
+	<ContextMenu on:close-context-menu={async () => showContextMenu = false} pos={rightClickPos} config={contextMenuConfig}/>
 {/if}
 
 <div class="deck node" id={deck.UId}>
 
-	<button transition:slide={{duration: 200}} type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {open ? 'open' : ''}" on:click={openDeck} on:focus={handleFocus} on:blur={handleBlur} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
+	<button transition:slide={{duration: 200}}
+		on:click={openDeck}
+		on:focus={handleFocus}
+		on:blur={handleBlur}
+		on:contextmenu|preventDefault|stopPropagation={handleRightClick}
+		type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {open ? 'open' : ''}"
+	>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
 			<img class="toggle-indicator" id="deck-icon" alt="deck icon" style="scale: 0.8">
-			<p class="prevent-select">{deck.name}</p>
+			{#if renaming}
+				<input id="rename-input" use:autofocus
+					on:blur={() => {renaming = false}}
+					on:keypress={handleNewNameSubmit} 
+					bind:value={newName}
+					type="text" />
+			{:else}
+				<p class="prevent-select">{deck.name}</p>
+			{/if}
 		</div>
 	</button>
-</div>
+	</div>
 
 <style>
 

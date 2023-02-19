@@ -1,8 +1,9 @@
 <script lang="ts">
     import type { Database } from "$lib/schema";
 
-    import { getExpandedFolderUIDs, sortTopLevelNodes } from "$lib/functions";
-    import { createEventDispatcher, tick } from "svelte";
+    import { getExpandedFolderUIDs, sortTopLevelNodes, deleteNode, renameNode } from "$lib/functions";
+    import { createEventDispatcher } from "svelte";
+    import { invalidateAll } from "$app/navigation";
     import { slide } from "svelte/transition";
     import { onMount } from "svelte";
     import Deck from "./Deck.svelte";
@@ -41,15 +42,46 @@
 		blurred = true
 	}
 
+	function autofocus(el: HTMLElement) {
+		el.focus()
+	}
+
 	let [ folder, children ] = arrayedNode as Database.ArrayedNode<"folder">
 	let expandedFolderUIds: string[] = []
 	let dispatch = createEventDispatcher()
 	let blurred: boolean;
 	let showContextMenu = false;
 	let rightClickPos: { x: number, y: number }
+	let renaming = false;
+	let newName: string = folder.name;
 
 	$: blurred = nodeSelectEvent?.nodeUId == folder.UId && blurred;
 	$: focused = nodeSelectEvent?.nodeUId == folder.UId
+
+	let contextMenuConfig = {
+		title: "folder",
+		options: [
+			{ name: "Rename folder", function: () => renaming = true },
+			{ name: "Delete folder", function: async () => {
+				let [_, err] = await deleteNode(folder.UId)
+				invalidateAll()
+				if (err) { alert(err) }
+			}},
+		]
+	}
+
+	async function handleNewNameSubmit(event: KeyboardEvent) {
+		if (event.key == "Enter") {
+			if (!newName || newName.trim() == "" || newName == folder.name) {
+				newName = folder.name
+				renaming = false;
+				return;
+			}
+			let [_, err] = await renameNode(folder.UId, newName)
+			invalidateAll()
+			if (err) { alert(err) }
+		}
+	}
 
 	onMount(() => {
 		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
@@ -58,15 +90,32 @@
 </script>
 
 {#if showContextMenu}
-	<ContextMenu on:close-context-menu={async () => {showContextMenu = false; await tick()}} pos={rightClickPos} node={folder}/>
+	<ContextMenu on:close-context-menu={async () => showContextMenu = false} pos={rightClickPos} config={contextMenuConfig}/>
 {/if}
 
 <div class="folder node" id={folder.UId}>
 
-	<button transition:slide={{duration: 200}} type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {expanded ? 'open' : ''}" on:click={(toggleFolder)} on:focus={handleFocus} on:blur={handleBlur} on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
+	<!-- keyup/keydown to stop spacebar/enter from toggling folder, as it messing with renaming -->
+	<button transition:slide={{duration: 200}} 
+		on:click={(toggleFolder)}
+		on:focus={handleFocus}
+		on:blur={handleBlur}
+		on:contextmenu|preventDefault|stopPropagation={handleRightClick}
+		disabled={renaming}
+		type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {expanded ? 'open' : ''}"
+	>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
 			<img class="toggle-indicator" id="folder-icon" alt="folder icon">
-			<p class="prevent-select">{folder.name}</p>
+
+			{#if renaming}
+				<input id="rename-input" use:autofocus
+					on:blur={() => {renaming = false}}
+					on:keypress={handleNewNameSubmit} 
+					bind:value={newName}
+					type="text" />
+			{:else}
+				<p class="prevent-select">{folder.name}</p>
+			{/if}
 		</div>
 	</button>
 	<div class="folder-contents">
@@ -81,7 +130,7 @@
 			{/each}
 		{/if}
 
-	</div>
+	</div>	
 </div>
 
 <style>

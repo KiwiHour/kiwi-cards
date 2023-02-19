@@ -51,3 +51,31 @@ export function sortTopLevelNodes(fileTree: Database.ArrayedNode<"folder" | "dec
 	return sortedFileTree
 
 }
+
+export async function deleteNode(nodeUId: string): Promise<[null, Error | null]> {
+	let res = await fetch("/api/directory-node", {
+		method: "DELETE",
+		body: JSON.stringify({ nodeUId })
+	})
+
+	let data = await res.json()
+	if (res.ok) {
+		return [data, null]
+	} else {
+		return [null, new Error(data.message)]
+	}
+}
+
+export async function renameNode(nodeUId: string, newName: string): Promise<[null, Error | null]> {
+	let res = await fetch("/api/rename-directory-node", {
+		method: "PATCH",
+		body: JSON.stringify({ nodeUId, newName })
+	})
+
+	let data = await res.json()
+	if (res.ok) {
+		return [data, null]
+	} else {
+		return [null, new Error(data.message)]
+	}
+}
