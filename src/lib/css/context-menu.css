@@ -16,11 +16,6 @@
 	list-style: none;
 }
 
-#context-menu li button {
-	border: none;
-	background-color: transparent;
-}
-
-#context-menu li button:hover {
+#context-menu li:hover {
 	background-color: var(--context-menu-hover-colour);
 }

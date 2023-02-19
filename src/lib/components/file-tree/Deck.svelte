@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Database } from "$lib/schema";
 
-	import { createEventDispatcher } from "svelte";
+	import { createEventDispatcher, tick } from "svelte";
     import { slide } from "svelte/transition";
     import ContextMenu from "./ContextMenu.svelte";
 
@@ -45,7 +45,7 @@
 </script>
 
 {#if showContextMenu}
-	<ContextMenu on:close-context-menu={() => showContextMenu = false} pos={rightClickPos} node={deck}/>
+	<ContextMenu on:close-context-menu={async () => {showContextMenu = false; await tick()}} pos={rightClickPos} node={deck}/>
 {/if}
 
 <div class="deck node" id={deck.UId}>

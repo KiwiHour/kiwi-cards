@@ -2,7 +2,7 @@
     import type { Database } from "$lib/schema";
 
     import { getExpandedFolderUIDs, sortTopLevelNodes } from "$lib/functions";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, tick } from "svelte";
     import { slide } from "svelte/transition";
     import { onMount } from "svelte";
     import Deck from "./Deck.svelte";
@@ -58,7 +58,7 @@
 </script>
 
 {#if showContextMenu}
-	<ContextMenu on:close-context-menu={() => showContextMenu = false} pos={rightClickPos} node={folder}/>
+	<ContextMenu on:close-context-menu={async () => {showContextMenu = false; await tick()}} pos={rightClickPos} node={folder}/>
 {/if}
 
 <div class="folder node" id={folder.UId}>
