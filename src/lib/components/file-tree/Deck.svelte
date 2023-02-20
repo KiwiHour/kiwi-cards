@@ -86,6 +86,7 @@
 		on:focus={handleFocus}
 		on:blur={handleBlur}
 		on:contextmenu|preventDefault|stopPropagation={handleRightClick}
+		disabled={renaming}
 		type="button" class="name-and-button {focused ? 'focused' : ''} {blurred ? 'blurred' : ''} {open ? 'open' : ''}"
 	>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
