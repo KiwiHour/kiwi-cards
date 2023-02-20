@@ -24,7 +24,6 @@
 
 	let openDeckUId: string | null = null;
 	let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null = null;
-	let expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
 	let showContextMenu = false;
 	let rightClickPos: { x: number, y: number }
 
@@ -52,7 +51,7 @@
 				<!-- Then just apply the add the isNew prop which is handeled by the component -->
 
 				{#if node.type == "folder"}
-					<Folder on:node-click={handleNodeClick} arrayedNode={[node, children]} expanded={expandedFolderUIds.includes(node.UId)} {nodeSelectEvent} {openDeckUId} depth={0}/>
+					<Folder on:node-click={handleNodeClick} arrayedNode={[node, children]} {nodeSelectEvent} {openDeckUId} depth={0}/>
 				{:else if node.type == "deck"}
 					<Deck on:node-click={handleNodeClick} arrayedNode={[node, children]} {nodeSelectEvent} {openDeckUId} depth={0}/>
 				{/if}

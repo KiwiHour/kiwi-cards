@@ -4,13 +4,11 @@
     import { getExpandedFolderUIDs, sortTopLevelNodes, deleteNode, renameNode } from "$lib/functions";
     import { createEventDispatcher } from "svelte";
     import { invalidateAll } from "$app/navigation";
-    import { slide } from "svelte/transition";
     import { onMount } from "svelte";
     import Deck from "./Deck.svelte";
     import ContextMenu from "./ContextMenu.svelte";
 
 	export let arrayedNode: any // i give up
-	export let expanded: boolean
 	export let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null
 	export let openDeckUId: string | null
 	export let depth: number;
@@ -54,6 +52,7 @@
 	let rightClickPos: { x: number, y: number }
 	let renaming = false;
 	let newName: string = folder.name;
+	let expanded = false;
 
 	$: blurred = nodeSelectEvent?.nodeUId == folder.UId && blurred;
 	$: focused = nodeSelectEvent?.nodeUId == folder.UId
@@ -84,6 +83,7 @@
 
 	onMount(() => {
 		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
+		expanded = expandedFolderUIds.includes(folder.UId)
 	})
 
 </script>
@@ -95,7 +95,7 @@
 <div class="folder node" id={folder.UId} >
 
 	<!-- keyup/keydown to stop spacebar/enter from toggling folder, as it messing with renaming -->
-	<button transition:slide={{duration: 200}} 
+	<button
 		on:click={(toggleFolder)}
 		on:focus={handleFocus}
 		on:blur={handleBlur}
@@ -122,7 +122,7 @@
 		{#if expanded}
 			{#each sortTopLevelNodes(children) as [child, grandChildren]}
 				{#if child.type == "folder"}
-					<svelte:self on:node-click arrayedNode={[child, grandChildren]} expanded={expandedFolderUIds.includes(child.UId)} {nodeSelectEvent} {openDeckUId} depth={depth + 1}/>
+					<svelte:self on:node-click arrayedNode={[child, grandChildren]} {nodeSelectEvent} {openDeckUId} depth={depth + 1}/>
 				{:else if child.type == "deck"}
 					<Deck on:node-click arrayedNode={[child, grandChildren]} {nodeSelectEvent} {openDeckUId} depth={depth + 1}/>
 				{/if}

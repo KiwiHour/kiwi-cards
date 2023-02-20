@@ -4,7 +4,6 @@
 	import { createEventDispatcher } from "svelte";
     import { invalidateAll } from "$app/navigation";
 	import { deleteNode, renameNode } from "$lib/functions";
-    import { slide } from "svelte/transition";
     import ContextMenu from "./ContextMenu.svelte";
 
 	export let arrayedNode: any // i give up
@@ -81,7 +80,7 @@
 
 <div class="deck node" id={deck.UId}>
 
-	<button transition:slide={{duration: 200}}
+	<button
 		on:click={openDeck}
 		on:focus={handleFocus}
 		on:blur={handleBlur}
