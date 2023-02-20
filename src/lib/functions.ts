@@ -44,8 +44,8 @@ export function sortTopLevelNodes(fileTree: Database.ArrayedNode<"folder" | "dec
 	let decks = fileTree.filter(([node, _]) => node.type == "deck")
 
 	let sortedFileTree = [
-		...folders.sort(([a, _1], [b, _2]) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0),
-		...decks.sort(([a, _1], [b, _2]) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0)
+		...folders.sort(([a, _1], [b, _2]) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0),
+		...decks.sort(([a, _1], [b, _2]) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0)
 	] as Database.ArrayedNode<"folder" | "deck">[]
 	
 	return sortedFileTree
