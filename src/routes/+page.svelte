@@ -1,21 +1,28 @@
 <script lang="ts">
     import type { PageData } from "./$types";
-    import { onMount } from "svelte";
+    import { onMount, tick } from "svelte";
     import FileTree from "$lib/components/FileTree.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
     import Homepage from "$lib/components/Homepage.svelte";
-    import { invalidateAll } from "$app/navigation";
 
 	export let data: PageData
 
 	let canResize = false;
 	let fileTreeWidth: number | null = 300;
+	let allDecksClosed = false;
 	
 	function handleFileTreeResize(event: MouseEvent) {
 		if (canResize) {
 			fileTreeWidth = Math.min(Math.max(150, event.clientX - 42), 1500) // 2x20 + 2 (2 x padding, l + r. and border width)
 			localStorage.setItem("file-tree-width", fileTreeWidth.toString())
 		}
+	}
+
+	async function handleCloseAllDecks() {
+		console.log("game")
+		allDecksClosed = true
+		await tick() // let file tree styling update, then allow decks to be clicked again. GOD DAMN I LOVE tick. TICK MY BELOVED
+		allDecksClosed = false;
 	}
 
 	onMount(() => {
@@ -32,11 +39,11 @@
 	<!-- THIS RELOADS THE DATA ON THE PAGE (hook.server.ts + server.page.ts)-->
 	<!-- <button type="button" on:click={async () => { await invalidateAll() }}>Invalidate All</button> -->
 
-	<FileTree fileTree={data.fileTree} width={fileTreeWidth ? fileTreeWidth : 300}/>
+	<FileTree fileTree={data.fileTree} width={fileTreeWidth ? fileTreeWidth : 300} {allDecksClosed}/>
 	<!-- preventDefault stops text highligting while resizing -->
 	<div id="resize-bar" on:mousedown|preventDefault={() => { canResize = true }}></div>
 	<div id="page">
-		<Navbar />
+		<Navbar on:close-all-decks={handleCloseAllDecks} />
 		<!-- Will have an if statement to decide to show homepage or a selected deck 
 			REMEMBER TO ADD overflow: auto TO ANY OTHER COMPONENTS THAT TAKE UP THE PAGE CONTENTS-->
 		<Homepage /> 

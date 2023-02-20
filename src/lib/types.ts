@@ -29,3 +29,5 @@ export namespace Database {
 	}
 
 }
+
+export type ContextMenuOptions = { name: string, function: () => any }[]

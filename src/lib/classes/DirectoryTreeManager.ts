@@ -1,4 +1,4 @@
-import type { Database } from "$lib/schema";
+import type { Database } from "$lib/types";
 import type { MongoClient } from "mongodb";
 import { Db } from "./index";
 
