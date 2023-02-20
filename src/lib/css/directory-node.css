@@ -10,6 +10,14 @@ svg {
 	background-color: var(--file-tree-node-background-colour);
 }
 
+#rename-input {
+	width: 100%;
+	padding-right: 10px;
+	font-size: 1.3em;
+
+	background-color:  var(--file-tree-background-colour);
+}
+
 .node .name-and-button {
 	width: 100%;
 	display: flex;
@@ -35,7 +43,7 @@ svg {
 }
 
 .node .name-and-button.open .button-contents p {
-	font-weight: bold;
+	/* font-weight: bold; */
 }
 
 .deck .name-and-button.open .button-contents p {
