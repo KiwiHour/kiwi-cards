@@ -5,6 +5,7 @@
     import Deck from "./file-tree/Deck.svelte";
     import Folder from "./file-tree/Folder.svelte";
     import ThemeToggle from "./ThemeToggle.svelte";
+    import ContextMenu from "./file-tree/ContextMenu.svelte";
 
 	export let fileTree: Database.ArrayedNode<"folder" | "deck">[]
 	export let width: number | null;
@@ -16,18 +17,40 @@
 		}
 	}
 
+	function handleRightClick(event: MouseEvent) {
+		rightClickPos = { x: event.clientX, y: event.clientY }
+		showContextMenu = true;
+	}
+
 	let openDeckUId: string | null = null;
 	let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null = null;
 	let expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
+	let showContextMenu = false;
+	let rightClickPos: { x: number, y: number }
+
+	let contextMenuConfig = {
+		options: [
+			{ name: "New Folder", function: async () => {
+
+			}}
+		]
+	}
 
 </script>
 
-<div class="file-tree" style="{width ? `width: ${width}px; min-width: ${width}px;` : ""}">
+{#if showContextMenu}
+	<ContextMenu on:close-context-menu={async () => showContextMenu = false} pos={rightClickPos} config={contextMenuConfig}/>
+{/if}
+
+<div class="file-tree" style="{width ? `width: ${width}px; min-width: ${width}px;` : ""}" on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 	
 	<div class="folders outline">
 		{#key fileTree}
 			{#each sortTopLevelNodes(fileTree) as [node, children]}
 		
+				<!-- MERGE THE DECK AND FOLDER COMPONENTS-->
+				<!-- Then just apply the add the isNew prop which is handeled by the component -->
+
 				{#if node.type == "folder"}
 					<Folder on:node-click={handleNodeClick} arrayedNode={[node, children]} expanded={expandedFolderUIds.includes(node.UId)} {nodeSelectEvent} {openDeckUId} depth={0}/>
 				{:else if node.type == "deck"}

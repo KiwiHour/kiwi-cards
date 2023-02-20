@@ -50,10 +50,9 @@
 	$: blurred = nodeSelectEvent?.nodeUId == deck.UId && blurred
 
 	let contextMenuConfig = {
-		title: "deck",
 		options: [
-			{ name: "Rename deck", function: () => renaming = true },
-			{ name: "Delete deck", function: async () => {
+			{ name: "Rename", function: () => renaming = true },
+			{ name: "Delete", function: async () => {
 				let [_, err] = await deleteNode(deck.UId)
 				invalidateAll()
 				if (err) { alert(err) }

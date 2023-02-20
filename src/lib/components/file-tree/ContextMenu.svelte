@@ -4,7 +4,6 @@
 
 	export let pos: { x: number, y: number };
 	export let config: {
-		title: string
 		options: { name: string, function: () => any }[]
 	}
 
@@ -21,7 +20,6 @@
 </script>
 
 <button use:autofocus id="context-menu" style="left: {pos.x}px; top: {pos.y}px;" on:blur|preventDefault={handleBlur}>
-	<p id="title">{config.title}</p>
 	<ul>
 		{#each config.options as option}
 			<li on:click={() => {dispatch("close-context-menu"); option.function()}} on:keypress>{option.name}</li>

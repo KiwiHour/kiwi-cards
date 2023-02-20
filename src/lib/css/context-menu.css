@@ -2,9 +2,14 @@
 	position: fixed;
 	z-index: 99;
 	padding: 0;
+	border: none;
 
 	border: 2px solid var(--context-menu-outline-colour);
 	background-color: var(--context-menu-background-colour);
+}
+
+#context-menu:focus {
+	outline:
 }
 
 #context-menu ul {

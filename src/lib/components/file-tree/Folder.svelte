@@ -59,10 +59,9 @@
 	$: focused = nodeSelectEvent?.nodeUId == folder.UId
 
 	let contextMenuConfig = {
-		title: "folder",
 		options: [
-			{ name: "Rename folder", function: () => renaming = true },
-			{ name: "Delete folder", function: async () => {
+			{ name: "Rename", function: () => renaming = true },
+			{ name: "Delete", function: async () => {
 				let [_, err] = await deleteNode(folder.UId)
 				invalidateAll()
 				if (err) { alert(err) }
@@ -93,7 +92,7 @@
 	<ContextMenu on:close-context-menu={async () => showContextMenu = false} pos={rightClickPos} config={contextMenuConfig}/>
 {/if}
 
-<div class="folder node" id={folder.UId}>
+<div class="folder node" id={folder.UId} >
 
 	<!-- keyup/keydown to stop spacebar/enter from toggling folder, as it messing with renaming -->
 	<button transition:slide={{duration: 200}} 
