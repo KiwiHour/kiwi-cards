@@ -9,7 +9,7 @@
 }
 
 #context-menu:focus {
-	outline:
+	outline: none
 }
 
 #context-menu ul {
