@@ -1,10 +1,13 @@
 <svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg">
-
  <g>
   <title>Layer 1</title>
-  <path id="svg_1" d="m128,192l0,640l768,0l0,-512l-410.24,0l-128.256,-128l-229.504,0zm-32,-64l287.872,0l128.384,128l415.744,0a32,32 0 0 1 32,32l0,576a32,32 0 0 1 -32,32l-832,0a32,32 0 0 1 -32,-32l0,-704a32,32 0 0 1 32,-32z" fill="#ffffff" stroke-width="10px"/>
-  <line id="svg_7" y2="371.88234" x2="357.41211" y1="371.52972" x1="128.00021" stroke-width="64" stroke="#ffffff" fill="none"/>
-  <line transform="rotate(45, 419.177, 444.647)" id="svg_9" y2="444.82355" x2="533.88277" y1="444.47093" x1="304.47087" stroke-width="64" stroke="#ffffff" fill="none"/>
-  <line id="svg_10" y2="518.94121" x2="902.11815" y1="518.5886" x1="480.94149" stroke-width="64" stroke="#ffffff" fill="none"/>
+  <path stroke-width="10px" fill="#ffffff" d="m128,192l0,640l768,0l0,-512l-410.24,0l-128.256,-128l-229.504,0zm-32,-64l287.872,0l128.384,128l415.744,0a32,32 0 0 1 32,32l0,576a32,32 0 0 1 -32,32l-832,0a32,32 0 0 1 -32,-32l0,-704a32,32 0 0 1 32,-32z" id="svg_1"/>
+  <line fill="none" stroke="#ffffff" stroke-width="64" x1="125.14308" y1="371.52972" x2="357.41211" y2="371.88234" id="svg_7"/>
+  <line fill="none" stroke="#ffffff" stroke-width="64" x1="476.94151" y1="518.5886" x2="902.11815" y2="518.94121" id="svg_10"/>
+  <line transform="rotate(45, 416.78, 445.015)" fill="none" stroke="#ffffff" stroke-width="64" x1="300.59023" y1="444.83855" x2="532.96938" y2="445.19116" id="svg_2"/>
+  <rect id="svg_5" height="262" width="767" y="548" x="129" stroke-width="64" stroke="#ffffff" fill="#ffffff"/>
+  <rect id="svg_9" height="66.88889" width="211.88888" y="426.11111" x="149" stroke-width="64" stroke="#ffffff" fill="#ffffff"/>
+  <rect id="svg_12" height="71.33334" width="232.99999" y="494.66667" x="209" stroke-width="64" stroke="#ffffff" fill="#ffffff"/>
  </g>
+
 </svg>
