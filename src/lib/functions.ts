@@ -1,10 +1,10 @@
 import type { MongoClient } from "mongodb"
-import type { Database } from "$lib/schema"
+import type { ContextMenuOptions, Database } from "$lib/types"
 
+import { invalidateAll } from "$app/navigation";
 import { error } from "@sveltejs/kit";
 import { Db } from "./classes"
 import crypto from "crypto"
-import iconPaths from "./icon-paths";
 
 /** @returns UID length of 16 (8 hex bytes) */
 export async function generateUId(connectedMongoClient: MongoClient) {

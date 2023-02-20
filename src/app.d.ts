@@ -1,6 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type { DatabaseDirectory } from "$lib/schema";
+import type { DatabaseDirectory } from "$lib/types";
 import type { MongoClient } from "mongodb";
 
 // for information about these interfaces

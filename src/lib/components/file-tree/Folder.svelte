@@ -1,12 +1,12 @@
 <script lang="ts">
-    import type { Database } from "$lib/schema";
+    import type { Database } from "$lib/types";
 
     import { getExpandedFolderUIDs, sortTopLevelNodes, deleteNode, renameNode } from "$lib/functions";
     import { createEventDispatcher } from "svelte";
     import { invalidateAll } from "$app/navigation";
     import { onMount } from "svelte";
     import Deck from "./Deck.svelte";
-    import ContextMenu from "./ContextMenu.svelte";
+    import ContextMenu from "../ContextMenu.svelte";
 
 	export let arrayedNode: any // i give up
 	export let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null
@@ -57,8 +57,7 @@
 	$: blurred = nodeSelectEvent?.nodeUId == folder.UId && blurred;
 	$: focused = nodeSelectEvent?.nodeUId == folder.UId
 
-	let contextMenuConfig = {
-		options: [
+	let contextMenuConfig = [
 			{ name: "Rename", function: () => renaming = true },
 			{ name: "Delete", function: async () => {
 				let [_, err] = await deleteNode(folder.UId)
@@ -66,7 +65,7 @@
 				if (err) { alert(err) }
 			}},
 		]
-	}
+	
 
 	async function handleNewNameSubmit(event: KeyboardEvent) {
 		if (event.key == "Enter") {
@@ -89,7 +88,7 @@
 </script>
 
 {#if showContextMenu}
-	<ContextMenu on:close-context-menu={async () => showContextMenu = false} pos={rightClickPos} config={contextMenuConfig}/>
+	<ContextMenu on:close-context-menu={async () => showContextMenu = false} pos={rightClickPos} options={contextMenuConfig}/>
 {/if}
 
 <div class="folder node" id={folder.UId} >

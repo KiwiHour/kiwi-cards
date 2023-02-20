@@ -42,10 +42,6 @@ svg {
 	background-color: var(--file-tree-node-blurred-background-colour) !important;
 }
 
-.node .name-and-button.open .button-contents p {
-	/* font-weight: bold; */
-}
-
 .deck .name-and-button.open .button-contents p {
 	text-decoration: underline;
 }

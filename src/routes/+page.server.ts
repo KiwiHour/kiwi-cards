@@ -1,5 +1,5 @@
 import { DirectoryTreeManager } from '$lib/classes';
-import type { Database } from '$lib/schema';
+import type { Database } from '$lib/types';
 import type { PageServerLoad } from './$types';
 
 let getTree = async (node: Database.DirectoryNode, treeManager: DirectoryTreeManager): Promise<Database.ArrayedNode<"folder" | "deck">> => {

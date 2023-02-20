@@ -1,4 +1,4 @@
-import type { Database } from "$lib/schema";
+import type { Database } from "$lib/types";
 import type { Collection, MongoClient } from "mongodb";
 
 export default class Db {

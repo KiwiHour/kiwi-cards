@@ -1,19 +1,18 @@
 <script lang="ts">
-    import type { Database } from "$lib/schema";
+    import type { Database } from "$lib/types";
 
-    import { getExpandedFolderUIDs, sortTopLevelNodes } from "$lib/functions";
-    import Deck from "./file-tree/Deck.svelte";
-    import Folder from "./file-tree/Folder.svelte";
+    import { sortTopLevelNodes } from "$lib/functions";
     import ThemeToggle from "./ThemeToggle.svelte";
-    import ContextMenu from "./file-tree/ContextMenu.svelte";
-
+    import ContextMenu from "./ContextMenu.svelte";
+    import DirectoryNode from "./file-tree/DirectoryNode.svelte";
 	export let fileTree: Database.ArrayedNode<"folder" | "deck">[]
 	export let width: number | null;
+	export let allDecksClosed: boolean;
 
 	async function handleNodeClick(event: CustomEvent) {
 		nodeSelectEvent = event.detail
 		if (event.detail.type == "deck" && event.detail.clickType == "left") {
-			openDeckUId = event.detail.nodeUId
+			openDeckUId = allDecksClosed ? "" : event.detail.nodeUId
 		}
 	}
 
@@ -27,35 +26,26 @@
 	let showContextMenu = false;
 	let rightClickPos: { x: number, y: number }
 
-	let contextMenuConfig = {
-		options: [
-			{ name: "New Folder", function: async () => {
+	let contextMenuOptions = [
+		{ name: "New Folder", function: async () => {
 
-			}}
-		]
-	}
+		}}
+	]
+
+	$: openDeckUId = allDecksClosed ? "" : openDeckUId
 
 </script>
 
 {#if showContextMenu}
-	<ContextMenu on:close-context-menu={async () => showContextMenu = false} pos={rightClickPos} config={contextMenuConfig}/>
+	<ContextMenu on:close-context-menu={async () => showContextMenu = false} pos={rightClickPos} options={contextMenuOptions}/>
 {/if}
 
 <div class="file-tree" style="{width ? `width: ${width}px; min-width: ${width}px;` : ""}" on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 	
 	<div class="folders outline">
 		{#key fileTree}
-			{#each sortTopLevelNodes(fileTree) as [node, children]}
-		
-				<!-- MERGE THE DECK AND FOLDER COMPONENTS-->
-				<!-- Then just apply the add the isNew prop which is handeled by the component -->
-
-				{#if node.type == "folder"}
-					<Folder on:node-click={handleNodeClick} arrayedNode={[node, children]} {nodeSelectEvent} {openDeckUId} depth={0}/>
-				{:else if node.type == "deck"}
-					<Deck on:node-click={handleNodeClick} arrayedNode={[node, children]} {nodeSelectEvent} {openDeckUId} depth={0}/>
-				{/if}
-		
+			{#each sortTopLevelNodes(fileTree) as arrayedNode}
+				<DirectoryNode on:node-click={handleNodeClick} depth={0} {arrayedNode} {nodeSelectEvent} {openDeckUId} />
 			{/each}
 		{/key}
 	</div>

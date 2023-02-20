@@ -1,12 +1,11 @@
 <script lang="ts">
-
+	
+    import type { ContextMenuOptions } from "$lib/types";
     import { createEventDispatcher } from "svelte";
 
 	export let pos: { x: number, y: number };
-	export let config: {
-		options: { name: string, function: () => any }[]
-	}
-
+	export let options: ContextMenuOptions
+	
 	async function handleBlur(event: FocusEvent) {
 		dispatch("close-context-menu")
 	}
@@ -19,9 +18,9 @@
 
 </script>
 
-<button use:autofocus id="context-menu" style="left: {pos.x}px; top: {pos.y}px;" on:blur|preventDefault={handleBlur}>
+<button use:autofocus id="context-menu" style="left: {pos.x}px; top: {pos.y}px;" on:blur|preventDefault={handleBlur} on:contextmenu|stopPropagation>
 	<ul>
-		{#each config.options as option}
+		{#each options as option}
 			<li on:click={() => {dispatch("close-context-menu"); option.function()}} on:keypress>{option.name}</li>
 		{/each}
 	</ul>
