@@ -59,6 +59,7 @@
 }
 
 .deck .button-contents img {
+	scale: 0.8;
 	padding: 0 4px; /* height 33px normally, 25px for deck, so add 8px padding total so they line up */
 }
 

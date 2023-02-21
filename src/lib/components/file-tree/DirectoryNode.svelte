@@ -5,6 +5,7 @@
     import { createEventDispatcher, onMount } from "svelte";
     import { invalidateAll } from "$app/navigation";
     import ContextMenu from "../ContextMenu.svelte";
+    import NewDirectoryNode from "./NewDirectoryNode.svelte";
 
 	// any node
 	function handleFocus() {
@@ -35,6 +36,18 @@
 			expandedFolderUIds = expandedFolderUIds.filter(UId => UId != node.UId)
 		}
 		sessionStorage.setItem("expanded-folder-uids", JSON.stringify(expandedFolderUIds))
+	}
+
+	function expandFolder() {
+		expanded = true;
+		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
+		if (expanded) {
+			expandedFolderUIds.push(node.UId)
+		} else {
+			expandedFolderUIds = expandedFolderUIds.filter(UId => UId != node.UId)
+		}
+		sessionStorage.setItem("expanded-folder-uids", JSON.stringify(expandedFolderUIds))
+
 	}
 
 	// deck
@@ -122,7 +135,7 @@
 		type="button" class="name-and-button {classes}"
 	>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
-			<img class="toggle-indicator" id="deck-icon" alt="deck icon" style="scale: 0.8">
+			<img class="toggle-indicator" alt="deck icon">
 			{#if renaming}
 				<input id="rename-input" use:autofocus
 					on:blur={() => {renaming = false}}
@@ -139,8 +152,11 @@
 
 		<div class="folder-contents">
 
-			{#if node.type == "folder"}
-				<svelte:self on:node-click depth={depth + 1} {arrayedNode} {nodeSelectEvent} {openDeckUId}/>
+			{#if node.type == "folder" && newNodeType}
+				<NewDirectoryNode
+					on:added-new-node={expandFolder}
+					on:remove-new-node={() => newNodeType = null}
+					depth={depth + 1} parentUId={node.UId} type={newNodeType}/>
 			{/if}
 
 			{#if expanded}
