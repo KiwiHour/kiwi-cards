@@ -10,6 +10,8 @@
 	width: 100%;
 	padding-right: 10px;
 	font-size: 1.3em;
+	border: none;
+	outline: none;
 
 	background-color:  var(--file-tree-background-colour);
 }

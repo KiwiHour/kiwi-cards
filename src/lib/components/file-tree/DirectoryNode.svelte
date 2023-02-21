@@ -58,19 +58,19 @@
 	}
 
 	let deckContextMenuOptions: ContextMenuOptions = [
-		{ name: "Rename", function: () => renaming = true },
 		{ name: "Delete", function: async () => {
 			let [_, err] = await deleteNode(node.UId)
 			invalidateAll()
 			if (err) { alert(err) }
 		}},
+		{ name: "Rename", function: () => renaming = true },
 	]
 	
 	let folderContextMenuOptions: ContextMenuOptions = [
-		...deckContextMenuOptions,
 		// folder specific functions
 		{ name: "New folder", function: () => newNodeType = "folder" },
-		{ name: "New deck", function: () => newNodeType = "deck" }
+		{ name: "New deck", function: () => newNodeType = "deck" },
+		...deckContextMenuOptions,
 	]
 
 	export let arrayedNode: Database.ArrayedNode<"deck" | "folder">
@@ -138,10 +138,6 @@
 	{#if node.type == "folder"}
 
 		<div class="folder-contents">
-
-			{#if node.type == "folder"}
-				<svelte:self on:node-click depth={depth + 1} {arrayedNode} {nodeSelectEvent} {openDeckUId}/>
-			{/if}
 
 			{#if expanded}
 				{#each sortTopLevelNodes(children) as arrayedNode}

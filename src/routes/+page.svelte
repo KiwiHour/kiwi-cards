@@ -35,10 +35,6 @@
 
 <main on:mouseup={() => { canResize = false }} on:mousemove={handleFileTreeResize}>
 
-
-	<!-- THIS RELOADS THE DATA ON THE PAGE (hook.server.ts + server.page.ts)-->
-	<!-- <button type="button" on:click={async () => { await invalidateAll() }}>Invalidate All</button> -->
-
 	<FileTree fileTree={data.fileTree} width={fileTreeWidth ? fileTreeWidth : 300} {allDecksClosed}/>
 	<!-- preventDefault stops text highligting while resizing -->
 	<div id="resize-bar" on:mousedown|preventDefault={() => { canResize = true }}></div>
