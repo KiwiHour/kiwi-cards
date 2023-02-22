@@ -76,6 +76,14 @@
 		}
 	}
 
+	function handleNewNameKeyup(event: KeyboardEvent) {
+		if (event.key == "Escape") {
+			newName = node.name
+			renaming = false;
+			return;
+		}
+	}
+
 	async function handleNewNodeNameSubmit(event: KeyboardEvent) {
 		if (event.key == "Enter") {
 			if (!newNodeName || newNodeName.trim() == "" ) {
@@ -93,6 +101,13 @@
 			dispatch("added-new-node")
 			isNew = false;
 			if (err) { alert(err) }
+		}
+	}
+
+	function handleNewNodeNameKeyup(event: KeyboardEvent) {
+		if (event.key == "Escape") {
+			dispatch("remove-new-node")
+			return;
 		}
 	}
 
@@ -177,12 +192,14 @@
 				<input id="rename-input" use:autofocus
 					on:blur={() => {renaming = false}}
 					on:keypress={handleNewNameSubmit} 
+					on:keyup={handleNewNameKeyup}
 					bind:value={newName}
 					type="text" />
 			{:else if isNew}
 				<input id="new-node-name-input" use:autofocus
 					on:blur={() => {dispatch("remove-new-node")}}
 					on:keypress={handleNewNodeNameSubmit} 
+					on:keyup={handleNewNodeNameKeyup}
 					bind:value={newNodeName}
 					type="text" />
 			{:else}
