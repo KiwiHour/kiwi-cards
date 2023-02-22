@@ -112,6 +112,7 @@
 	}
 
 	let deckContextMenuOptions: ContextMenuOptions = [
+		{ name: "Rename", function: () => renaming = true },
 		{ name: "Delete", function: async () => {
 			if (confirm(`Are you sure you want to delete the ${node.type} '${node.name}'`)) {
 				let [_, err] = await deleteNode(node.UId)
@@ -119,7 +120,6 @@
 				if (err) { alert(err) }
 			}
 		}},
-		{ name: "Rename", function: () => renaming = true },
 	]
 	
 	let folderContextMenuOptions: ContextMenuOptions = [

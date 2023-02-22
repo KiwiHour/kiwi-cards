@@ -2,6 +2,7 @@
 	position: fixed;
 	z-index: 99;
 	padding: 5px 2px;
+	padding-right: 20px;
 	border: none;
 	border: 2px solid var(--context-menu-outline-colour);
 	background-color: var(--context-menu-background-colour);
@@ -21,6 +22,7 @@
 	font-size: 1.3em;
 	padding: 5px 5px;
 	border-radius: 5px;
+	text-align: left;
 }
 
 #context-menu li:hover {
