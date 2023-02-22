@@ -79,3 +79,28 @@ export async function renameNode(nodeUId: string, newName: string): Promise<[nul
 		return [null, new Error(data.message)]
 	}
 }
+
+/** @returns the added node's UId if no error occurs */
+export async function addNode(parentUId: string | null, name: string, type: "folder" | "deck"): Promise<[string, null] | [null, Error]> {
+	let res = await fetch("/api/directory-node", {
+		method: "POST",
+		body: JSON.stringify({ parentUId, name, type })
+	})
+
+	let data = await res.json();
+	if (res.ok) {
+		return [data.addedNodeUId, null]
+	} else {
+		return [null, new Error(data.message)]
+	}
+}
+
+export function generateNewNode(type: "folder" | "deck", parentUId: string | null) {
+	return {
+		UId: "new-node",
+		parentUId,
+		childrenUIds: [],
+		name: "",
+		type
+	} as Database.DirectoryNode
+}

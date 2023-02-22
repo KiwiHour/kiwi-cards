@@ -1,9 +1,8 @@
 #context-menu {
 	position: fixed;
 	z-index: 99;
-	padding: 0;
+	padding: 5px 2px;
 	border: none;
-
 	border: 2px solid var(--context-menu-outline-colour);
 	background-color: var(--context-menu-background-colour);
 }
@@ -20,7 +19,7 @@
 #context-menu li {
 	list-style: none;
 	font-size: 1.3em;
-	padding: 5px 0;
+	padding: 5px 5px;
 	border-radius: 5px;
 }
 

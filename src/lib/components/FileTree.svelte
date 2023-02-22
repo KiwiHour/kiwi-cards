@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Database } from "$lib/types";
 
-    import { sortTopLevelNodes } from "$lib/functions";
+    import { generateNewNode, sortTopLevelNodes } from "$lib/functions";
     import ThemeToggle from "./ThemeToggle.svelte";
     import ContextMenu from "./ContextMenu.svelte";
     import DirectoryNode from "./file-tree/DirectoryNode.svelte";
@@ -11,7 +11,7 @@
 
 	async function handleNodeClick(event: CustomEvent) {
 		nodeSelectEvent = event.detail
-		if (event.detail.type == "deck" && event.detail.clickType == "left") {
+		if (event.detail.type == "deck" && event.detail.clickType == "left" && !newNode) {
 			openDeckUId = allDecksClosed ? "" : event.detail.nodeUId
 		}
 	}
@@ -21,15 +21,19 @@
 		showContextMenu = true;
 	}
 
-	let openDeckUId: string | null = null;
-	let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null = null;
-	let showContextMenu = false;
-	let rightClickPos: { x: number, y: number }
+	let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null = null,
+		openDeckUId: string | null = null,
+		showContextMenu = false,
+		rightClickPos: { x: number, y: number },
+		newNode: Database.DirectoryNode | null = null;
 
 	let contextMenuOptions = [
-		{ name: "New Folder", function: async () => {
-
-		}}
+		{ name: "New Folder", function: () => {
+			newNode = generateNewNode("folder", null) 
+		}},
+		{ name: "New Deck", function: () => {
+			newNode = generateNewNode("deck", null)
+		}},
 	]
 
 	$: openDeckUId = allDecksClosed ? "" : openDeckUId
@@ -44,8 +48,15 @@
 	
 	<div class="folders outline">
 		{#key fileTree}
+			{#if newNode}
+				<DirectoryNode
+					on:added-new-node={() => newNode = null}
+					on:remove-new-node={() => newNode = null}
+					depth={0} isNew={true} arrayedNode={[newNode, []]} {nodeSelectEvent} {openDeckUId}/>
+			{/if}
+
 			{#each sortTopLevelNodes(fileTree) as arrayedNode}
-				<DirectoryNode on:node-click={handleNodeClick} depth={0} {arrayedNode} {nodeSelectEvent} {openDeckUId} />
+				<DirectoryNode on:node-click={handleNodeClick} depth={0} isNew={false} {arrayedNode} {nodeSelectEvent} {openDeckUId} />
 			{/each}
 		{/key}
 	</div>

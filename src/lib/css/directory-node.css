@@ -6,7 +6,7 @@
 	background-color: var(--file-tree-node-background-colour);
 }
 
-#rename-input {
+#rename-input, #new-node-name-input {
 	width: 100%;
 	padding-right: 10px;
 	font-size: 1.3em;
@@ -75,6 +75,7 @@
 }
 .deck .name-and-button img {
 	content: var(--deck-closed-icon);
+	scale: 0.8;
 }
 
 /* open icons */

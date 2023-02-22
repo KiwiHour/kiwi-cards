@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import type { ContextMenuOptions, Database } from "$lib/types";
-    import { deleteNode, getExpandedFolderUIDs, renameNode, sortTopLevelNodes } from "$lib/functions"
+    import { addNode, deleteNode, generateNewNode, getExpandedFolderUIDs, renameNode, sortTopLevelNodes } from "$lib/functions"
     import { createEventDispatcher, onMount } from "svelte";
     import { invalidateAll } from "$app/navigation";
     import ContextMenu from "../ContextMenu.svelte";
@@ -25,8 +25,20 @@
 		el.focus()
 	}
 
+	// button control here
+	async function handleNodeKeydown(event: KeyboardEvent) {
+		if (["Backspace", "Delete"].includes(event.key)) {
+			if (confirm(`Are you sure you want to delete the ${node.type} '${node.name}'`)) {
+				let [_, err] = await deleteNode(node.UId)
+				await invalidateAll()
+				if (err) { alert(err) }
+			}
+		}
+	}
+
 	// folders
 	function toggleFolder() {
+		if (node.UId == "new-node") { return }
 		expanded = !expanded
 		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
 		if (expanded) {
@@ -34,6 +46,13 @@
 		} else {
 			expandedFolderUIds = expandedFolderUIds.filter(UId => UId != node.UId)
 		}
+		sessionStorage.setItem("expanded-folder-uids", JSON.stringify(expandedFolderUIds))
+	}
+
+	function addFolderToExpandedList(folderUId: string) {
+		if (folderUId == "new-node") { return }
+		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
+		expandedFolderUIds.push(folderUId)
 		sessionStorage.setItem("expanded-folder-uids", JSON.stringify(expandedFolderUIds))
 	}
 
@@ -52,24 +71,50 @@
 				return;
 			}
 			let [_, err] = await renameNode(node.UId, newName)
-			invalidateAll()
+			await invalidateAll()
+			if (err) { alert(err) }
+		}
+	}
+
+	async function handleNewNodeNameSubmit(event: KeyboardEvent) {
+		if (event.key == "Enter") {
+			if (!newNodeName || newNodeName.trim() == "" ) {
+				dispatch("remove-new-node")
+				return;
+			}
+			// update name so it seem as if there is no delay
+			disableNode = true
+			isNew = false
+			node.name = newNodeName
+			
+			let [newNodeUId, err] = await addNode(node.parentUId, newNodeName, node.type)
+			node.parentUId ? addFolderToExpandedList(node.parentUId) : ""
+			await invalidateAll()
+			dispatch("added-new-node")
+			isNew = false;
 			if (err) { alert(err) }
 		}
 	}
 
 	let deckContextMenuOptions: ContextMenuOptions = [
 		{ name: "Delete", function: async () => {
-			let [_, err] = await deleteNode(node.UId)
-			invalidateAll()
-			if (err) { alert(err) }
+			if (confirm(`Are you sure you want to delete the ${node.type} '${node.name}'`)) {
+				let [_, err] = await deleteNode(node.UId)
+				await invalidateAll()
+				if (err) { alert(err) }
+			}
 		}},
 		{ name: "Rename", function: () => renaming = true },
 	]
 	
 	let folderContextMenuOptions: ContextMenuOptions = [
 		// folder specific functions
-		{ name: "New folder", function: () => newNodeType = "folder" },
-		{ name: "New deck", function: () => newNodeType = "deck" },
+		{ name: "New Folder", function: () => {
+			newNode = generateNewNode("folder", node.UId) 
+		}},
+		{ name: "New Deck", function: () => {
+			newNode = generateNewNode("deck", node.UId)
+		}},
 		...deckContextMenuOptions,
 	]
 
@@ -77,6 +122,7 @@
 	export let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null
 	export let openDeckUId: string | null
 	export let depth: number;
+	export let isNew: boolean;
 
 	let dispatch = createEventDispatcher()
 	let [node, children] = arrayedNode as [Database.DirectoryNode, any] // R.I.P
@@ -84,11 +130,13 @@
 	let	open: boolean, 
 		focused: boolean, 
 		blurred: boolean, 
-		expanded: boolean,
-		expandedFolderUIds: string[],
 		renaming: boolean,
 		newName: string = node.name,
-		newNodeType: "folder" | "deck" | null = null;
+		newNode: Database.DirectoryNode | null = null,
+		expanded: boolean,
+		expandedFolderUIds: string[],
+		newNodeName: string,
+		disableNode: boolean = false;
 		
 	let	showContextMenu: boolean = false,
 		rightClickPos: { x: number, y: number };
@@ -98,11 +146,12 @@
 	$: open = openDeckUId == node.UId // only useful for decks, but a folder will never have a deck uid so all good
 	$: focused = nodeSelectEvent?.nodeUId == node.UId && !blurred
 	$: blurred = nodeSelectEvent?.nodeUId == node.UId && blurred;
+	$: expanded = newNode !== null || expanded;
 	$: classes = `${focused ? 'focused' : ''} ${blurred ? 'blurred' : ''} ${open || expanded ? 'open' : ''}`
 
 	onMount(() => {
 		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
-		expanded = node.type == "folder" ? expandedFolderUIds.includes(node.UId) : false
+		expanded = expandedFolderUIds.includes(node.UId)
 	})
 
 </script>
@@ -117,17 +166,24 @@
 		on:click={node.type == "deck" ? openDeck : toggleFolder}
 		on:focus={handleFocus}
 		on:blur={handleBlur}
+		on:keydown={handleNodeKeydown}
 		on:contextmenu|preventDefault|stopPropagation={handleRightClick}
-		disabled={renaming}
+		disabled={renaming || isNew || disableNode}
 		type="button" class="name-and-button {classes}"
 	>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
-			<img class="toggle-indicator" id="deck-icon" alt="deck icon" style="scale: 0.8">
+			<img class="toggle-indicator" alt="node icon">
 			{#if renaming}
 				<input id="rename-input" use:autofocus
 					on:blur={() => {renaming = false}}
 					on:keypress={handleNewNameSubmit} 
 					bind:value={newName}
+					type="text" />
+			{:else if isNew}
+				<input id="new-node-name-input" use:autofocus
+					on:blur={() => {dispatch("remove-new-node")}}
+					on:keypress={handleNewNodeNameSubmit} 
+					bind:value={newNodeName}
 					type="text" />
 			{:else}
 				<p class="prevent-select">{node.name}</p>
@@ -139,9 +195,12 @@
 
 		<div class="folder-contents">
 
-			{#if expanded}
+			{#if expanded || newNode}
+				{#if newNode}
+					<svelte:self on:remove-new-node={() => newNode = null} on:node-click depth={depth + 1} isNew={true} arrayedNode={[newNode, []]} {nodeSelectEvent} {openDeckUId}/>
+				{/if}
 				{#each sortTopLevelNodes(children) as arrayedNode}
-					<svelte:self on:node-click depth={depth + 1} {arrayedNode} {nodeSelectEvent} {openDeckUId}/>
+					<svelte:self on:node-click depth={depth + 1} isNew={false} {arrayedNode} {nodeSelectEvent} {openDeckUId}/>
 				{/each}
 			{/if}
 
