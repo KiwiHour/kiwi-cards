@@ -1,3 +1,5 @@
+On top of GNU General Public License, please attribute my work by linking to this github reposity
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
