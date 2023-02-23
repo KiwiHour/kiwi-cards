@@ -69,6 +69,10 @@
 	width: auto;
 }
 
+.node .name-and-button.loading img {
+	content: var(--spinner-icon) !important;
+}
+
 /* closed icons */
 .folder .name-and-button img {
 	content: var(--folder-closed-icon);

@@ -9,6 +9,8 @@ export default {
 		"folder-open": "svg/folder/light/folder-open-svgrepo-com.svg",
 		"folder-add": "svg/folder/light/folder-add-svgrepo-com.svg",
 		"folder-delete": "svg/folder/light/folder-delete-svgrepo-com.svg",
+
+		"spinner": "svg/spinner-light.svg"
 	},
 	dark: {
 		"deck-closed": "svg/deck/dark/808605-iconfinder-deck-closed.svg",
@@ -20,5 +22,7 @@ export default {
 		"folder-open": "svg/folder/dark/folder-open-svgrepo-com.svg",
 		"folder-add": "svg/folder/dark/folder-add-svgrepo-com.svg",
 		"folder-delete": "svg/folder/dark/folder-delete-svgrepo-com.svg",
+
+		"spinner": "svg/spinner-dark.svg"
 	}
 }

@@ -42,6 +42,8 @@
 	--folder-add-icon: url("$lib/svg/folder/dark/folder-add-svgrepo-com.svg");
 	--folder-delete-icon: url("$lib/svg/folder/dark/folder-delete-svgrepo-com.svg");
 
+	--spinner-icon: url("$lib/svg/spinner-dark.svg");
+
 }
 
 :root body.light-theme {
@@ -79,4 +81,6 @@
 	--folder-open-icon: url("$lib/svg/folder/light/folder-open-svgrepo-com.svg");
 	--folder-add-icon: url("$lib/svg/folder/light/folder-add-svgrepo-com.svg");
 	--folder-delete-icon: url("$lib/svg/folder/light/folder-delete-svgrepo-com.svg");
+
+	--spinner-icon: url("$lib/svg/spinner-light.svg");
 }

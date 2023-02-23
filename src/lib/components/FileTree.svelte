@@ -19,6 +19,7 @@
 	}
 
 	function handleRightClick(event: MouseEvent) {
+		if (isDisabled) { return }
 		rightClickPos = { x: event.clientX, y: event.clientY }
 		showContextMenu = true;
 	}
@@ -28,7 +29,8 @@
 		openDeckUId: string | null = null,
 		showContextMenu = false,
 		rightClickPos: { x: number, y: number },
-		newNode: Database.DirectoryNode | null = null;
+		newNode: Database.DirectoryNode | null = null,
+		isDisabled = false;
 
 	let contextMenuOptions = [
 		{ name: "New Folder", function: () => {
@@ -52,15 +54,26 @@
 	<div class="folders outline">
 		{#key fileTree}
 			{#if newNode}
+
 				<DirectoryNode
+					on:is-loading={e => isDisabled = e.detail}
 					on:added-new-node={() => newNode = null}
 					on:remove-new-node={() => newNode = null}
-					depth={0} isNew={true} arrayedNode={[newNode, []]} {nodeSelectEvent} {openDeckUId}/>
-			{/if}
+					depth={0}
+					isNew={true}
+					{isDisabled} arrayedNode={[newNode, []]} {nodeSelectEvent} {openDeckUId}
+				/>
 
-			{#each sortTopLevelNodes(fileTree) as arrayedNode}
-				<DirectoryNode on:node-click={handleNodeClick} depth={0} isNew={false} {arrayedNode} {nodeSelectEvent} {openDeckUId} />
-			{/each}
+			{/if}
+				{#each sortTopLevelNodes(fileTree) as arrayedNode}
+					<DirectoryNode
+						on:is-loading={e => isDisabled = e.detail}
+						on:node-click={handleNodeClick}
+						depth={0}
+						isNew={false}
+						{isDisabled} {arrayedNode} {nodeSelectEvent} {openDeckUId}
+					/>
+				{/each}
 		{/key}
 	</div>
 	<ThemeToggle />

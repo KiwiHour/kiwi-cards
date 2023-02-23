@@ -17,6 +17,7 @@
 	}
 
 	function handleRightClick(event: MouseEvent) {
+		if (isDisabled) { return }
 		rightClickPos = { x: event.clientX, y: event.clientY }
 		showContextMenu = true;
 	}
@@ -25,15 +26,9 @@
 		el.focus()
 	}
 
-	// button control here
-	async function handleNodeKeydown(event: KeyboardEvent) {
-		if (["Backspace", "Delete"].includes(event.key)) {
-			if (confirm(`Are you sure you want to delete the ${node.type} '${node.name}'`)) {
-				let [_, err] = await deleteNode(node.UId)
-				await invalidateAll()
-				if (err) { alert(err) }
-			}
-		}
+	function setIsLoading(isLd: boolean) {
+		isLoading = isLd
+		dispatch("is-loading", isLd)
 	}
 
 	// folders
@@ -70,8 +65,10 @@
 				renaming = false;
 				return;
 			}
+			setIsLoading(true)
 			let [_, err] = await renameNode(node.UId, newName)
 			await invalidateAll()
+			setIsLoading(false)
 			if (err) { alert(err) }
 		}
 	}
@@ -91,14 +88,15 @@
 				return;
 			}
 			// update name so it seem as if there is no delay
-			disableNode = true
+			setIsLoading(true)
 			isNew = false
 			node.name = newNodeName
-			
+
 			let [newNodeUId, err] = await addNode(node.parentUId, newNodeName, node.type)
 			node.parentUId ? addFolderToExpandedList(node.parentUId) : ""
 			await invalidateAll()
 			dispatch("added-new-node")
+			setIsLoading(false)
 			isNew = false;
 			if (err) { alert(err) }
 		}
@@ -115,8 +113,10 @@
 		{ name: "Rename", function: () => renaming = true },
 		{ name: "Delete", function: async () => {
 			if (confirm(`Are you sure you want to delete the ${node.type} '${node.name}'`)) {
+				setIsLoading(true)
 				let [_, err] = await deleteNode(node.UId)
 				await invalidateAll()
+				setIsLoading(false)
 				if (err) { alert(err) }
 			}
 		}},
@@ -138,6 +138,7 @@
 	export let openDeckUId: string | null
 	export let depth: number;
 	export let isNew: boolean;
+	export let isDisabled: boolean;
 
 	let dispatch = createEventDispatcher()
 	let [node, children] = arrayedNode as [Database.DirectoryNode, any] // R.I.P
@@ -151,7 +152,7 @@
 		expanded: boolean,
 		expandedFolderUIds: string[],
 		newNodeName: string,
-		disableNode: boolean = false;
+		isLoading: boolean = false;
 		
 	let	showContextMenu: boolean = false,
 		rightClickPos: { x: number, y: number };
@@ -162,7 +163,7 @@
 	$: focused = nodeSelectEvent?.nodeUId == node.UId && !blurred
 	$: blurred = nodeSelectEvent?.nodeUId == node.UId && blurred;
 	$: expanded = newNode !== null || expanded;
-	$: classes = `${focused ? 'focused' : ''} ${blurred ? 'blurred' : ''} ${open || expanded ? 'open' : ''}`
+	$: classes = `${focused ? 'focused' : ''} ${blurred ? 'blurred' : ''} ${open || expanded ? 'open' : ''} ${isLoading ? "loading" : ""}`
 
 	onMount(() => {
 		expandedFolderUIds = getExpandedFolderUIDs(sessionStorage)
@@ -181,29 +182,34 @@
 		on:click={node.type == "deck" ? openDeck : toggleFolder}
 		on:focus={handleFocus}
 		on:blur={handleBlur}
-		on:keydown={handleNodeKeydown}
 		on:contextmenu|preventDefault|stopPropagation={handleRightClick}
-		disabled={renaming || isNew || disableNode}
+		disabled={renaming || isLoading || isDisabled}
 		type="button" class="name-and-button {classes}"
 	>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
 			<img class="toggle-indicator" alt="node icon">
 			{#if renaming}
+
 				<input id="rename-input" use:autofocus
 					on:blur={() => {renaming = false}}
 					on:keypress={handleNewNameSubmit} 
 					on:keyup={handleNewNameKeyup}
 					bind:value={newName}
 					type="text" />
+					
 			{:else if isNew}
+
 				<input id="new-node-name-input" use:autofocus
 					on:blur={() => {dispatch("remove-new-node")}}
 					on:keypress={handleNewNodeNameSubmit} 
 					on:keyup={handleNewNodeNameKeyup}
 					bind:value={newNodeName}
 					type="text" />
+
 			{:else}
+
 				<p class="prevent-select">{node.name}</p>
+
 			{/if}
 		</div>
 	</button>
@@ -214,10 +220,24 @@
 
 			{#if expanded || newNode}
 				{#if newNode}
-					<svelte:self on:remove-new-node={() => newNode = null} on:node-click depth={depth + 1} isNew={true} arrayedNode={[newNode, []]} {nodeSelectEvent} {openDeckUId}/>
+					<svelte:self
+						on:is-loading
+						on:remove-new-node={() => newNode = null}
+						on:node-click
+						depth={depth + 1}
+						isNew={true}
+						arrayedNode={[newNode, []]}
+						{isDisabled} {nodeSelectEvent} {openDeckUId}
+					/>
 				{/if}
 				{#each sortTopLevelNodes(children) as arrayedNode}
-					<svelte:self on:node-click depth={depth + 1} isNew={false} {arrayedNode} {nodeSelectEvent} {openDeckUId}/>
+					<svelte:self
+						on:is-loading
+						on:node-click 
+						depth={depth + 1}
+						isNew={false}
+						{isDisabled} {arrayedNode} {nodeSelectEvent} {openDeckUId}
+					/>
 				{/each}
 			{/if}
 
