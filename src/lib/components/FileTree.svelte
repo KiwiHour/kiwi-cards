@@ -2,6 +2,7 @@
     import type { Database } from "$lib/types";
 
     import { generateNewNode, sortTopLevelNodes } from "$lib/functions";
+    import { createEventDispatcher } from "svelte";
     import ThemeToggle from "./ThemeToggle.svelte";
     import ContextMenu from "./ContextMenu.svelte";
     import DirectoryNode from "./file-tree/DirectoryNode.svelte";
@@ -11,8 +12,9 @@
 
 	async function handleNodeClick(event: CustomEvent) {
 		nodeSelectEvent = event.detail
-		if (event.detail.type == "deck" && event.detail.clickType == "left" && !newNode) {
-			openDeckUId = allDecksClosed ? "" : event.detail.nodeUId
+		if (event.detail.node.type == "deck" && event.detail.clickType == "left" && !newNode) {
+			openDeckUId = allDecksClosed ? "" : event.detail.node.UId;
+			dispatch("open-deck", event.detail)
 		}
 	}
 
@@ -21,6 +23,7 @@
 		showContextMenu = true;
 	}
 
+	let dispatch = createEventDispatcher()
 	let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null = null,
 		openDeckUId: string | null = null,
 		showContextMenu = false,

@@ -10,8 +10,10 @@ import crypto from "crypto"
 export async function generateUId(connectedMongoClient: MongoClient) {
 	let db = new Db(connectedMongoClient);
 
-	let directoryNodes = await db.directoryNodesCollection.find({}).toArray()
-	let cards = await db.cardsCollection.find({}).toArray()
+	let [directoryNodes, cards] = await Promise.all([
+		db.directoryNodesCollection.find({}).toArray(),
+		db.cardsCollection.find({}).toArray()
+	])
 
 	let inUseUIds = [...cards.map(card => card.UId), ...directoryNodes.map(node => node.UId)]
 	let randomUId: string;

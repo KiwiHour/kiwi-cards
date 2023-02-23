@@ -9,7 +9,7 @@
 	// any node
 	function handleFocus() {
 		blurred = false
-		dispatch("node-click", { nodeUId: node.UId, type: node.type })
+		dispatch("node-click", { node })
 	}
 
 	function handleBlur() {
@@ -58,7 +58,7 @@
 
 	// deck
 	function openDeck() {
-		dispatch("node-click", { nodeUId: node.UId, type: "deck", clickType: "left" })
+		dispatch("node-click", { node, clickType: "left" })
 	}
 
 	// context menu handlers
