@@ -71,6 +71,7 @@
 
 .node .name-and-button.loading img {
 	content: var(--spinner-icon) !important;
+	scale: 1 !important;
 }
 
 /* closed icons */

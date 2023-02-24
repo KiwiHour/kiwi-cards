@@ -89,9 +89,9 @@
 			}
 			// update name so it seem as if there is no delay
 			setIsLoading(true)
-			isNew = false
+			isNew = true
 			node.name = newNodeName
-
+			
 			let [newNodeUId, err] = await addNode(node.parentUId, newNodeName, node.type)
 			node.parentUId ? addFolderToExpandedList(node.parentUId) : ""
 			await invalidateAll()
