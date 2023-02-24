@@ -9,6 +9,8 @@ const mongoClient = new MongoClient(MONGO_URI, { serverApi: ServerApiVersion.v1 
 
 export const handle: Handle = async ({ event, resolve }) => {
 
+	let t0 = performance.now()
+
 	if (MAINTENANCE == "0" && event.url.pathname == "/maintenance") {
 		throw redirect(302, "/")
 	}
@@ -24,6 +26,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	let db = new Db(mongoClient)
+
+	console.log(`${(performance.now() - t0).toFixed(5)}ms`)
 
 	console.log("successfully connected to mongodb")
 	event.locals.connectedMongoClient = event.locals.connectedMongoClient || mongoClient;

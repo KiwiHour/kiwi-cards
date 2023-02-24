@@ -25,4 +25,7 @@ export default {
 
 		"spinner": "svg/spinner-dark.svg"
 	}
+} as {
+	dark: { [name: string] : string}
+	light: { [name: string] : string}
 }

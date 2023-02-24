@@ -44,8 +44,6 @@
 	<div id="resize-bar" on:mousedown|preventDefault={() => { canResize = true }}></div>
 	<div id="page">
 		<Navbar on:close-all-decks={handleCloseAllDecks} />
-		<!-- Will have an if statement to decide to show homepage or a selected deck 
-			REMEMBER TO ADD overflow: auto TO ANY OTHER COMPONENTS THAT TAKE UP THE PAGE CONTENTS-->
 		{#if openDeck}
 			<Deck node={openDeck} cards={data.cards.filter(card => openDeck?.childrenUIds.includes(card.UId))} />
 		{:else}
