@@ -25,9 +25,9 @@ export default class RequestTypeHandler {
 
 	getTrueTypedVariable() {
 		if (this.isUndefined()) { return undefined }
-		if (this.isNull()) { return null }
-		if (this.isNumber()) { return parseFloat(this.variable || "") }
-		if (this.isString()) { return this.variable }
+		if (this.validTypes.includes("null") && this.isNull()) { return null }
+		if (this.validTypes.includes("number") && this.isNumber()) { return parseFloat(this.variable || "") }
+		if (this.validTypes.includes("string") && this.isString()) { return this.variable?.toString() }
 	}
 
 	formattedError(invalidType: string, validTypes: ("string"|"number"|"boolean"|"null")[] | (string|number|boolean|null)[]) {
