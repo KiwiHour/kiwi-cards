@@ -117,9 +117,20 @@ export default class DirectoryTreeManager {
 		let node = await this.getNode(nodeUId)
 		let possibleSiblings = await this.getChildren(newParentUId)
 		let takenNames = possibleSiblings.filter(sibling => sibling.type == node.type).map(sibling => sibling.name)
+		if (node.parentUId == newParentUId) {
+			throw new Error("Cannot move node into own folder")
+		}
+		if (node.UId == newParentUId) {
+			throw new Error("Cannot move node into itself")
+		}
 		if (takenNames.includes(node.name)) {
 			throw new Error(`One of the to-be node's sibling already has the name '${node.name}'`)
 		}
+		let descendants = await this.getDescendants(nodeUId)
+		if (descendants.map(descendant => descendant.UId).includes(newParentUId || "")) {
+			throw new Error(`Cannot move node into one of it's children`)
+		}
+
 		await this.db.directoryNodesCollection.findOneAndUpdate(
 			{ "UId": node.UId },
 			{ $set: { "parentUId": newParentUId }}

@@ -97,6 +97,20 @@ export async function addNode(parentUId: string | null, name: string, type: "fol
 	}
 }
 
+export async function moveNode(newParentUId: string | null, nodeUId: string): Promise<[null, Error | null]> {
+	let res = await fetch("/api/move-directory-node", {
+		method: "PATCH",
+		body: JSON.stringify({ newParentUId, nodeUId })
+	})
+
+	let data = await res.json();
+	if (res.ok) {
+		return [data, null]
+	} else {
+		return [null, new Error(data.message)]
+	}
+}
+
 export function generateNewNode(type: "folder" | "deck", parentUId: string | null) {
 	return {
 		UId: "new-node",

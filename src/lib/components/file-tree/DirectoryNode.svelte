@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import type { ContextMenuOptions, Database } from "$lib/types";
-    import { addNode, deleteNode, generateNewNode, getExpandedFolderUIDs, renameNode, sortTopLevelNodes } from "$lib/functions"
+    import { addNode, deleteNode, generateNewNode, getExpandedFolderUIDs, moveNode, renameNode, sortTopLevelNodes } from "$lib/functions"
     import { createEventDispatcher, onMount } from "svelte";
     import { invalidateAll } from "$app/navigation";
     import ContextMenu from "../ContextMenu.svelte";
@@ -29,6 +29,35 @@
 	function setIsLoading(isLd: boolean) {
 		isLoading = isLd
 		dispatch("is-loading", isLd)
+	}
+
+	function handleDragStart(e: DragEvent) {
+		e.dataTransfer?.setData("dragged-node-uid", node.UId)
+		e.dataTransfer?.setData("current-parent-uid", node.parentUId ?? "null")
+
+		let nodeElement = document.getElementById(node.UId)?.children[0].cloneNode(false) as HTMLDivElement
+		e.dataTransfer?.setDragImage(nodeElement, 0, 0)
+	}
+
+	async function handleDrop(e: DragEvent) {
+		console.log(`dropped`); console.log(e)
+		console.log(`${e.dataTransfer?.getData("dragged-node-uid")} was dragged`)
+
+		let newParentUId = node.type == "folder" ? node.UId : node.parentUId // if drag onto a folder, move into folder, if drag onto deck, move into that deck's folder
+		let toMoveNodeUId = e.dataTransfer?.getData("dragged-node-uid") as string
+		let currentParentUId = e.dataTransfer?.getData("current-parent-uid") as string | null
+
+		currentParentUId = currentParentUId == "null" ? null : currentParentUId  // retype null
+		
+		if (toMoveNodeUId == node.UId) { return }
+		if (newParentUId == currentParentUId) { return }
+
+		setIsLoading(true)
+		let [_, err] = await moveNode(newParentUId, toMoveNodeUId)
+		await invalidateAll()
+		setIsLoading(false)
+		expanded = true
+		if (err) { alert(err) }
 	}
 
 	// folders
@@ -176,7 +205,11 @@
 	<ContextMenu on:close-context-menu={async () => showContextMenu = false} pos={rightClickPos} options={contextMenuOptions}/>
 {/if}
 
-<div class="node {node.type}" id={node.UId}>
+<div
+	on:dragstart|stopPropagation={handleDragStart}
+	on:drop|stopPropagation={handleDrop}
+	on:dragover|preventDefault
+	class="node {node.type}" id={node.UId} draggable="true" >
 
 	<button
 		on:click={node.type == "deck" ? openDeck : toggleFolder}
