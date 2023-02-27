@@ -15,7 +15,7 @@
 	display: inline-block;
 	background: var(--theme-toggle-light-mode-background-colour);
 	border-radius: 16px;
-	width: 58px;
+	min-width: 58px;
 	height: 32px;
 	position: relative;
 	vertical-align: middle;
@@ -67,4 +67,5 @@
 .toggle-label {
 	margin-left: 5px;
 	position: relative;
+	text-align: center;
 }

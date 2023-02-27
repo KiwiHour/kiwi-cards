@@ -14,11 +14,17 @@
 		el.focus()
 	}
 
+	let contextMenuEl: HTMLButtonElement
 	let dispatch = createEventDispatcher()
+	$: bounding = contextMenuEl?.getBoundingClientRect();
+	$: overflowingY = bounding ? bounding.bottom > (window.innerHeight || document.documentElement.clientHeight) : false
+
+	$: xPos = pos.x
+	$: yPos = overflowingY ? pos.y - bounding.height : pos.y
 
 </script>
 
-<button use:autofocus id="context-menu" style="left: {pos.x}px; top: {pos.y}px;" on:blur|preventDefault={handleBlur} on:contextmenu|stopPropagation>
+<button bind:this={contextMenuEl} use:autofocus id="context-menu" style="left: {xPos}px; top: {yPos}px;" on:blur|preventDefault={handleBlur} on:contextmenu|stopPropagation>
 	<ul>
 		{#each options as option}
 			<li on:click={() => {dispatch("close-context-menu"); option.function()}} on:keypress>{option.name}</li>
