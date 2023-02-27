@@ -228,6 +228,7 @@
 					on:keypress={handleNewNameSubmit} 
 					on:keyup={handleNewNameKeyup}
 					bind:value={newName}
+					disabled={isLoading || isDisabled}
 					type="text" />
 					
 			{:else if isNew}
@@ -237,6 +238,7 @@
 					on:keypress={handleNewNodeNameSubmit} 
 					on:keyup={handleNewNodeNameKeyup}
 					bind:value={newNodeName}
+					disabled={isLoading || isDisabled}
 					type="text" />
 
 			{:else}
