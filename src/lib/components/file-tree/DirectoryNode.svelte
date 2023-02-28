@@ -26,36 +26,35 @@
 		el.focus()
 	}
 
-	function setIsLoading(isLd: boolean) {
-		isLoading = isLd
-		dispatch("is-loading", isLd)
+	function setIsLoading(isLd: boolean, nodeUId: string) {
+		dispatch("is-loading", { isLoading: isLd, nodeUId })
 	}
 
-	function handleDragStart(e: DragEvent) {
-		e.dataTransfer?.setData("dragged-node-uid", node.UId)
-		e.dataTransfer?.setData("current-parent-uid", node.parentUId ?? "null")
+	function handleDragStart(event: DragEvent) {
+		event.dataTransfer?.setData("dragged-node-uid", node.UId)
+		event.dataTransfer?.setData("current-parent-uid", node.parentUId ?? "null")
 
 		let nodeElement = document.getElementById(node.UId)?.children[0].cloneNode(false) as HTMLDivElement
-		e.dataTransfer?.setDragImage(nodeElement, 0, 0)
+		event.dataTransfer?.setDragImage(nodeElement, 0, 0)
 	}
 
-	async function handleDrop(e: DragEvent) {
-		console.log(`dropped`); console.log(e)
-		console.log(`${e.dataTransfer?.getData("dragged-node-uid")} was dragged`)
+	async function handleDrop(event: DragEvent) {
+		console.log(`dropped`); console.log(event)
+		console.log(`${event.dataTransfer?.getData("dragged-node-uid")} was dragged`)
 
 		let newParentUId = node.type == "folder" ? node.UId : node.parentUId // if drag onto a folder, move into folder, if drag onto deck, move into that deck's folder
-		let toMoveNodeUId = e.dataTransfer?.getData("dragged-node-uid") as string
-		let currentParentUId = e.dataTransfer?.getData("current-parent-uid") as string | null
+		let toMoveNodeUId = event.dataTransfer?.getData("dragged-node-uid") as string
+		let currentParentUId = event.dataTransfer?.getData("current-parent-uid") as string | null
 
 		currentParentUId = currentParentUId == "null" ? null : currentParentUId  // retype null
 		
 		if (toMoveNodeUId == node.UId) { return }
 		if (newParentUId == currentParentUId) { return }
 
-		setIsLoading(true)
+		setIsLoading(true, toMoveNodeUId)
 		let [_, err] = await moveNode(newParentUId, toMoveNodeUId)
 		await invalidateAll()
-		setIsLoading(false)
+		setIsLoading(false, toMoveNodeUId)
 		expanded = true
 		if (err) { alert(err) }
 	}
@@ -94,10 +93,10 @@
 				renaming = false;
 				return;
 			}
-			setIsLoading(true)
+			setIsLoading(true, node.UId)
 			let [_, err] = await renameNode(node.UId, newName)
 			await invalidateAll()
-			setIsLoading(false)
+			setIsLoading(false, node.UId)
 			if (err) { alert(err) }
 		}
 	}
@@ -117,7 +116,7 @@
 				return;
 			}
 			// update name so it seem as if there is no delay
-			setIsLoading(true)
+			setIsLoading(true, node.UId)
 			isNew = true
 			node.name = newNodeName
 			
@@ -125,7 +124,7 @@
 			node.parentUId ? addFolderToExpandedList(node.parentUId) : ""
 			await invalidateAll()
 			dispatch("added-new-node")
-			setIsLoading(false)
+			setIsLoading(false, node.UId)
 			isNew = false;
 			if (err) { alert(err) }
 		}
@@ -142,10 +141,10 @@
 		{ name: "Rename", function: () => renaming = true },
 		{ name: "Delete", function: async () => {
 			if (confirm(`Are you sure you want to delete the ${node.type} '${node.name}'`)) {
-				setIsLoading(true)
+				setIsLoading(true, node.UId)
 				let [_, err] = await deleteNode(node.UId)
 				await invalidateAll()
-				setIsLoading(false)
+				setIsLoading(false, node.UId)
 				if (err) { alert(err) }
 			}
 		}},
@@ -168,6 +167,7 @@
 	export let depth: number;
 	export let isNew: boolean;
 	export let isDisabled: boolean;
+	export let loadingNodeUId: string | null;
 
 	let dispatch = createEventDispatcher()
 	let [node, children] = arrayedNode as [Database.DirectoryNode, any] // R.I.P
@@ -192,6 +192,7 @@
 	$: focused = nodeSelectEvent?.nodeUId == node.UId && !blurred
 	$: blurred = nodeSelectEvent?.nodeUId == node.UId && blurred;
 	$: expanded = newNode !== null || expanded;
+	$: isLoading = loadingNodeUId == node.UId;
 	$: classes = `${focused ? 'focused' : ''} ${blurred ? 'blurred' : ''} ${open || expanded ? 'open' : ''} ${isLoading ? "loading" : ""}`
 
 	onMount(() => {
@@ -209,7 +210,7 @@
 	on:dragstart|stopPropagation={handleDragStart}
 	on:drop|stopPropagation={handleDrop}
 	on:dragover|preventDefault
-	class="node {node.type}" id={node.UId} draggable="true" >
+	class="node {node.type}" id={node.UId} draggable={!isLoading} >
 
 	<button
 		on:click={node.type == "deck" ? openDeck : toggleFolder}
@@ -262,7 +263,7 @@
 						depth={depth + 1}
 						isNew={true}
 						arrayedNode={[newNode, []]}
-						{isDisabled} {nodeSelectEvent} {openDeckUId}
+						{isDisabled} {loadingNodeUId} {nodeSelectEvent} {openDeckUId}
 					/>
 				{/if}
 				{#each sortTopLevelNodes(children) as arrayedNode}
@@ -271,7 +272,7 @@
 						on:node-click 
 						depth={depth + 1}
 						isNew={false}
-						{isDisabled} {arrayedNode} {nodeSelectEvent} {openDeckUId}
+						{isDisabled} {loadingNodeUId} {arrayedNode} {nodeSelectEvent} {openDeckUId}
 					/>
 				{/each}
 			{/if}

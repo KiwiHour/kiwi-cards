@@ -1,8 +1,9 @@
 <script lang="ts">
     import type { Database } from "$lib/types";
 
-    import { generateNewNode, sortTopLevelNodes } from "$lib/functions";
+    import { generateNewNode, moveNode, sortTopLevelNodes } from "$lib/functions";
     import { createEventDispatcher } from "svelte";
+    import { invalidateAll } from "$app/navigation";
     import ThemeToggle from "./ThemeToggle.svelte";
     import ContextMenu from "./ContextMenu.svelte";
     import DirectoryNode from "./file-tree/DirectoryNode.svelte";
@@ -24,13 +25,34 @@
 		showContextMenu = true;
 	}
 
+	async function handleDrop(event: DragEvent) {
+		let toMoveNodeUId = event.dataTransfer?.getData("dragged-node-uid") as string
+		let currentParentUId = event.dataTransfer?.getData("current-parent-uid") as string
+
+		if (currentParentUId == "null") { return }
+
+		isDisabled = true
+		loadingNodeUId = toMoveNodeUId
+		let [_, err] = await moveNode(null, toMoveNodeUId)
+		await invalidateAll()
+		isDisabled = false
+		loadingNodeUId = null
+		if (err) { alert(err) }
+	}
+
+	function handleIsLoading(event: CustomEvent) {
+		isDisabled = event.detail.isLoading
+		loadingNodeUId = event.detail.isLoading ? event.detail.nodeUId : null
+	}
+
 	let dispatch = createEventDispatcher()
 	let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null = null,
 		openDeckUId: string | null = null,
 		showContextMenu = false,
 		rightClickPos: { x: number, y: number },
 		newNode: Database.DirectoryNode | null = null,
-		isDisabled = false;
+		isDisabled = false,
+		loadingNodeUId: string | null = null;
 
 	let contextMenuOptions = [
 		{ name: "New Folder", function: () => {
@@ -51,27 +73,27 @@
 
 <div class="file-tree" style="{width ? `width: ${width}px; min-width: ${width}px;` : ""}" on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 	
-	<div class="folders outline">
+	<div class="folders outline" on:drop|stopPropagation={handleDrop} on:dragover|preventDefault>
 		{#key fileTree}
 			{#if newNode}
 
 				<DirectoryNode
-					on:is-loading={e => isDisabled = e.detail}
+					on:is-loading={handleIsLoading}
 					on:added-new-node={() => newNode = null}
 					on:remove-new-node={() => newNode = null}
 					depth={0}
 					isNew={true}
-					{isDisabled} arrayedNode={[newNode, []]} {nodeSelectEvent} {openDeckUId}
+					{isDisabled} {loadingNodeUId} arrayedNode={[newNode, []]} {nodeSelectEvent} {openDeckUId}
 				/>
 
 			{/if}
 				{#each sortTopLevelNodes(fileTree) as arrayedNode}
 					<DirectoryNode
-						on:is-loading={e => isDisabled = e.detail}
+						on:is-loading={handleIsLoading}
 						on:node-click={handleNodeClick}
 						depth={0}
 						isNew={false}
-						{isDisabled} {arrayedNode} {nodeSelectEvent} {openDeckUId}
+						{isDisabled} {loadingNodeUId} {arrayedNode} {nodeSelectEvent} {openDeckUId}
 					/>
 				{/each}
 		{/key}
