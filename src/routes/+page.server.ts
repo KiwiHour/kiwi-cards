@@ -20,11 +20,13 @@ export const load: PageServerLoad = async ({ locals }) => {
 	let db = new Db(locals.connectedMongoClient)
     let directoryTreeManager = new DirectoryTreeManager(locals.connectedMongoClient)
     let rootNodes: Database.DirectoryNode[] = await directoryTreeManager.getChildren(null) // top level nodes
-    
-    let fileTree = await Promise.all(rootNodes.map(rootNode => getTree(rootNode, directoryTreeManager)))
-	let cards = await db.cardsCollection.find({}).toArray()
-	cards = cards.map(card => { card._id = ""; return card})
+    let allNodes: Database.DirectoryNode[] = await db.directoryNodesCollection.find({}).toArray()
 
-    return { fileTree, cards } as { fileTree: Database.ArrayedNode<"folder" | "deck">[], cards: Database.Card[] }
+    let fileTree: Database.ArrayedNode<"folder" | "deck">[] = await Promise.all(rootNodes.map(rootNode => getTree(rootNode, directoryTreeManager)))
+	let cards: Database.Card[] = await db.cardsCollection.find({}).toArray()
+	cards = cards.map(card => { card._id = ""; return card})
+    allNodes = allNodes.map(node => { node._id = ""; return node})
+
+    return { fileTree, cards, allNodes }
 
 }

@@ -43,6 +43,9 @@
 	function handleIsLoading(event: CustomEvent) {
 		isDisabled = event.detail.isLoading
 		loadingNodeUId = event.detail.isLoading ? event.detail.nodeUId : null
+		if (!isDisabled) { // finished process
+			dispatch("refresh-page-contents")
+		}
 	}
 
 	let dispatch = createEventDispatcher()

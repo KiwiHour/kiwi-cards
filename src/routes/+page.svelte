@@ -7,13 +7,14 @@
     import Navbar from "$lib/components/Navbar.svelte";
     import Homepage from "$lib/components/Homepage.svelte";
     import Deck from "$lib/components/Deck.svelte";
+    import { invalidateAll } from "$app/navigation";
 
 	export let data: PageData
 
 	let canResize = false;
 	let fileTreeWidth: number | null = 300;
 	let allDecksClosed = false;
-	let openDeck: Database.DirectoryNode | null = null;
+	let openDeck: Database.DirectoryNode | null;
 	
 	function handleFileTreeResize(event: MouseEvent) {
 		if (canResize) {
@@ -22,12 +23,19 @@
 		}
 	}
 
+	async function refreshPageContents() {
+		await invalidateAll()
+		openDeck = data.allNodes.find(node => node.UId == openDeck?.UId) || null
+	}
+
 	async function handleCloseAllDecks() {
 		allDecksClosed = true
 		openDeck = null;
 		await tick() // let file tree styling update, then allow decks to be clicked again. GOD DAMN I LOVE tick. TICK MY BELOVED
 		allDecksClosed = false;
 	}
+
+	$: openDeck = null;
 
 	onMount(() => {
 		fileTreeWidth = parseInt(localStorage.getItem("file-tree-width") || "300") // 300 default
@@ -39,7 +47,12 @@
 
 <main on:mouseup={() => { canResize = false }} on:mousemove={handleFileTreeResize}>
 
-	<FileTree on:open-deck={(e) => openDeck = e.detail.node} fileTree={data.fileTree} width={fileTreeWidth ? fileTreeWidth : 300} {allDecksClosed}/>
+	<FileTree
+		on:refresh-page-contents={refreshPageContents}
+		on:open-deck={(e) => openDeck = e.detail.node}
+		fileTree={data.fileTree} 
+		width={fileTreeWidth ? fileTreeWidth : 300}
+		{allDecksClosed}/>
 	<!-- preventDefault stops text highligting while resizing -->
 	<div id="resize-bar" on:mousedown|preventDefault={() => { canResize = true }}></div>
 	<div id="page">
