@@ -48,6 +48,7 @@
 
 		currentParentUId = currentParentUId == "null" ? null : currentParentUId  // retype null
 		
+		if (!toMoveNodeUId) { return }
 		if (toMoveNodeUId == node.UId) { return }
 		if (newParentUId == currentParentUId) { return }
 
