@@ -9,7 +9,7 @@
 #rename-input, #new-node-name-input {
 	width: 100%;
 	padding-right: 10px;
-	font-size: 1.3em;
+	font-size: 1em;
 	border: none;
 	outline: none;
 
@@ -46,7 +46,6 @@
 }
 
 .button-contents {
-	width: 100%;
 	height: 33px;
 	display: flex;
 	flex-direction: row;
@@ -94,7 +93,5 @@
 }
 
 .button-contents p {
-	text-align: left;
-	font-size: 1.3em;
 	white-space: nowrap;
 }

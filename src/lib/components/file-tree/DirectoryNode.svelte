@@ -216,13 +216,12 @@
 	on:dragover|preventDefault
 	class="node {node.type}" id={node.UId} draggable={!isLoading} >
 
-	<button
-		on:click={node.type == "deck" ? openDeck : toggleFolder}
+	<div on:keydown
+		on:click={node.type == "deck" ? renaming || isLoading || isDisabled ? () => {} : openDeck : toggleFolder}
 		on:focus={handleFocus}
 		on:blur={handleBlur}
 		on:contextmenu|preventDefault|stopPropagation={handleRightClick}
-		disabled={renaming || isLoading || isDisabled}
-		type="button" class="name-and-button {classes}"
+		class="name-and-button {classes}"
 		draggable="true"
 		on:dragstart={() => {}}
 	>
@@ -254,7 +253,7 @@
 
 			{/if}
 		</div>
-	</button>
+	</div>
 
 	{#if node.type == "folder"}
 
