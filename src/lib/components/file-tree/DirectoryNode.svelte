@@ -222,6 +222,8 @@
 		on:contextmenu|preventDefault|stopPropagation={handleRightClick}
 		disabled={renaming || isLoading || isDisabled}
 		type="button" class="name-and-button {classes}"
+		draggable="true"
+		on:dragstart={() => {}}
 	>
 		<div class="button-contents" style="padding-left: {(depth) * 1}vw;">
 			<img class="toggle-indicator" alt="node icon">
