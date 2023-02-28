@@ -23,6 +23,7 @@
 	align-items: center;
 	justify-content: flex-start;
 	border: none;
+	cursor: pointer;
 
 	background-color: var(--file-tree-node-background-colour);
 }
