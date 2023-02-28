@@ -52,10 +52,13 @@
 		if (newParentUId == currentParentUId) { return }
 
 		setIsLoading(true, toMoveNodeUId)
+		if (node.type == "folder") {
+			expanded = true
+			addFolderToExpandedList(node.UId)
+		}
 		let [_, err] = await moveNode(newParentUId, toMoveNodeUId)
 		await invalidateAll()
 		setIsLoading(false, toMoveNodeUId)
-		expanded = true
 		if (err) { alert(err) }
 	}
 
