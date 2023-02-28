@@ -71,7 +71,7 @@
 	<ContextMenu on:close-context-menu={async () => showContextMenu = false} pos={rightClickPos} options={contextMenuOptions}/>
 {/if}
 
-<div class="file-tree" style="{width ? `width: ${width}px; min-width: ${width}px;` : ""}" on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
+<div class="file-tree" style="{width ? `width: ${width}px; min-width: min(70vw, ${width}px);` : ""}" on:contextmenu|preventDefault|stopPropagation={handleRightClick}>
 	
 	<div class="folders outline" on:drop|stopPropagation={handleDrop} on:dragover|preventDefault>
 		{#key fileTree}
