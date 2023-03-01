@@ -39,8 +39,6 @@
 	}
 
 	async function handleDrop(event: DragEvent) {
-		console.log(`dropped`); console.log(event)
-		console.log(`${event.dataTransfer?.getData("dragged-node-uid")} was dragged`)
 
 		let newParentUId = node.type == "folder" ? node.UId : node.parentUId // if drag onto a folder, move into folder, if drag onto deck, move into that deck's folder
 		let toMoveNodeUId = event.dataTransfer?.getData("dragged-node-uid") as string
@@ -127,9 +125,11 @@
 			let [newNodeUId, err] = await addNode(node.parentUId, newNodeName, node.type)
 			node.parentUId ? addFolderToExpandedList(node.parentUId) : ""
 			await invalidateAll()
+
 			dispatch("added-new-node")
 			setIsLoading(false, node.UId)
 			isNew = false;
+
 			if (err) { alert(err) }
 		}
 	}
@@ -179,12 +179,14 @@
 	let	open: boolean, 
 		focused: boolean, 
 		blurred: boolean, 
-		renaming: boolean,
-		newName: string = node.name,
+		renaming: boolean;
+
+	let newName: string = node.name,
 		newNode: Database.DirectoryNode | null = null,
-		expanded: boolean,
+		newNodeName: string;
+
+	let expanded: boolean,
 		expandedFolderUIds: string[],
-		newNodeName: string,
 		isLoading: boolean = false;
 		
 	let	showContextMenu: boolean = false,
@@ -260,6 +262,7 @@
 		<div class="folder-contents">
 
 			{#if expanded || newNode}
+
 				{#if newNode}
 					<svelte:self
 						on:is-loading
@@ -271,6 +274,7 @@
 						{isDisabled} {loadingNodeUId} {nodeSelectEvent} {openDeckUId}
 					/>
 				{/if}
+
 				{#each sortTopLevelNodes(children) as arrayedNode}
 					<svelte:self
 						on:is-loading
@@ -280,6 +284,7 @@
 						{isDisabled} {loadingNodeUId} {arrayedNode} {nodeSelectEvent} {openDeckUId}
 					/>
 				{/each}
+				
 			{/if}
 
 		</div>	
