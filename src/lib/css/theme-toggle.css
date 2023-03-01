@@ -1,12 +1,17 @@
 /* css from https://codepen.io/alvarotrigo/pen/YzEdrKj with some modifications by me */
 /* i have no clue why this css works, but... yeah */
 
+#toggle-wrapper {
+	display: flex;	
+}
+
 .toggle {
 
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+	padding: 5px 0;
 	gap: 10px;
 	cursor: pointer;
 }
@@ -68,4 +73,5 @@
 	margin-left: 5px;
 	position: relative;
 	text-align: center;
+	white-space: nowrap;
 }

@@ -1,8 +1,11 @@
 @import "$lib/css/global.css";
 
-.toggle {
+#toggle-wrapper {
 	width: 100%;
-	padding-top: 20px;
+	padding-top: 10px;
+
+	flex-direction: row;
+	justify-content: center;
 }
 
 .file-tree {
@@ -12,6 +15,7 @@
 	justify-content: center;
 	align-items: center;
 	padding: 20px; /* causes resizing issue, which is dealt with by js adjustments, if you change this, change the js of handleResize*/
+	padding-bottom: 10px;
 
 	background-color: var(--file-tree-background-colour);
 }
