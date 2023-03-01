@@ -34,8 +34,8 @@
 		event.dataTransfer?.setData("dragged-node-uid", node.UId)
 		event.dataTransfer?.setData("current-parent-uid", node.parentUId ?? "null")
 
-		let nodeElement = document.getElementById(node.UId)?.children[0].cloneNode(false) as HTMLDivElement
-		event.dataTransfer?.setDragImage(nodeElement, 0, 0)
+		let blankDiv = document.createElement("div")
+		event.dataTransfer?.setDragImage(blankDiv, 0, 0)
 	}
 
 	async function handleDrop(event: DragEvent) {
@@ -284,7 +284,7 @@
 						{isDisabled} {loadingNodeUId} {arrayedNode} {nodeSelectEvent} {openDeckUId}
 					/>
 				{/each}
-				
+
 			{/if}
 
 		</div>	

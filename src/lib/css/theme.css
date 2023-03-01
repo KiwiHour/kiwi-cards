@@ -28,8 +28,8 @@
 	/* navbar */
 	--navbar-background-colour: rgb(64, 69, 72);
 	--navbar-menu-button-outline-colour: rgb(179, 107, 0);
-	--navbar-menu-button-background-colour: rgba(179, 107, 0, 0.6);
-	--navbar-menu-button-hover-background-colour: rgba(179, 107, 0, 0.75);
+	--navbar-menu-button-background-colour: rgb(64, 69, 72);
+	--navbar-menu-button-hover-background-colour: rgb(77, 77, 77);
 
 	/* icons */
 	--deck-closed-icon: url("$lib/svg/deck/dark/808605-iconfinder-deck-closed.svg");

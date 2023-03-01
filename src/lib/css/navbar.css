@@ -15,25 +15,29 @@
 
 #navbar button {
 
-	border-radius: 5px;
+	cursor: pointer;
+	border: none;
+	background-color: transparent;
+	/* border-radius: 5px;
 	border: 2px solid var(--navbar-menu-button-outline-colour);
-	background-color: var(--navbar-menu-button-background-colour); 
+	background-color: var(--navbar-menu-button-background-colour);  */
 }
 
-#navbar button:hover {
+/* #navbar button:hover {
 	background-color: var(--navbar-menu-button-hover-background-colour);
-}
+} */
 
-#navbar button:active {
+/* #navbar button:active {
 	transform: translate(1px, 1px);
-}
+} */
 
 #navbar button {
-	font-size: 1.4em;
+	font-size: 1.5em;
 	padding: 12px
 }
 
 #navbar button p {
+	text-decoration: underline;
 	margin: 0;
 	padding: 0;
 }
