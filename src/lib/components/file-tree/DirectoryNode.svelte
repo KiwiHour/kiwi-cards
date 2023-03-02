@@ -40,7 +40,6 @@
 
 		if (toMoveNodeUId == node.UId || node.UId == currentParentUId) { return }
 		if (node.parentUId == currentParentUId && node.type == "deck") { return }
-		if (toMoveNodeChildrenUIds.includes(node.UId)) { return }
 
 		if (node.type == "deck") {
 			let parentNode = document.getElementById(node.UId)?.parentElement?.parentElement
