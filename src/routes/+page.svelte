@@ -58,7 +58,7 @@
 	<div id="page">
 		<Navbar on:close-all-decks={handleCloseAllDecks} />
 		{#if openDeck}
-			<Deck node={openDeck} cards={data.cards.filter(card => openDeck?.childrenUIds.includes(card.UId))} />
+			<Deck deck={openDeck} cards={data.cards.filter(card => openDeck?.childrenUIds.includes(card.UId))} />
 		{:else}
 			<Homepage /> 
 		{/if}

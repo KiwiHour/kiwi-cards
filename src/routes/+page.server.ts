@@ -1,5 +1,7 @@
-import { Db, DeckManager, DirectoryTreeManager } from '$lib/classes';
+import { invalidateAll } from '$app/navigation';
+import { Card, Db, Deck, DirectoryTreeManager } from '$lib/classes';
 import type { Database } from '$lib/types';
+import type { Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 let getTree = async (node: Database.DirectoryNode, treeManager: DirectoryTreeManager): Promise<Database.ArrayedNode<"folder" | "deck">> => {
@@ -30,3 +32,18 @@ export const load: PageServerLoad = async ({ locals }) => {
     return { fileTree, cards, allNodes }
 
 }
+
+export const actions: Actions = {
+  
+    "add-new-card": async ({ request, locals }) => {
+        let formData = await request.formData()
+        let decKUId = formData.get("deck-uid") as string
+        
+        let deck = new Deck(locals.connectedMongoClient, decKUId)
+        let newCard = await deck.newBlankCard()
+
+        return { status: 200 }
+
+    }
+
+};

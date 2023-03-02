@@ -1,13 +1,27 @@
 <script lang="ts">
+    import { enhance } from "$app/forms";
+    import { invalidateAll } from "$app/navigation";
     import type { Database } from "$lib/types";
 
-	export let node: Database.DirectoryNode
+	import Card from "./Card.svelte"
+
+	export let deck: Database.DirectoryNode
 	export let cards: Database.Card[]
+
+	console.log(cards)
 
 </script>
 
-<h1>{node.name}</h1>
-<h2>{node.UId}</h2>
-{#each cards as card}
-	{JSON.stringify(card)}
-{/each}
+<div class="deck">
+	<h1>{deck.name}</h1>
+	<h2>{deck.UId}</h2>
+
+	<form method="post" action="?/add-new-card" use:enhance={async() => await invalidateAll()}>
+		<input type="hidden" name="deck-uid" value={deck.UId}>
+		<input type="submit" value="New card">
+	</form>
+
+	{#each cards as card}
+		<Card {card} />
+	{/each}
+</div>

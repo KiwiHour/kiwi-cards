@@ -18,12 +18,12 @@ export namespace Database {
 	}
 
 	export interface Card {
-		lastCorrect: Date
+		lastCorrect: Date | null
 		daysTillAsk: number
 		front: string
 		back: string
 		
-		_id: ObjectId | string
+		_id?: ObjectId | string
 		UId: string
 		type: "card"
 	}
