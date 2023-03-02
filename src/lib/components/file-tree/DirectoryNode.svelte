@@ -31,6 +31,9 @@
 	}
 
 	function handleDragOver(event: DragEvent) {
+		let toMoveNodeUId = event.dataTransfer?.getData("dragged-node-uid") as string
+		if (toMoveNodeUId == node.UId) { return }
+
 		draggingOver = true
 	}
 

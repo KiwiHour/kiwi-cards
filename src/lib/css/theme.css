@@ -16,10 +16,10 @@
 	--file-tree-background-colour: rgb(64, 69, 72);
 	--file-tree-folders-background-colour: rgb(48, 48, 48);
 	--file-tree-node-background-colour: transparent;
-	--file-tree-drag-over-background-colour: rgba(179, 107, 0, 0.2);
-	--file-tree-node-focused-background-colour: rgba(179, 107, 0, 0.6);
-	--file-tree-node-blurred-background-colour: rgba(179, 107, 0, 0.6);
-	--file-tree-node-hover-background-colour: rgba(179, 107, 0, 0.3);
+	--file-tree-drag-over-background-colour: rgba(179, 107, 0, 0.12);
+	--file-tree-node-focused-background-colour: rgba(85, 85, 85, 0.5);
+	--file-tree-node-blurred-background-colour: rgba(85, 85, 85, 0.5);
+	--file-tree-node-hover-background-colour: rgba(85, 85, 85, 0.3);
 
 	/* context menu */
 	--context-menu-background-colour:rgb(64, 69, 72);
@@ -57,10 +57,10 @@
 	--file-tree-background-colour: rgb(212, 253, 235);
 	--file-tree-folders-background-colour: rgb(189, 252, 224);
 	--file-tree-node-background-colour: transparent;
-	--file-tree-drag-over-background-colour: rgba(157, 231, 199, 0.2);
-	--file-tree-node-focused-background-colour: rgba(157, 231, 199, 0.6);
-	--file-tree-node-blurred-background-colour: rgba(157, 231, 199, 0.6);
-	--file-tree-node-hover-background-colour: rgba(157, 231, 199, 0.35);
+	--file-tree-drag-over-background-colour: rgba(144, 224, 255, 0.5);
+	--file-tree-node-focused-background-colour: rgba(157, 231, 199, 0.4);
+	--file-tree-node-blurred-background-colour: rgba(157, 231, 199, 0.4);
+	--file-tree-node-hover-background-colour: rgba(157, 231, 199, 0.4);
 
 	/* context menu */
 	--context-menu-background-colour:rgb(212, 253, 235);
