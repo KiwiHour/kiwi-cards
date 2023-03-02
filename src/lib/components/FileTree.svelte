@@ -42,6 +42,15 @@
 		if (err) { alert(err) }
 	}
 
+	function handleDragOver(event: DragEvent) {
+		let toMoveNodeUId = event.dataTransfer?.getData("dragged-node-uid") as string
+		let currentParentUId = event.dataTransfer?.getData("current-parent-uid") as string
+		
+		if (currentParentUId == "null") { return }
+
+		draggingOver = true
+	}
+
 	function handleIsLoading(event: CustomEvent) {
 		isDisabled = event.detail.isLoading
 		loadingNodeUId = event.detail.isLoading ? event.detail.nodeUId : null
@@ -81,7 +90,7 @@
 	
 	<div class="folders outline {draggingOver ? "dragging-over" : ""}"
 		on:drop|stopPropagation={handleDrop}
-		on:dragover|preventDefault|stopPropagation={() => draggingOver = true}
+		on:dragover|preventDefault|stopPropagation={handleDragOver}
 		on:dragleave|stopPropagation={() => draggingOver = false}
 		on:contextmenu|preventDefault|stopPropagation={handleRightClick}
 	>
