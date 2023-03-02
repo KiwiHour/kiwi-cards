@@ -3,21 +3,12 @@
 	import { onMount } from "svelte";
 	import iconPaths from "$lib/icon-paths";
 
-	function preloadIcons() {
-		for (let iconName in iconPaths.dark) {
-			let path = iconPaths.dark[iconName]
-			let img = document.createElement("img")
-			img.src = "src/lib/" + path
-		}
-		for (let iconName in iconPaths.light) {
-			let path = iconPaths.light[iconName]
-			let img = document.createElement("img")
-			img.src = "src/lib/" + path
-		}
-	}
-
 	let theme: "light" | "dark"
 	let mounted = false;
+	let preloadURLs = [
+		...Object.keys(iconPaths.dark).map(key => "src/lib/" + iconPaths.dark[key]),
+		...Object.keys(iconPaths.light).map(key => "src/lib/" + iconPaths.light[key])
+	]
 	
 	onMount(() => {
 		mounted = true;
@@ -25,10 +16,15 @@
 		// redefine incase of defaults
 		localStorage.setItem("theme", theme)
 		document.body.classList.add(`${theme}-theme`)
-		preloadIcons()
 	})
 
 </script>
+
+<svelte:head>
+	{#each preloadURLs as preloadURL}
+		<link rel="preload" as="image" href={preloadURL}>
+	{/each}
+</svelte:head>
 
 {#if mounted}
 	<slot/>
