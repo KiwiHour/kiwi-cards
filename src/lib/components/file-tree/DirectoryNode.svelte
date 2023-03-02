@@ -35,6 +35,9 @@
 		let currentParentUId = event.dataTransfer?.getData("current-parent-uid") as string | null
 		let toMoveNodeChildrenUIds = JSON.parse(event.dataTransfer?.getData("dragged-node-children-uids") || "[]") as string[]
 
+		let toMoveNode = document.getElementById(toMoveNodeUId)
+		if (toMoveNode?.contains((event as any).explicitOriginalTarget)) { return }
+
 		if (toMoveNodeUId == node.UId || node.UId == currentParentUId) { return }
 		if (node.parentUId == currentParentUId && node.type == "deck") { return }
 		if (toMoveNodeChildrenUIds.includes(node.UId)) { return }
