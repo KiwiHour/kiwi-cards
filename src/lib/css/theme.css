@@ -57,7 +57,7 @@
 	--file-tree-background-colour: rgb(212, 253, 235);
 	--file-tree-folders-background-colour: rgb(189, 252, 224);
 	--file-tree-node-background-colour: transparent;
-	--file-tree-drag-over-background-colour: rgba(231, 157, 231, 0.15);
+	--file-tree-drag-over-background-colour: rgba(255, 188, 255, 0.2);
 	--file-tree-node-focused-background-colour: rgba(157, 231, 199, 0.4);
 	--file-tree-node-blurred-background-colour: rgba(157, 231, 199, 0.4);
 	--file-tree-node-hover-background-colour: rgba(157, 231, 199, 0.4);
