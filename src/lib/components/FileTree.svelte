@@ -12,7 +12,6 @@
 	export let allDecksClosed: boolean;
 
 	async function handleNodeClick(event: CustomEvent) {
-		console.log(event.detail)
 		nodeSelectEvent = event.detail
 		if (event.detail.node.type == "deck" && event.detail.clickType == "left" && !newNode) {
 			openDeckUId = allDecksClosed ? "" : event.detail.node.UId;
