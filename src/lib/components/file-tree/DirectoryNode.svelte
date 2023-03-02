@@ -32,18 +32,33 @@
 
 	function handleDragOver(event: DragEvent) {
 		let toMoveNodeUId = event.dataTransfer?.getData("dragged-node-uid") as string
-		if (toMoveNodeUId == node.UId) { return }
+		let currentParentUId = event.dataTransfer?.getData("current-parent-uid") as string | null
+		let toMoveNodeChildrenUIds = JSON.parse(event.dataTransfer?.getData("dragged-node-children-uids") || "[]") as string[]
+
+		if (toMoveNodeUId == node.UId || node.UId == currentParentUId) { return }
+		if (node.parentUId == currentParentUId && node.type == "deck") { return }
+		if (toMoveNodeChildrenUIds.includes(node.UId)) { return }
+
+		if (node.type == "deck") {
+			let parentNode = document.getElementById(node.UId)?.parentElement?.parentElement
+			parentNode?.classList.add("dragging-over")
+		}
 
 		draggingOver = true
 	}
 
 	function handleDragLeave(event: DragEvent) {
+		if (node.type == "deck") {
+			let parentNode = document.getElementById(node.UId)?.parentElement?.parentElement
+			parentNode?.classList.remove("dragging-over")
+		}
 		draggingOver = false;
 	}
 
 	function handleDragStart(event: DragEvent) {
 		event.dataTransfer?.setData("dragged-node-uid", node.UId)
 		event.dataTransfer?.setData("current-parent-uid", node.parentUId ?? "null")
+		event.dataTransfer?.setData("dragged-node-children-uids", JSON.stringify(node.childrenUIds))
 
 		let blankDiv = document.createElement("div")
 		event.dataTransfer?.setDragImage(blankDiv, 0, 0)
