@@ -30,6 +30,14 @@
 		dispatch("is-loading", { isLoading: isLd, nodeUId })
 	}
 
+	function handleDragOver(event: DragEvent) {
+		draggingOver = true
+	}
+
+	function handleDragLeave(event: DragEvent) {
+		draggingOver = false;
+	}
+
 	function handleDragStart(event: DragEvent) {
 		event.dataTransfer?.setData("dragged-node-uid", node.UId)
 		event.dataTransfer?.setData("current-parent-uid", node.parentUId ?? "null")
@@ -45,6 +53,7 @@
 		let currentParentUId = event.dataTransfer?.getData("current-parent-uid") as string | null
 
 		currentParentUId = currentParentUId == "null" ? null : currentParentUId  // retype null
+		draggingOver = false
 		
 		if (!toMoveNodeUId) { return }
 		if (toMoveNodeUId == node.UId) { return }
@@ -166,7 +175,7 @@
 	]
 
 	export let arrayedNode: Database.ArrayedNode<"deck" | "folder">
-	export let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null
+	export let nodeSelectEvent: { node: Database.DirectoryNode, clickType: "left" | "right" } | null
 	export let openDeckUId: string | null
 	export let depth: number;
 	export let isNew: boolean;
@@ -179,7 +188,8 @@
 	let	open: boolean, 
 		focused: boolean, 
 		blurred: boolean, 
-		renaming: boolean;
+		renaming: boolean,
+		draggingOver: boolean;
 
 	let newName: string = node.name,
 		newNode: Database.DirectoryNode | null = null,
@@ -195,8 +205,8 @@
 	let contextMenuOptions = node.type == "folder" ? folderContextMenuOptions : deckContextMenuOptions;
 
 	$: open = openDeckUId == node.UId // only useful for decks, but a folder will never have a deck uid so all good
-	$: focused = nodeSelectEvent?.nodeUId == node.UId && !blurred
-	$: blurred = nodeSelectEvent?.nodeUId == node.UId && blurred;
+	$: focused = nodeSelectEvent?.node.UId == node.UId && !blurred
+	$: blurred = nodeSelectEvent?.node.UId == node.UId && blurred;
 	$: expanded = newNode !== null || expanded;
 	$: isLoading = loadingNodeUId == node.UId;
 	$: classes = `${focused ? 'focused' : ''} ${blurred ? 'blurred' : ''} ${open || expanded ? 'open' : ''} ${isLoading ? "loading" : ""}`
@@ -215,10 +225,11 @@
 <div
 	on:dragstart|stopPropagation={handleDragStart}
 	on:drop|stopPropagation={handleDrop}
-	on:dragover|preventDefault
-	class="node {node.type}" id={node.UId} draggable={!isLoading} >
+	on:dragover|preventDefault|stopPropagation={handleDragOver}
+	on:dragleave|stopPropagation={handleDragLeave}
+	class="node {node.type} {draggingOver ? "dragging-over": ""}" id={node.UId} draggable={!isLoading} >
 
-	<div on:keydown
+	<div on:keydown tabindex="-1"
 		on:click={node.type == "deck" ? renaming || isLoading || isDisabled ? () => {} : openDeck : toggleFolder}
 		on:focus={handleFocus}
 		on:blur={handleBlur}

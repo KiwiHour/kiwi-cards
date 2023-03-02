@@ -6,6 +6,10 @@
 	background-color: var(--file-tree-node-background-colour);
 }
 
+.node.dragging-over .name-and-button {
+	background-color: var(--file-tree-drag-over-background-colour);
+}
+
 #rename-input, #new-node-name-input {
 	width: 100%;
 	padding-right: 10px;

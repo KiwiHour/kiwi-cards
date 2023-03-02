@@ -2,8 +2,6 @@
 
 #toggle-wrapper {
 	width: 100%;
-	padding-top: 10px;
-
 	flex-direction: row;
 	justify-content: center;
 }
@@ -38,4 +36,17 @@
 	overflow-x: hidden;
 
 	background-color: var(--file-tree-folders-background-colour);
+}
+
+.folders.dragging-over {
+	background-color: var(--file-tree-drag-over-background-colour);
+}
+
+#file-tree-footer {
+	width: 100%;
+	padding-top: 10px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
 }

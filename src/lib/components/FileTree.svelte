@@ -12,6 +12,7 @@
 	export let allDecksClosed: boolean;
 
 	async function handleNodeClick(event: CustomEvent) {
+		console.log(event.detail)
 		nodeSelectEvent = event.detail
 		if (event.detail.node.type == "deck" && event.detail.clickType == "left" && !newNode) {
 			openDeckUId = allDecksClosed ? "" : event.detail.node.UId;
@@ -29,6 +30,7 @@
 		let toMoveNodeUId = event.dataTransfer?.getData("dragged-node-uid") as string
 		let currentParentUId = event.dataTransfer?.getData("current-parent-uid") as string
 
+		draggingOver = false
 		if (currentParentUId == "null") { return }
 
 		isDisabled = true
@@ -49,13 +51,14 @@
 	}
 
 	let dispatch = createEventDispatcher()
-	let nodeSelectEvent: { nodeUId: string, type: "folder" | "deck", clickType: "left" | "right" } | null = null,
+	let nodeSelectEvent: { node: Database.DirectoryNode, clickType: "left" | "right" } | null = null,
 		openDeckUId: string | null = null,
 		showContextMenu = false,
 		rightClickPos: { x: number, y: number },
 		newNode: Database.DirectoryNode | null = null,
 		isDisabled = false,
-		loadingNodeUId: string | null = null;
+		loadingNodeUId: string | null = null,
+		draggingOver: boolean = false;
 
 	let contextMenuOptions = [
 		{ name: "New Folder", function: () => {
@@ -76,9 +79,10 @@
 
 <div class="file-tree" style="{width ? `width: ${width}px; min-width: min(70vw, ${width}px);` : ""}">
 	
-	<div class="folders outline"
+	<div class="folders outline {draggingOver ? "dragging-over" : ""}"
 		on:drop|stopPropagation={handleDrop}
-		on:dragover|preventDefault
+		on:dragover|preventDefault|stopPropagation={() => draggingOver = true}
+		on:dragleave|stopPropagation={() => draggingOver = false}
 		on:contextmenu|preventDefault|stopPropagation={handleRightClick}
 	>
 		{#key fileTree}
@@ -105,7 +109,9 @@
 				{/each}
 		{/key}
 	</div>
-	<ThemeToggle />
+	<div id="file-tree-footer">
+		<ThemeToggle />
+	</div>
 </div>
 
 <style>
