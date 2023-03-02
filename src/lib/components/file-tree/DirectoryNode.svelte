@@ -69,6 +69,7 @@
 		let newParentUId = node.type == "folder" ? node.UId : node.parentUId // if drag onto a folder, move into folder, if drag onto deck, move into that deck's folder
 		let toMoveNodeUId = event.dataTransfer?.getData("dragged-node-uid") as string
 		let currentParentUId = event.dataTransfer?.getData("current-parent-uid") as string | null
+		let toMoveNodeChildrenUIds = JSON.parse(event.dataTransfer?.getData("dragged-node-children-uids") || "[]") as string[]
 
 		currentParentUId = currentParentUId == "null" ? null : currentParentUId  // retype null
 		draggingOver = false
@@ -76,6 +77,7 @@
 		if (!toMoveNodeUId) { return }
 		if (toMoveNodeUId == node.UId) { return }
 		if (newParentUId == currentParentUId) { return }
+		if (toMoveNodeChildrenUIds.includes(node.UId)) { return }
 
 		setIsLoading(true, toMoveNodeUId)
 		if (node.type == "folder") {
