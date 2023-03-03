@@ -1,14 +1,14 @@
 <script lang="ts">
-    import { enhance } from "$app/forms";
-    import { invalidateAll } from "$app/navigation";
     import type { Database } from "$lib/types";
-
+    import { enhance } from "$app/forms";
+    import { createEventDispatcher } from "svelte";
 	import Card from "./Card.svelte"
 
 	export let deck: Database.DirectoryNode
 	export let cards: Database.Card[]
 
-	console.log(cards)
+	let dispatch = createEventDispatcher()
+	let isLoading = false;
 
 </script>
 
@@ -16,7 +16,19 @@
 	<h1>{deck.name}</h1>
 	<h2>{deck.UId}</h2>
 
-	<form method="post" action="?/add-new-card" use:enhance={async() => await invalidateAll()}>
+	{#if isLoading}
+		<img class="loading-spinner" alt="loading icon" style="width: 25px" />
+	{/if}
+	
+	<form method="post" action="?/add-new-card" use:enhance={() => {
+		isLoading = true
+		return async ({ result }) => {
+			isLoading = false
+			if (result.type == "success") {
+				dispatch("refresh-page-contents")
+			}
+		}
+	}}>
 		<input type="hidden" name="deck-uid" value={deck.UId}>
 		<input type="submit" value="New card">
 	</form>
@@ -25,3 +37,9 @@
 		<Card {card} />
 	{/each}
 </div>
+
+<style>
+
+	@import "$lib/css/deck.css";
+
+</style>

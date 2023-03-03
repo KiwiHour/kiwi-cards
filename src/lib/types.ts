@@ -25,6 +25,7 @@ export namespace Database {
 		
 		_id?: ObjectId | string
 		UId: string
+		deckUId: string
 		type: "card"
 	}
 

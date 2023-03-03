@@ -17,19 +17,31 @@ export default class Deck {
 
 	async addCard(card: Database.Card) {
 		await this.db.cardsCollection.insertOne(card)
+		await this.db.directoryNodesCollection.updateOne(
+			{ "UId": this.UId },
+			{ $push: { "childrenUIds": card.UId }}
+		)
+	}
+
+	async deleteCard(cardUId: string) {
+		await this.db.cardsCollection.deleteOne({ UId: cardUId })
+		await this.db.directoryNodesCollection.updateOne(
+			{ "UId": this.UId },
+			{ $pull: { "childrenUIds": cardUId }}
+		);
 	}
 
 	/* also adds this card to the deck */
 	async newBlankCard() {
         let newCard: Database.Card = {
             UId: await generateUId(this.connectedMongoClient),
+			deckUId: this.UId,
             type: "card",
             lastCorrect: null,
             daysTillAsk: 1,
             front: "",
             back: ""
         }
-		await this.addCard(newCard)
 		
 		return newCard
     }

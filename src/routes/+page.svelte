@@ -1,13 +1,13 @@
 <script lang="ts">
-    import type { PageData } from "./$types";
+    import type { ActionData, PageData } from "./$types";
     import type { Database } from "$lib/types";
 
     import { onMount, tick } from "svelte";
+    import { invalidateAll } from "$app/navigation";
     import FileTree from "$lib/components/FileTree.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
     import Homepage from "$lib/components/Homepage.svelte";
     import Deck from "$lib/components/Deck.svelte";
-    import { invalidateAll } from "$app/navigation";
 
 	export let data: PageData
 
@@ -58,7 +58,8 @@
 	<div id="page">
 		<Navbar on:close-all-decks={handleCloseAllDecks} />
 		{#if openDeck}
-			<Deck deck={openDeck} cards={data.cards.filter(card => openDeck?.childrenUIds.includes(card.UId))} />
+			<Deck on:refresh-page-contents={refreshPageContents}
+				deck={openDeck} cards={data.cards.filter(card => openDeck?.childrenUIds.includes(card.UId))} />
 		{:else}
 			<Homepage /> 
 		{/if}

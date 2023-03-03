@@ -1,0 +1,3 @@
+.loading-spinner {
+	content: var(--spinner-icon) !important;
+}
