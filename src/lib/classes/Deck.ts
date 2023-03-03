@@ -19,7 +19,7 @@ export default class Deck {
 		await this.db.cardsCollection.insertOne(card)
 		await this.db.directoryNodesCollection.updateOne(
 			{ "UId": this.UId },
-			{ $push: { "childrenUIds": card.UId }}
+			{ $push: { "childrenUIds": card.UId } }
 		)
 	}
 
@@ -27,31 +27,31 @@ export default class Deck {
 		await this.db.cardsCollection.deleteOne({ UId: cardUId })
 		await this.db.directoryNodesCollection.updateOne(
 			{ "UId": this.UId },
-			{ $pull: { "childrenUIds": cardUId }}
+			{ $pull: { "childrenUIds": { $eq: cardUId } } }
 		);
 	}
 
 	/* also adds this card to the deck */
 	async newBlankCard() {
-        let newCard: Database.Card = {
-            UId: await generateUId(this.connectedMongoClient),
+		let newCard: Database.Card = {
+			UId: await generateUId(this.connectedMongoClient),
 			deckUId: this.UId,
-            type: "card",
-            lastCorrect: null,
-            daysTillAsk: 1,
-            front: "",
-            back: ""
-        }
-		
+			type: "card",
+			lastCorrect: null,
+			daysTillAsk: 1,
+			front: "",
+			back: ""
+		}
+
 		return newCard
-    }
+	}
 
 	/** Get all the cards in this deck */
 	async getCardsInDeck() {
 		let deck = await this.get()
 		let cardUIds = deck?.childrenUIds
-		
-		let cards = await this.db.cardsCollection.find({ UId: { $in: cardUIds ?? [] }}).toArray()
+
+		let cards = await this.db.cardsCollection.find({ UId: { $in: cardUIds ?? [] } }).toArray()
 		return cards
 	}
 
